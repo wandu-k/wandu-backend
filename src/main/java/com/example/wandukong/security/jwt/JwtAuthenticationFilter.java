@@ -1,4 +1,4 @@
-package com.example.demo.security.jwt;
+package com.example.wandukong.security.jwt;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.dto.CustomUserDetails;
+import com.example.wandukong.dto.CustomUserDetails;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

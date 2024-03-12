@@ -1,10 +1,10 @@
-package com.example.demo.dto;
+package com.example.wandukong.dto;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import com.example.demo.domain.UserDo;
+import com.example.wandukong.domain.UserDo;
 
 import lombok.Getter;
 import lombok.Setter;

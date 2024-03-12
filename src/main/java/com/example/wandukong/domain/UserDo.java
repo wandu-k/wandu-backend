@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.wandukong.domain;
 
 import java.util.Date;
 

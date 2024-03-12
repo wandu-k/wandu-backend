@@ -1,4 +1,4 @@
-package com.example.demo.security.jwt;
+package com.example.wandukong.security.jwt;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,8 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.dto.CustomUserDetails;
-import com.example.demo.dto.UserDto;
+import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.dto.UserDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,4 +1,4 @@
-package com.example.demo.security.jwt;
+package com.example.wandukong.security.jwt;
 
 //로그인 필터 경로
 //토큰 헤더

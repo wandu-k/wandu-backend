@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.wandukong.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,9 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.domain.UserDo;
-import com.example.demo.dto.UserDto;
-import com.example.demo.repository.AccountRepository;
+import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.repository.AccountRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

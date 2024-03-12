@@ -1,16 +1,15 @@
-package com.example.demo.security;
+package com.example.wandukong.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.domain.UserDo;
-import com.example.demo.dto.CustomUserDetails;
-import com.example.demo.dto.UserDto;
-import com.example.demo.repository.AccountRepository;
+import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.repository.AccountRepository;
 
 import lombok.extern.slf4j.Slf4j;
 

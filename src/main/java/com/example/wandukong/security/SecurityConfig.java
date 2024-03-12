@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.wandukong.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.demo.security.jwt.JwtAuthenticationFilter;
-import com.example.demo.security.jwt.JwtRequestFilter;
-import com.example.demo.security.jwt.JwtTokenProvider;
+import com.example.wandukong.security.jwt.JwtAuthenticationFilter;
+import com.example.wandukong.security.jwt.JwtRequestFilter;
+import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
