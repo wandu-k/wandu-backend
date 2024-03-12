@@ -55,43 +55,37 @@ public class JwtTokenProvider {
         if (authHeader == null || authHeader.length() == 0) {
             return null;
         }
-        try {
-            String jwt = authHeader.replace(JwtConstants.TOKEN_PREFIX, "");
-            Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
-            log.info("parsedToken : " + parsedToken);
+        String jwt = authHeader.replace(JwtConstants.TOKEN_PREFIX, "");
+        Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
 
-            String email = parsedToken.getPayload().get("email").toString();
-            Long userID = Long.valueOf(Integer.parseInt((parsedToken.getPayload().get("userid").toString())));
-            String role = (String) parsedToken.getPayload().get("rol");
+        String email = parsedToken.getPayload().get("email").toString();
+        String strUserID = parsedToken.getPayload().get("userid").toString();
+        Long userID = Long.valueOf(strUserID);
+        String role = parsedToken.getPayload().get("rol").toString();
 
-            if (email == null || email.length() == 0) {
-                return null;
-            }
+        log.info("토큰 데이터 추출 완료");
 
-            UserDto userDto = new UserDto();
-            userDto.setEmail(email);
-            userDto.setUserID(userID);
-
-            // GrantedAuthority 객체로 변환
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
-
-            // 권한 목록 반환
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(grantedAuthority);
-
-            UserDetails userDetails = new CustomUserDetails(userDto);
-            return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-
-        } catch (Exception e) {
-
+        if (email == null || email.length() == 0) {
+            return null;
         }
-        return null;
+
+        UserDto userDto = new UserDto();
+        userDto.setEmail(email);
+        userDto.setUserID(userID);
+
+        // GrantedAuthority 객체로 변환
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
+
+        // 권한 목록 반환
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(grantedAuthority);
+
+        UserDetails userDetails = new CustomUserDetails(userDto);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
     }
 
     // 토큰 유효성 검사
     public boolean vaildateToken(String jwt) {
-
-        log.info(jwtProps.getSecretKey());
         try {
             Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
             log.info("토큰 만료 기간");

@@ -26,7 +26,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = request.getHeader(JwtConstants.TOKEN_HEADER);
-        log.info("authorization : " + header);
 
         if (header == null || header.length() == 0 || !header.startsWith(JwtConstants.TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
