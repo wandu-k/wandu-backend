@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,23 +18,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "MyAvatar")
-public class MyAvatar {
+@Table(name = "ItemFile")
+public class ItemFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemBuyID", unique = true)
-    private Long itemBuyID;
-
-    @Column(name = "userID")
-    private Long userID;
-
-    @Column(name = "itemID")
+    @Column(name = "itemID", unique = true)
     private Long itemID;
 
-    @OneToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userdo;
+    @Column(name = "uuid")
+    private Long uuid;
+
+    @Column(name = "fileName")
+    private String fileName;
 
     @ManyToOne
     @JoinColumn(name = "itemID", referencedColumnName = "itemID")
