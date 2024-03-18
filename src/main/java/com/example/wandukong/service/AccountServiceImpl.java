@@ -2,11 +2,7 @@ package com.example.wandukong.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.MiniHome;
@@ -15,8 +11,6 @@ import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.MiniHpRepository;
-
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
 
             log.info("회원가입된 유저 아이디" + user.getUserID());
 
-            // 회원가입이 완료되면 그 유저아이디로 미니홈 테이블도 생성
+            // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHomeDto miniHomeDto = new MiniHomeDto();
             miniHomeDto.setUserID(user.getUserID());
             MiniHome miniHome = miniHomeDto.toEntity();
