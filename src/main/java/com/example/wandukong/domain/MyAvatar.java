@@ -29,7 +29,7 @@ public class MyAvatar {
 
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userdo;
+    private UserDo userDo;
 
     @ManyToOne
     @JoinColumn(name = "itemID", referencedColumnName = "itemID")

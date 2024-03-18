@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "User")
+@Table(name = "Users")
 public class UserDo {
 
     @Id
