@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "MiniHome")
 public class MiniHome {
@@ -23,8 +27,8 @@ public class MiniHome {
     private Long hpID;
 
     @ManyToOne
-    @Column(name = "userID")
-    private Long userID;
+    @JoinColumn(name = "userID")
+    private UserDo userDo;
 
     @Column(name = "statusM")
     private String statusM;
