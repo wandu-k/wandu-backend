@@ -1,7 +1,5 @@
 package com.example.wandukong.domain;
 
-import org.checkerframework.checker.units.qual.C;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,9 +27,6 @@ public class MiniHome {
 
     @Column(name = "statusM")
     private String statusM;
-
-    @Column(name = "profilePhoto")
-    private String profilePhoto;
 
     @Column(name = "introduction")
     private String introduction;
