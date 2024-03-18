@@ -27,12 +27,6 @@ public class Shop {
     @Column(name = "itemID", unique = true)
     private Long itemID;
 
-    @Column(name = "userID")
-    private Long userID;
-
-    @Column(name = "categoryID")
-    private Long categoryID;
-
     @Column(name = "itemName")
     private String itemName;
 

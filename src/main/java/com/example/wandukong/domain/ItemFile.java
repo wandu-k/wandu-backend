@@ -23,16 +23,13 @@ public class ItemFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemID", unique = true)
-    private Long itemID;
+    @ManyToOne
+    @JoinColumn(name = "itemID", referencedColumnName = "itemID", unique = true)
+    private Shop shop;
 
     @Column(name = "uuid")
     private Long uuid;
 
     @Column(name = "fileName")
     private String fileName;
-
-    @ManyToOne
-    @JoinColumn(name = "itemID", referencedColumnName = "itemID")
-    private Shop shop;
 }

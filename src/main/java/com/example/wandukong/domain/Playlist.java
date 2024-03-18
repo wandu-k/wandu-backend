@@ -26,12 +26,6 @@ public class Playlist {
     @Column(name = "playlistID", unique = true)
     private Long playlistID;
 
-    @Column(name = "userID")
-    private Long userID;
-
-    @Column(name = "hpID")
-    private Long hpID;
-
     @Column(name = "plName")
     private String plName;
 

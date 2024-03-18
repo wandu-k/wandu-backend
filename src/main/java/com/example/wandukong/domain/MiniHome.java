@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +26,6 @@ public class MiniHome {
     @Column(name = "hpID", unique = true)
     private Long hpID;
 
-    @ManyToOne
-    @JoinColumn(name = "userID")
-    private UserDo userDo;
-
     @Column(name = "statusM")
     private String statusM;
 
@@ -45,8 +41,8 @@ public class MiniHome {
     @Column(name = "hpOpen")
     private int hpOpen;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userdo;
+    private UserDo userDo;
 
 }

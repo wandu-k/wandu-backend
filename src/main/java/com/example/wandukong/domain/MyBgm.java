@@ -27,12 +27,6 @@ public class MyBgm {
     @Column(name = "musicBuyID", unique = true)
     private Long musicBuyID;
 
-    @Column(name = "userID")
-    private Long userID;
-
-    @Column(name = "itemID")
-    private Long itemID;
-
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userdo;

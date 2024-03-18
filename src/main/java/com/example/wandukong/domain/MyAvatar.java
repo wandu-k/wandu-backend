@@ -27,12 +27,6 @@ public class MyAvatar {
     @Column(name = "itemBuyID", unique = true)
     private Long itemBuyID;
 
-    @Column(name = "userID")
-    private Long userID;
-
-    @Column(name = "itemID")
-    private Long itemID;
-
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userdo;

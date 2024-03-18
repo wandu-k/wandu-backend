@@ -26,12 +26,6 @@ public class MyPlaylists {
     @Column(name = "myplID", unique = true)
     private Long myplID;
 
-    @Column(name = "playlistID")
-    private Long playlistID;
-
-    @Column(name = "musicBuyID")
-    private Long musicBuyID;
-
     @ManyToOne
     @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
     private Playlist playlist;
