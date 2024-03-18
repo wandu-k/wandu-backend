@@ -35,5 +35,5 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "hpID", referencedColumnName = "hpID")
-    private Playlist playlist;
+    private MiniHome minihome;
 }
