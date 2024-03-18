@@ -1,7 +1,5 @@
 package com.example.wandukong.domain;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,29 +16,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "Ask")
-public class Ask {
+@Table(name = "MyBgm")
+public class MyBgm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "askID", unique = true)
-    private Long askID;
+    @Column(name = "musicBuyID", unique = true)
+    private Long musicBuyID;
 
     @Column(name = "userID")
-    private String userID;
+    private Long userID;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "content")
-    private String content;
-
-    @Column(name = "writeDate")
-    private Date writeDate;
-
-    @Column(name = "solveState")
-    private int solveState;
-
-    @Column(name = "hideState")
-    private int hideState;
+    @Column(name = "itemID")
+    private Long itemID;
 }
