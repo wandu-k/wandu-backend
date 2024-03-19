@@ -2,7 +2,7 @@ package com.example.wandukong.dto;
 
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.MyAvatar;
+import com.example.wandukong.domain.Category;
 import com.example.wandukong.domain.Shop;
 import com.example.wandukong.domain.UserDo;
 
@@ -12,20 +12,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-public class MyAvatarDto {
-  private Long itemBuyID;
+public class ShopDto {
   private Long userID;
   private Long itemID;
+  private String itemName;
+  private Long categoryID;
 
-  /* 내 아바타 인벤토리 */
-  public MyAvatar toEntity() {
+  /* 상점 */
+  public Shop toEntity() {
 
-    MyAvatar myavatar = MyAvatar.builder()
-        .itemBuyID(itemBuyID)
+    Shop shop = Shop.builder()
+        .itemID(itemID)
+        .itemName(itemName)
         .userDo(UserDo.builder().userID(userID).build())
-        .shop(Shop.builder().itemID(itemID).build())
+        .category(Category.builder().categoryID(categoryID).build())
         .build();
-    return myavatar;
+    return shop;
   }
 
 }

@@ -31,7 +31,7 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userdo;
+    private UserDo userDo;
 
     @ManyToOne
     @JoinColumn(name = "hpID", referencedColumnName = "hpID")

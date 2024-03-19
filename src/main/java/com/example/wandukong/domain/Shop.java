@@ -32,7 +32,7 @@ public class Shop {
 
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userdo;
+    private UserDo userDo;
 
     @ManyToOne
     @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")

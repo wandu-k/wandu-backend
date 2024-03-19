@@ -32,5 +32,5 @@ public class MyPlaylists {
 
     @ManyToOne
     @JoinColumn(name = "musicBuyID", referencedColumnName = "musicBuyID")
-    private MyBgm MyBgm;
+    private MyBgm mybgm;
 }

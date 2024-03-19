@@ -17,7 +17,7 @@ public class MiniHomeDto {
     private int allVisit;
     private int hpOpen;
 
-    /* DTO -> Entity */
+    /* 미니홈피 */
     public MiniHome toEntity() {
         MiniHome miniHome = MiniHome.builder()
                 .userDo(UserDo.builder().userID(userID).build())
