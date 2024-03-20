@@ -2,6 +2,7 @@ package com.example.wandukong.domain;
 
 import java.util.Date;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -56,8 +57,8 @@ public class UserDo {
     @Column(name = "gender")
     private String gender;
 
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "role")
-    private int role = 0;
+    private int role;
 
 }
