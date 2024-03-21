@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.example.wandukong.domain.MiniHome;
 
 @Repository
-public interface MiniHpRepository extends JpaRepository<MiniHome, Long> {
+public interface MiniHomeRepository extends JpaRepository<MiniHome, Long> {
+
+    MiniHome findByUserDo_UserID(Long userID);
 
 }

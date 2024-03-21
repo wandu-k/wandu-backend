@@ -10,7 +10,7 @@ import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.repository.AccountRepository;
-import com.example.wandukong.repository.MiniHpRepository;
+import com.example.wandukong.repository.MiniHomeRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +25,7 @@ public class AccountServiceImpl implements AccountService {
     AccountRepository accountRepository;
 
     @Autowired
-    MiniHpRepository miniHpRepository;
+    MiniHomeRepository miniHpRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;

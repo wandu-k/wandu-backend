@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.CustomUserDetails;
@@ -16,6 +17,7 @@ import com.example.wandukong.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequestMapping("/api/user")
 @RestController
 public class AccountController {
 
@@ -23,7 +25,7 @@ public class AccountController {
     AccountService accountService;
 
     // 회원가입
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDto userDto) {
         int result = accountService.register(userDto);
 
@@ -35,7 +37,7 @@ public class AccountController {
     }
 
     // 내 정보 조회
-    @GetMapping("/api/myinfo")
+    @GetMapping("/myinfo")
     public ResponseEntity<?> myinfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         UserDto userDto = customUserDetails.getUserDto();

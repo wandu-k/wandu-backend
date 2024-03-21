@@ -38,8 +38,7 @@ runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
 
-// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
-implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor
 implementation 'org.springframework.boot:spring-boot-configuration-processor:3.2.3'
 // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
