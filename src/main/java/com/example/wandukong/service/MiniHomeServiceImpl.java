@@ -7,6 +7,8 @@ import com.example.wandukong.domain.MiniHome;
 import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.repository.MiniHomeRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 public class MiniHomeServiceImpl implements MiniHomeService {
 
@@ -16,13 +18,11 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     @Override
     public MiniHomeDto getMiniHome(Long userID) {
 
-        // MiniHome miniHome = miniHomeRepository.findByUserDo_UserID(userID);
+        MiniHome miniHome = miniHomeRepository.findByUserDo_UserID(userID);
 
         MiniHomeDto miniHomeDto = new MiniHomeDto();
 
-        // miniHomeDto.setUserID(miniHome.getUserDo().getUserID());
-
-        // TODO Auto-generated method stub
+        miniHomeDto.setUserID(miniHome.getUserDo().getUserID());
         return miniHomeDto;
     }
 
