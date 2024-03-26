@@ -25,6 +25,6 @@ public class MiniHomeBoard {
     private Long boardID;
 
     @Column(name = "categoryName")
-    private String BoardName;
+    private String boardName;
 
 }
