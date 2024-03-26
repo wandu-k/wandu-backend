@@ -3,7 +3,11 @@ package com.example.wandukong.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.MiniHomeDto;
+import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.service.MiniHomeService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +30,15 @@ public class MiniHomeController {
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    @GetMapping("/board")
+    public ResponseEntity<?> getBoardList() {
+        List<MiniHomeBoardDto> boardList = new ArrayList<MiniHomeBoardDto>();
+        boardList = miniHomeService.getBoardList();
+
+        if (boardList == null) {
+            return new ResponseEntity<>("현재 등록된 게시판이 없습니다", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
 
 }
