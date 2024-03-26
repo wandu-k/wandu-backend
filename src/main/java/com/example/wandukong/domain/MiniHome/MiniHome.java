@@ -1,4 +1,6 @@
-package com.example.wandukong.domain;
+package com.example.wandukong.domain.MiniHome;
+
+import com.example.wandukong.domain.UserDo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

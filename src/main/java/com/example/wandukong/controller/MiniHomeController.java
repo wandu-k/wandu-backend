@@ -26,4 +26,9 @@ public class MiniHomeController {
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
 
+    @GetMapping("/")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+
 }

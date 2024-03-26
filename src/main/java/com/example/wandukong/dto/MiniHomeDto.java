@@ -1,7 +1,7 @@
 package com.example.wandukong.dto;
 
-import com.example.wandukong.domain.MiniHome;
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import lombok.Getter;
 import lombok.Setter;

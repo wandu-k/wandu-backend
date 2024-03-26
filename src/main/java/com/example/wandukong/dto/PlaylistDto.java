@@ -2,9 +2,9 @@ package com.example.wandukong.dto;
 
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.MiniHome;
 import com.example.wandukong.domain.Playlist;
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import lombok.Getter;
 import lombok.Setter;

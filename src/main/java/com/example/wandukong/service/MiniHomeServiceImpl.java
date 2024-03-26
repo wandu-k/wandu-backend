@@ -3,7 +3,7 @@ package com.example.wandukong.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.wandukong.domain.MiniHome;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.repository.MiniHomeRepository;
 

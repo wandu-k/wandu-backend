@@ -1,5 +1,7 @@
 package com.example.wandukong.domain;
 
+import com.example.wandukong.domain.MiniHome.MiniHome;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

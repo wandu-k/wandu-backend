@@ -5,8 +5,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.wandukong.domain.MiniHome;
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.repository.AccountRepository;
