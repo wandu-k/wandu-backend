@@ -35,7 +35,7 @@ public class MiniHomeController {
         List<MiniHomeBoardDto> boardList = new ArrayList<MiniHomeBoardDto>();
         boardList = miniHomeService.getBoardList();
 
-        if (boardList == null) {
+        if (boardList.isEmpty()) {
             return new ResponseEntity<>("현재 등록된 게시판이 없습니다", HttpStatus.OK);
         }
         return new ResponseEntity<>(boardList, HttpStatus.OK);
