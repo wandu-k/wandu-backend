@@ -65,7 +65,7 @@ public class UserDo {
     @Column(name = "role")
     private int role;
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome miniHome;
 
 }
