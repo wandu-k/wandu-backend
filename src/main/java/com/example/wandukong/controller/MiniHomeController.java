@@ -2,8 +2,8 @@ package com.example.wandukong.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
+import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.service.MiniHomeService;
 
 import java.util.ArrayList;

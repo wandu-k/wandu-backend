@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
-import com.example.wandukong.dto.MiniHomeDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
+import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.repository.MiniHomeBoardRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
 
