@@ -1,4 +1,4 @@
-package com.example.wandukong.dto;
+package com.example.wandukong.dto.ShopInfo;
 
 import org.springframework.stereotype.Component;
 

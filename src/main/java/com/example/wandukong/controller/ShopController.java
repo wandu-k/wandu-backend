@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.ShopDto;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.service.ShopService;
 
 import lombok.extern.slf4j.Slf4j;
