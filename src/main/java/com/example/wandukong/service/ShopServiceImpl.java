@@ -9,17 +9,17 @@ import com.example.wandukong.domain.Shop;
 @Service
 public class ShopServiceImpl {
 
-  @Autowired
-  ShopRepository shoprepository;
+    @Autowired
+    ShopRepository shoprepository;
 
-  @Override
-  public int uploadItem(Long userID, MultipartFile Itemfile, ShopDto shopDto) {
+    @Override
+    public int uploadItem(Long userID, MultipartFile Itemfile, ShopDto shopDto) {
 
-    Shop shop = ShopRepository.findByUserDo_UserID(userID);
+        Shop shop = ShopRepository.findByUserDo_UserID(userID);
 
-    ShopDto shopDto = new ShopDto();
+        ShopDto shopDto = new ShopDto();
 
-    ShopDto.setUserID(shop.getUserDo().getUserID());
-    return shopDto;
-  }
+        ShopDto.setUserID(shop.getUserDo().getUserID());
+        return shopDto;
+    }
 }
