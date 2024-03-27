@@ -6,5 +6,7 @@ public interface AccountService {
 
     int register(UserDto userDto);
 
+    void deleteAccount(Long userID);
+
     // void login(UserDto userDto, HttpServletRequest request);
 }

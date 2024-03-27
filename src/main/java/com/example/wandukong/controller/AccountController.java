@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +45,17 @@ public class AccountController {
         log.info("user : " + userDto);
         if (userDto != null) {
             return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        UserDto userDto = customUserDetails.getUserDto();
+        if (userDto != null) {
+            accountService.deleteAccount(userDto.getUserID());
+            return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);

@@ -56,6 +56,11 @@ public class AccountServiceImpl implements AccountService {
         return 1;
     }
 
+    @Override
+    public void deleteAccount(Long userID) {
+        accountRepository.deleteById(userID);
+    }
+
     // 필요없는 부분
 
     // @Override
