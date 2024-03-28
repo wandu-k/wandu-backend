@@ -64,10 +64,16 @@ public class AccountController {
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
-    @PutMapping("path/{id}")
-    public ResponseEntity<?> updateProfilePicture(@PathVariable String id, @RequestBody MultipartFile multipartFile) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProfilePicture(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody MultipartFile multipartFile) {
 
-        return new ResponseEntity<>("프로필 사진 설정이 완료 되었습니다.", HttpStatus.OK);
+        if (customUserDetails != null) {
+            return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+
     }
 
 }
