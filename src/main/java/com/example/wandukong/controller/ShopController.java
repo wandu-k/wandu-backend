@@ -22,22 +22,4 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/shop")
 public class ShopController {
 
-  @Autowired
-  private ShopService shopservice;
-
-  @PostMapping("/upload")
-  public ResponseEntity<?> ShopItemFileupload(
-      @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("ItemFile") MultipartFile Itemfile,
-      @RequestParam("Shop") ShopDto shopDto) {
-
-    UserDto userDto = customUserDetails.getUserDto();
-    int result = shopservice.uploadItem(userDto.getUserID(), Itemfile, shopDto);
-
-    if (result == 0) {
-      return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
-    }
-  }
-
 }

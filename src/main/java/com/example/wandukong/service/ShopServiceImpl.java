@@ -6,20 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.domain.Shop;
 
-@Service
 public class ShopServiceImpl {
 
-    @Autowired
-    ShopRepository shoprepository;
-
-    @Override
-    public int uploadItem(Long userID, MultipartFile Itemfile, ShopDto shopDto) {
-
-        Shop shop = ShopRepository.findByUserDo_UserID(userID);
-
-        ShopDto shopDto = new ShopDto();
-
-        ShopDto.setUserID(shop.getUserDo().getUserID());
-        return shopDto;
-    }
 }

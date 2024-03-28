@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -61,9 +62,10 @@ public class SecurityConfig {
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                     .authorizeHttpRequests(requests -> {
-                        requests.requestMatchers("/api/**").permitAll();
+                        requests.requestMatchers("/api/**", "/v3/**", "/swagger-ui/**", "/error").permitAll();
                         requests.requestMatchers(HttpMethod.POST, "/api/articles").authenticated();
                     })
+
                     .sessionManagement(
                             sessionManagement -> sessionManagement
                                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
