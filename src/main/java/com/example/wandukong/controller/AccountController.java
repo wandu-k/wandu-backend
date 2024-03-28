@@ -15,12 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.service.AccountService;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-@Slf4j
 @RequestMapping("/api/user")
 @RestController
 public class AccountController {
@@ -44,9 +40,8 @@ public class AccountController {
     @GetMapping("/myinfo")
     public ResponseEntity<?> myinfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        UserDto userDto = customUserDetails.getUserDto();
-        log.info("user : " + userDto);
-        if (userDto != null) {
+        if (customUserDetails != null) {
+            UserDto userDto = customUserDetails.getUserDto();
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }
 
@@ -55,8 +50,8 @@ public class AccountController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        UserDto userDto = customUserDetails.getUserDto();
-        if (userDto != null) {
+        if (customUserDetails != null) {
+            UserDto userDto = customUserDetails.getUserDto();
             accountService.deleteAccount(userDto.getUserID());
             return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
         }
