@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,16 +25,19 @@ import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PutMapping;
 
 @Tag(name = "계정", description = "계정 API")
+@Slf4j
 @RequestMapping("/api/user")
 @RestController
 public class AccountController {
@@ -111,15 +115,18 @@ public class AccountController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 업데이트가 완료 되었습니다."),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
-            @ApiResponse(responseCode = "401", description = "지원하지 않는 파일 타입")
+            @ApiResponse(responseCode = "415", description = "지원하지 않는 미디어 타입")
     })
+    @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestPart(required = false) @Parameter(description = "프로필 사진") MultipartFile profileImage,
-            @Parameter(description = "업데이트할 사용자 정보") @RequestPart UserDto userDto) {
-
+            @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
+            @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
+            throws IOException {
         if (customUserDetails != null) {
+            userDto.setUserID(customUserDetails.getUserDto().getUserID());
+            accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
         }
         return new ResponseEntity<>("인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED);

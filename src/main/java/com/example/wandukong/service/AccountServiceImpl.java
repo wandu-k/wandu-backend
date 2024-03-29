@@ -1,10 +1,18 @@
 package com.example.wandukong.service;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 
@@ -30,6 +38,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    AmazonS3 amazonS3;
+
+    @Value(value = "${cloud.aws.s3.bucket}")
+    private String bucketName;
 
     // 회원가입
     @Transactional
@@ -60,6 +74,26 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(Long userID) {
         accountRepository.deleteById(userID);
+    }
+
+    @Override
+    public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(profileImage.getContentType());
+
+        String filePath = userDto.getUserID() + "profile";
+
+        String extension = profileImage.getOriginalFilename()
+                .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
+
+        String filename = "profile" + "_" + userDto.getUserID() + extension;
+
+        log.info(extension);
+        amazonS3
+                .putObject(new PutObjectRequest(bucketName, filePath + filename,
+                        profileImage.getInputStream(), objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+
     }
 
     // 필요없는 부분
