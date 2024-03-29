@@ -81,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = userDto.getUserID() + "profile";
+        String filePath = "users/" + userDto.getUserID() + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
