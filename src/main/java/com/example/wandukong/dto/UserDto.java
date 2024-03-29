@@ -17,6 +17,8 @@ public class UserDto {
     private Long userID;
     private String email;
     private String password;
+    private String profileImage;
+    private String nickname;
     private String name;
     private String phone;
     private String gender;
@@ -29,6 +31,8 @@ public class UserDto {
         UserDo user = UserDo.builder()
                 .email(email)
                 .password(password)
+                .nickname(nickname)
+                .profileImage(profileImage)
                 .name(name)
                 .birthday(birthday)
                 .phone(phone)

@@ -45,8 +45,8 @@ public class UserDo {
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "profilePhoto")
-    private String profilePhoto;
+    @Column(name = "profileImage")
+    private String profileImage;
 
     @Column(name = "birthday")
     private Date birthday;
