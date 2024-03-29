@@ -14,5 +14,7 @@ public interface AccountService {
 
     void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException;
 
+    UserDto getMyInfo(String username);
+
     // void login(UserDto userDto, HttpServletRequest request);
 }

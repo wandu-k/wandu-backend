@@ -96,6 +96,15 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    @Override
+    public UserDto getMyInfo(String username) {
+        UserDo userDo = accountRepository.findByEmail(username);
+        UserDto userDto = new UserDto();
+        userDto.setUserID(userDo.getUserID());
+        userDto.setEmail(userDo.getEmail());
+        return userDto;
+    }
+
     // 필요없는 부분
 
     // @Override

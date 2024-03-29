@@ -77,17 +77,18 @@ public class AccountController {
         }
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     // 내 정보 조회
     @Operation(summary = "내 정보 조회", description = "자기자신의 회원 정보를 조회를 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원탈퇴가 완료되었습니다."),
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
     })
     @GetMapping("/myinfo")
-    public ResponseEntity<?> myinfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         if (customUserDetails != null) {
-            UserDto userDto = customUserDetails.getUserDto();
+            UserDto userDto = accountService.getMyInfo(customUserDetails.getUsername());
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }
 
