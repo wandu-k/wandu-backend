@@ -1,6 +1,8 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,10 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.SSEAwsKeyManagementParams;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 
@@ -50,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public int register(UserDto userDto) {
         String encodedPw = passwordEncoder.encode(userDto.getPassword());
+
         // Check for duplicate username before saving
         if (accountRepository.findByEmail(userDto.getEmail()) == null) {
             userDto.setPassword(encodedPw);
@@ -76,32 +82,60 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(userID);
     }
 
+    // 유저정보 업데이트
+    @Transactional
     @Override
     public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + userDto.getUserID() + "/profile/";
+        UserDo userDo = accountRepository.findById(userDto.getUserID()).orElseThrow(() -> {
+            throw new IllegalArgumentException("해당하는 아이디가 없습니다");
+        });
 
-        String extension = profileImage.getOriginalFilename()
-                .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
+        if (profileImage != null) {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(profileImage.getContentType());
 
-        String filename = "profile" + "_" + userDto.getUserID() + extension;
+            String filePath = "users/" + userDto.getUserID() + "/profile/";
 
-        log.info(extension);
-        amazonS3
-                .putObject(new PutObjectRequest(bucketName, filePath + filename,
-                        profileImage.getInputStream(), objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            String extension = profileImage.getOriginalFilename()
+                    .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
+
+            String filename = "profile" + "_" + userDto.getUserID() + extension;
+
+            amazonS3
+                    .putObject(new PutObjectRequest(bucketName, filePath + filename,
+                            profileImage.getInputStream(), objectMetadata)
+                            .withCannedAcl(CannedAccessControlList.PublicRead));
+
+            userDto.setProfileImage(filePath + filename);
+        }
+
+        userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
+                userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
 
     }
 
     @Override
     public UserDto getMyInfo(String username) {
+
         UserDo userDo = accountRepository.findByEmail(username);
         UserDto userDto = new UserDto();
         userDto.setUserID(userDo.getUserID());
         userDto.setEmail(userDo.getEmail());
+        userDto.setProfileImage(userDo.getProfileImage());
+
+        String objectKey = userDto.getProfileImage();
+
+        // KMS 암호화 파일 주소 만들때 쓰는 코드
+
+        // Date expiration = new Date(System.currentTimeMillis() + 3600000);
+        // GeneratePresignedUrlRequest generatePresignedUrlRequest = new
+        // GeneratePresignedUrlRequest(bucketName, objectKey)
+        // .withMethod(HttpMethod.GET)
+        // .withExpiration(expiration);
+
+        // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        userDto.setProfileImage(amazonS3.getUrl(bucketName, objectKey).toString());
         return userDto;
     }
 

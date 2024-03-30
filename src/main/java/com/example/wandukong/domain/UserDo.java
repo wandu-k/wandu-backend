@@ -68,4 +68,16 @@ public class UserDo {
     @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome miniHome;
 
+    // 필드 업데이트 메서드
+    public void updateProfile(String email, String name, String nickname, String profileImage, Date birthday,
+            String phone, String gender) {
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.gender = gender;
+    }
+
 }
