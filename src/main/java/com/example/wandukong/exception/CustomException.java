@@ -9,7 +9,7 @@ public class CustomException extends Exception {
     }
 
     public static class UserAlreadyExistsException extends Exception {
-        public UserAlreadyExistsException(String message) {
+        public UserAlreadyExistsException() {
             // super(message);
             System.out.println("이미 존재하는 회원 입니다.");
         }

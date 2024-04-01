@@ -3,11 +3,12 @@ package com.example.wandukong.service;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 
 public interface AccountService {
 
-    int register(UserDto userDto);
+    void register(UserDto userDto) throws UserAlreadyExistsException;
 
     void deleteAccount(Long userID);
 

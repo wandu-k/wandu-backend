@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException;
+import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
 
@@ -65,14 +66,9 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDto userDto) {
-        int result = accountService.register(userDto);
-
-        if (result == 0) {
-            return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> register(@RequestBody UserDto userDto) throws UserAlreadyExistsException {
+        accountService.register(userDto);
+        return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")

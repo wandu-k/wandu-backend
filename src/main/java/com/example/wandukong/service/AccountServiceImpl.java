@@ -20,6 +20,7 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException;
+import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
@@ -51,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
     // 회원가입
     @Transactional
     @Override
-    public int register(UserDto userDto) {
+    public void register(UserDto userDto) throws UserAlreadyExistsException {
         String encodedPw = passwordEncoder.encode(userDto.getPassword());
 
         // Check for duplicate username before saving
@@ -60,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
             UserDo user = userDto.toEntity();
             user = accountRepository.save(user);
 
-            log.info("회원가입된 유저 아이디" + user.getUserID());
+            log.info("회원가입된 회원 아이디" + user.getUserID());
 
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHomeDto miniHomeDto = new MiniHomeDto();
@@ -70,9 +71,9 @@ public class AccountServiceImpl implements AccountService {
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
 
             miniHpRepository.save(miniHome);
-            return 0;
+        } else {
+            throw new UserAlreadyExistsException();
         }
-        return 1;
     }
 
     @Override
