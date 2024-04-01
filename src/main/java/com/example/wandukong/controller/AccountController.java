@@ -43,10 +43,10 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @Operation(summary = "JWT 인증", description = "사용자를 JWT로 인증합니다.")
+    @Operation(summary = "JWT 인증", description = "이용자를 JWT로 인증합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JWT 생성 성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패")
+            @ApiResponse(responseCode = "401", description = "회원 인증 실패")
     })
     @PostMapping("/login")
     public void authenticateJwt(@RequestParam String username, @RequestParam String password,
@@ -80,7 +80,7 @@ public class AccountController {
     @Operation(summary = "내 정보 조회", description = "자기자신의 회원 정보를 조회를 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @GetMapping("/myinfo")
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -94,8 +94,8 @@ public class AccountController {
     }
 
     // 다른 사람 정보 조회
-    @Operation(summary = "유저 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
-    @ApiResponse(responseCode = "422", description = "해당하는 유저가 없습니다.")
+    @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
+    @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     @GetMapping("/get")
     public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
 
@@ -107,7 +107,7 @@ public class AccountController {
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원탈퇴가 완료되었습니다."),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/delete")
@@ -124,8 +124,8 @@ public class AccountController {
     @Operation(summary = "프로필 업데이트", description = "인증된 사용자의 프로필을 업데이트합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 업데이트가 완료 되었습니다."),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
-            @ApiResponse(responseCode = "422", description = "해당하는 유저가 없습니다.")
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
+            @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -140,7 +140,7 @@ public class AccountController {
             accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
         }
-        return new ResponseEntity<>("인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("인증되지 않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
     }
 
 }
