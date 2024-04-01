@@ -3,15 +3,13 @@ package com.example.wandukong.exception;
 public class CustomException extends Exception {
     public static class UserNotFoundException extends Exception {
         public UserNotFoundException() {
-            // super(message);
-            System.out.println("해당하는 회원이 없습니다.");
+            // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
         }
     }
 
     public static class UserAlreadyExistsException extends Exception {
         public UserAlreadyExistsException() {
-            // super(message);
-            System.out.println("이미 존재하는 회원 입니다.");
+            // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
         }
     }
 
