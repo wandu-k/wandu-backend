@@ -1,5 +1,7 @@
 package com.example.wandukong.security;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +16,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.example.wandukong.security.jwt.JwtAuthenticationFilter;
 import com.example.wandukong.security.jwt.JwtRequestFilter;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -56,7 +61,18 @@ public class SecurityConfig {
             return httpSecurity
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .csrf(AbstractHttpConfigurer::disable)
-                    .cors(AbstractHttpConfigurer::disable)
+                    .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                        @Override
+                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.setAllowedOrigins(Collections.singletonList("*"));
+                            config.setAllowedMethods(Collections.singletonList("*"));
+                            config.setAllowCredentials(false);
+                            config.setAllowedHeaders(Collections.singletonList("*"));
+                            config.setMaxAge(3600L); // 1시간
+                            return config;
+                        }
+                    }))
                     .addFilterAfter(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider),
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
