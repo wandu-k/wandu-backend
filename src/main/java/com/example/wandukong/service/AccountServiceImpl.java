@@ -1,6 +1,8 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,8 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.exception.CustomException;
+import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
 import jakarta.transaction.Transactional;
@@ -132,6 +136,18 @@ public class AccountServiceImpl implements AccountService {
 
         // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
         userDto.setProfileImage(amazonS3.getUrl(bucketName, objectKey).toString());
+        return userDto;
+    }
+
+    @Override
+    public UserDto getUserInfo(Long userID) throws UserNotFoundException {
+
+        UserDo userDo = accountRepository.findById(userID)
+                .orElseThrow(() -> new UserNotFoundException("해당하는 아이디가 없습니다"));
+        UserDto userDto = new UserDto();
+
+        userDto.setUserID(userDo.getUserID());
+        userDto.setNickname(userDo.getNickname());
         return userDto;
     }
 

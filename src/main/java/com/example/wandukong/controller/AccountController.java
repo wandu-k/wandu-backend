@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -88,6 +89,19 @@ public class AccountController {
         }
 
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+    }
+
+    // 다른 사람 정보 조회
+    @Operation(summary = "유저 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
+    @GetMapping("/get")
+    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) {
+
+        try {
+            UserDto userDto = accountService.getUserInfo(userID);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("해당하는 아이디가 없습니다.", HttpStatus.NOT_FOUND);
+        }
     }
 
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")
