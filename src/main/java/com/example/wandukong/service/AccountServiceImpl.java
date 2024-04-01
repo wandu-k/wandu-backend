@@ -85,11 +85,10 @@ public class AccountServiceImpl implements AccountService {
     // 유저정보 업데이트
     @Transactional
     @Override
-    public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException {
+    public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userDto.getUserID()).orElseThrow(() -> {
-            throw new IllegalArgumentException("해당하는 아이디가 없습니다");
-        });
+        UserDo userDo = accountRepository.findById(userDto.getUserID())
+                .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -143,7 +142,7 @@ public class AccountServiceImpl implements AccountService {
     public UserDto getUserInfo(Long userID) throws UserNotFoundException {
 
         UserDo userDo = accountRepository.findById(userID)
-                .orElseThrow(() -> new UserNotFoundException("해당하는 아이디가 없습니다"));
+                .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = new UserDto();
 
         userDto.setUserID(userDo.getUserID());

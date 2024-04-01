@@ -11,7 +11,7 @@ public interface AccountService {
 
     void deleteAccount(Long userID);
 
-    void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException;
+    void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException;
 
     UserDto getMyInfo(String username);
 

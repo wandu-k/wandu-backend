@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
 
@@ -93,15 +95,13 @@ public class AccountController {
 
     // 다른 사람 정보 조회
     @Operation(summary = "유저 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
+    @ApiResponse(responseCode = "422", description = "해당하는 유저가 없습니다.")
     @GetMapping("/get")
-    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) {
+    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
 
-        try {
-            UserDto userDto = accountService.getUserInfo(userID);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>("해당하는 아이디가 없습니다.", HttpStatus.NOT_FOUND);
-        }
+        UserDto userDto = accountService.getUserInfo(userID);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+
     }
 
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")
@@ -125,7 +125,7 @@ public class AccountController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 업데이트가 완료 되었습니다."),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
-            @ApiResponse(responseCode = "415", description = "지원하지 않는 미디어 타입")
+            @ApiResponse(responseCode = "422", description = "해당하는 유저가 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -133,9 +133,10 @@ public class AccountController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
-            throws IOException {
+            throws IOException, UserNotFoundException {
         if (customUserDetails != null) {
             userDto.setUserID(customUserDetails.getUserDto().getUserID());
+
             accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
         }
