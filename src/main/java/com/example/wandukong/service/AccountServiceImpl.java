@@ -74,6 +74,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(Long userID) {
         accountRepository.deleteById(userID);
+        amazonS3.deleteObject(bucketName, "users/" + userID + "/");
+
     }
 
     // 유저정보 업데이트
