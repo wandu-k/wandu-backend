@@ -2,6 +2,7 @@ package com.example.wandukong.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.exception.CustomException;
+import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.repository.MiniHomeBoardRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
 
@@ -23,9 +26,10 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     MiniHomeBoardRepository miniHomeBoardRepository;
 
     @Override
-    public MiniHomeDto getMiniHome(Long userID) {
+    public MiniHomeDto getMiniHome(Long userID) throws HomeNotFoundException {
 
-        MiniHome miniHome = miniHomeRepository.findByUserDo_UserID(userID);
+        MiniHome miniHome = miniHomeRepository.findByUserDo_UserID(userID)
+                .orElseThrow(() -> new HomeNotFoundException());
 
         MiniHomeDto miniHomeDto = new MiniHomeDto();
 

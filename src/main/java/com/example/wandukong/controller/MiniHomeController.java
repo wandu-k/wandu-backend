@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.service.MiniHomeService;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class MiniHomeController {
     @Autowired
     MiniHomeService miniHomeService;
 
-    @GetMapping("/info")
-    public ResponseEntity<?> getMiniHome(@RequestParam Long userID) {
+    @GetMapping("/get")
+    public ResponseEntity<?> getMiniHome(@RequestParam Long userID) throws HomeNotFoundException {
 
         MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(userID);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
