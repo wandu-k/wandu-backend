@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,8 +93,8 @@ public class AccountController {
     // 다른 사람 정보 조회
     @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
     @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
-    @GetMapping("/get")
-    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
+    @GetMapping("{userID}")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long userID) throws UserNotFoundException {
 
         UserDto userDto = accountService.getUserInfo(userID);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -106,7 +107,7 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             UserDto userDto = customUserDetails.getUserDto();
@@ -124,7 +125,7 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
