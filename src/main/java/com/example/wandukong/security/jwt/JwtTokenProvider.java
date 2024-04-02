@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,18 +37,18 @@ public class JwtTokenProvider {
     @Autowired
     CustomUserDetails customUserDetails;
 
-    public String createToken(Long userID, String email, int role) {
-
-        String jwt = Jwts.builder().header()
+    public JwtToken createToken(Authentication authentication) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String accessToken = Jwts.builder().header()
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
-                .claim("userid", userID)
-                .claim("email", email)
-                .claim("rol", role)
+                .claim("userid", customUserDetails.getUserDto().getUserID())
+                .claim("email", customUserDetails.getUserDto().getEmail())
+                .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();
-        log.info("jwt : " + jwt);
-        return jwt;
+
+        return JwtToken.builder().accessToken(accessToken).build();
 
     }
 

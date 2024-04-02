@@ -24,6 +24,7 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
+import com.example.wandukong.security.jwt.JwtToken;
 import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,12 +52,10 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "회원 인증 실패")
     })
     @PostMapping("/login")
-    public void authenticateJwt(@RequestParam String username, @RequestParam String password,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // 이 메서드는 실제로는 필터에서 수행되므로 컨트롤러의 내용은 비워두어도 됩니다.
-        // Swagger 문서에는 필요한 설명과 응답 코드만 추가하면 됩니다.
-        response.setStatus(HttpStatus.OK.value());
-        response.getWriter().println("JWT 생성 성공");
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+        JwtToken token = accountService.login(username, password);
+        return ResponseEntity.ok(token);
+
     }
 
     // 회원가입

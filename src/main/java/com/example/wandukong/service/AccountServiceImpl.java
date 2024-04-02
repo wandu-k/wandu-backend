@@ -1,11 +1,11 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,11 +19,13 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
-import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
+import com.example.wandukong.security.jwt.JwtToken;
+import com.example.wandukong.security.jwt.JwtTokenProvider;
+
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +43,10 @@ public class AccountServiceImpl implements AccountService {
     MiniHomeRepository miniHpRepository;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     AmazonS3 amazonS3;
@@ -149,6 +154,18 @@ public class AccountServiceImpl implements AccountService {
         userDto.setUserID(userDo.getUserID());
         userDto.setNickname(userDo.getNickname());
         return userDto;
+    }
+
+    @Override
+    public JwtToken login(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                password);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        JwtToken token = jwtTokenProvider.createToken(authentication);
+
+        return token;
     }
 
     // 필요없는 부분
