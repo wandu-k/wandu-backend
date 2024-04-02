@@ -1,12 +1,12 @@
 package com.example.wandukong.domain;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,20 +15,31 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "ForumBoard")
+@Table(name = "ForumPost")
 @ToString
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForumBoard {
-
+public class ForumPost {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardID;
+    private Long postID;
 
-    private String boardName;
+    @ManyToOne
+    private ForumBoard forumBoard;
 
-    @OneToMany(mappedBy = "forumBoard")
-    private List<ForumPost> boards;
+    @ManyToOne
+    private UserDo userDo;
+
+    private String title;
+
+    private String content;
+
+    private LocalDate writeDate;
+
+    private int state;
+
+    
 }
