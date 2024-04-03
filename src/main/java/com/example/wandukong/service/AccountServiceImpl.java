@@ -71,6 +71,7 @@ public class AccountServiceImpl implements AccountService {
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHomeDto miniHomeDto = new MiniHomeDto();
             miniHomeDto.setUserID(user.getUserID());
+            miniHomeDto.setIntroduction(userDto.getNickname() + "의 미니홈입니다.");
             MiniHome miniHome = miniHomeDto.toEntity();
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
