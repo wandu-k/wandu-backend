@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
+import com.example.wandukong.security.jwt.JwtToken;
 import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,12 +52,10 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "회원 인증 실패")
     })
     @PostMapping("/login")
-    public void authenticateJwt(@RequestParam String username, @RequestParam String password,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // 이 메서드는 실제로는 필터에서 수행되므로 컨트롤러의 내용은 비워두어도 됩니다.
-        // Swagger 문서에는 필요한 설명과 응답 코드만 추가하면 됩니다.
-        response.setStatus(HttpStatus.OK.value());
-        response.getWriter().println("JWT 생성 성공");
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+        JwtToken token = accountService.login(username, password);
+        return ResponseEntity.ok(token);
+
     }
 
     // 회원가입
@@ -92,8 +92,8 @@ public class AccountController {
     // 다른 사람 정보 조회
     @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
     @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
-    @GetMapping("/get")
-    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
+    @GetMapping("{userID}")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long userID) throws UserNotFoundException {
 
         UserDto userDto = accountService.getUserInfo(userID);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -106,7 +106,7 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             UserDto userDto = customUserDetails.getUserDto();
@@ -124,7 +124,7 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,

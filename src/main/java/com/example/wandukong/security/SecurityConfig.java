@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.example.wandukong.security.jwt.JwtAuthenticationFilter;
 import com.example.wandukong.security.jwt.JwtRequestFilter;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
@@ -73,8 +72,6 @@ public class SecurityConfig {
                             return config;
                         }
                     }))
-                    .addFilterAfter(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider),
-                            UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                     .authorizeHttpRequests(requests -> {
                         requests.requestMatchers("/api/**", "/v3/**", "/swagger-ui/**", "/error").permitAll();
