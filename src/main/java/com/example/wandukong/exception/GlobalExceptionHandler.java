@@ -32,4 +32,11 @@ public class GlobalExceptionHandler {
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException e) {
+        String message = "비밀번호가 일치 하지 않습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }
