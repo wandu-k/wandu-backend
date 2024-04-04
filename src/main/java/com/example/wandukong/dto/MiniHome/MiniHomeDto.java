@@ -1,15 +1,12 @@
 package com.example.wandukong.dto.MiniHome;
 
-import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.domain.MiniHome.MiniHome;
-
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class MiniHomeDto {
 
+    private Long hpID;
     private Long userID;
     private String statusM;
     private String introduction;
@@ -17,16 +14,16 @@ public class MiniHomeDto {
     private int allVisit;
     private int hpOpen;
 
-    /* 미니홈피 */
-    public MiniHome toEntity() {
-        MiniHome miniHome = MiniHome.builder()
-                .userDo(UserDo.builder().userID(userID).build())
-                .statusM(statusM)
-                .introduction(introduction)
-                .hpToday(hpToday)
-                .allVisit(allVisit)
-                .hpOpen(hpOpen)
-                .build();
-        return miniHome;
+    @Builder
+    public MiniHomeDto(Long hpID, Long userID, String statusM, String introduction, int hpToday, int allVisit,
+            int hpOpen) {
+        this.hpID = hpID;
+        this.userID = userID;
+        this.statusM = statusM;
+        this.introduction = introduction;
+        this.hpToday = hpToday;
+        this.allVisit = allVisit;
+        this.hpOpen = hpOpen;
     }
+
 }
