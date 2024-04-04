@@ -8,7 +8,7 @@ import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 
 public interface MiniHomeService {
 
-    MiniHomeDto getMiniHome(Long userID) throws HomeNotFoundException;
+    MiniHomeDto getMiniHome(Long hpID) throws HomeNotFoundException;
 
     List<MiniHomeBoardDto> getBoardList();
 

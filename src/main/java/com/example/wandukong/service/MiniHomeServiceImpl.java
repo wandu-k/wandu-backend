@@ -26,9 +26,9 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     MiniHomeBoardRepository miniHomeBoardRepository;
 
     @Override
-    public MiniHomeDto getMiniHome(Long userID) throws HomeNotFoundException {
+    public MiniHomeDto getMiniHome(Long hpID) throws HomeNotFoundException {
 
-        MiniHome miniHome = miniHomeRepository.findByUserDo_UserID(userID)
+        MiniHome miniHome = miniHomeRepository.findById(hpID)
                 .orElseThrow(() -> new HomeNotFoundException());
 
         MiniHomeDto miniHomeDto = new MiniHomeDto();

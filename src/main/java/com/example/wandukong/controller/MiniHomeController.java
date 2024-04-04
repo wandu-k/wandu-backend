@@ -25,10 +25,10 @@ public class MiniHomeController {
     @Autowired
     MiniHomeService miniHomeService;
 
-    @GetMapping("/{userID}")
-    public ResponseEntity<?> getMiniHome(@PathVariable Long userID) throws HomeNotFoundException {
+    @GetMapping("/{hpID}")
+    public ResponseEntity<?> getMiniHome(@PathVariable Long hpID) throws HomeNotFoundException {
 
-        MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(userID);
+        MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(hpID);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
 
