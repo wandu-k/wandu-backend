@@ -121,7 +121,7 @@ public class AccountServiceImpl implements AccountService {
             userDto.setProfileImage(filePath + filename);
         }
 
-        userDo.updateProfile(userDto.getEmail(), userDto.getNickname(), userDto.getProfileImage(),
+        userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
                 userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
 
     }
