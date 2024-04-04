@@ -32,10 +32,11 @@ public class CustomUserDetailService implements UserDetailsService {
         log.info("사용자가 있음");
         log.info(userDo.toString());
 
-        UserDto userDto = new UserDto();
-        userDto.setUserID(userDo.getUserID());
-        userDto.setEmail(userDo.getEmail());
-        userDto.setPassword(userDo.getPassword());
+        UserDto userDto = UserDto.builder()
+                .userID(userDo.getUserID())
+                .email(userDo.getEmail()).build();
+
+        userDto.changePassword(userDo.getPassword());
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userDto);
 

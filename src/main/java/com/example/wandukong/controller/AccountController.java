@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
-import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.security.jwt.JwtToken;
@@ -34,8 +32,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @Tag(name = "계정", description = "계정 API")
@@ -130,8 +126,7 @@ public class AccountController {
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
             throws IOException, UserNotFoundException {
-        if (customUserDetails != null) {
-            userDto.setUserID(customUserDetails.getUserDto().getUserID());
+        if (customUserDetails != null && customUserDetails.getUserDto().getUserID() != userDto.getUserID()) {
 
             accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);

@@ -3,6 +3,7 @@ package com.example.wandukong.service;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -62,16 +63,20 @@ public class AccountServiceImpl implements AccountService {
 
         // Check for duplicate username before saving
         if (accountRepository.findByEmail(userDto.getEmail()) == null) {
-            userDto.setPassword(encodedPw);
-            UserDo user = userDto.toEntity();
-            user = accountRepository.save(user);
+            UserDo userDo = UserDo.builder()
+                    .email(userDto.getEmail())
+                    .password(encodedPw)
+                    .nickname(userDto.getNickname())
+                    .build();
 
-            log.info("회원가입된 회원 아이디" + user.getUserID());
+            userDo = accountRepository.save(userDo);
+
+            log.info("회원가입된 회원 아이디" + userDo.getUserID());
 
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHome miniHome = MiniHome.builder()
-                    .userDo(user)
-                    .introduction(userDto.getNickname() + "의 미니홈입니다.")
+                    .userDo(userDo)
+                    .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
@@ -116,7 +121,7 @@ public class AccountServiceImpl implements AccountService {
             userDto.setProfileImage(filePath + filename);
         }
 
-        userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
+        userDo.updateProfile(userDto.getEmail(), userDto.getNickname(), userDto.getProfileImage(),
                 userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
 
     }
@@ -125,12 +130,8 @@ public class AccountServiceImpl implements AccountService {
     public UserDto getMyInfo(String username) {
 
         UserDo userDo = accountRepository.findByEmail(username);
-        UserDto userDto = new UserDto();
-        userDto.setUserID(userDo.getUserID());
-        userDto.setEmail(userDo.getEmail());
-        userDto.setProfileImage(userDo.getProfileImage());
 
-        String objectKey = userDto.getProfileImage();
+        String objectKey = userDo.getProfileImage();
 
         // KMS 암호화 파일 주소 만들때 쓰는 코드
 
@@ -141,7 +142,13 @@ public class AccountServiceImpl implements AccountService {
         // .withExpiration(expiration);
 
         // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-        userDto.setProfileImage(amazonS3.getUrl(bucketName, objectKey).toString());
+
+        UserDto userDto = UserDto.builder()
+                .userID(userDo.getUserID())
+                .email(userDo.getEmail())
+                .profileImage(amazonS3.getUrl(bucketName, objectKey).toString())
+                .build();
+
         return userDto;
     }
 
@@ -150,10 +157,11 @@ public class AccountServiceImpl implements AccountService {
 
         UserDo userDo = accountRepository.findById(userID)
                 .orElseThrow(() -> new UserNotFoundException());
-        UserDto userDto = new UserDto();
+        UserDto userDto = UserDto.builder()
+                .userID(userDo.getUserID())
+                .nickname(userDo.getNickname())
+                .build();
 
-        userDto.setUserID(userDo.getUserID());
-        userDto.setNickname(userDo.getNickname());
         return userDto;
     }
 

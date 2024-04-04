@@ -2,16 +2,10 @@ package com.example.wandukong.dto;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
-import com.example.wandukong.domain.UserDo;
-
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-@Component
 public class UserDto {
 
     private Long userID;
@@ -26,18 +20,27 @@ public class UserDto {
     private Date birthday;
     private int role;
 
-    /* DTO -> Entity */
-    public UserDo toEntity() {
-        UserDo user = UserDo.builder()
-                .email(email)
-                .password(password)
-                .nickname(nickname)
-                .profileImage(profileImage)
-                .name(name)
-                .birthday(birthday)
-                .phone(phone)
-                .gender(gender)
-                .build();
-        return user;
+    @Builder
+    public UserDto(Long userID, String email, String profileImage, String nickname, String name, String phone,
+            String gender, Date signupDay, Date birthday, int role) {
+        this.userID = userID;
+        this.email = email;
+        this.profileImage = profileImage;
+        this.nickname = nickname;
+        this.name = name;
+        this.phone = phone;
+        this.gender = gender;
+        this.signupDay = signupDay;
+        this.birthday = birthday;
+        this.role = role;
     }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
 }

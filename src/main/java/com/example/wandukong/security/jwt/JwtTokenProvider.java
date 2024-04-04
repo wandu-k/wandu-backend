@@ -70,9 +70,10 @@ public class JwtTokenProvider {
             return null;
         }
 
-        UserDto userDto = new UserDto();
-        userDto.setEmail(email);
-        userDto.setUserID(userID);
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .userID(userID)
+                .build();
 
         // GrantedAuthority 객체로 변환
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
