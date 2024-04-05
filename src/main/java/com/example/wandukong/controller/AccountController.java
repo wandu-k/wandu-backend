@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -58,16 +57,17 @@ public class AccountController {
 
     // 회원가입
 
-    @Operation(summary = "회원가입", description = "회원가입을 합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입이 완료되었습니다!"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
-    })
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDto userDto) throws UserAlreadyExistsException {
-        accountService.register(userDto);
-        return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
-    }
+    // @Operation(summary = "회원가입", description = "회원가입을 합니다.")
+    // @ApiResponses(value = {
+    // @ApiResponse(responseCode = "200", description = "회원가입이 완료되었습니다!"),
+    // @ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+    // })
+    // @PostMapping("/register")
+    // public ResponseEntity<?> register(@RequestBody UserDto userDto) throws
+    // UserAlreadyExistsException {
+    // accountService.register(userDto);
+    // return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
+    // }
 
     @SecurityRequirement(name = "Bearer Authentication")
     // 내 정보 조회
@@ -115,10 +115,10 @@ public class AccountController {
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
-    @Operation(summary = "프로필 업데이트", description = "인증된 사용자의 프로필을 업데이트합니다.")
+    @Operation(summary = "계정 추가 / 수정", description = "계정을 추가하거나 수정을 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "프로필 업데이트가 완료 되었습니다."),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정이 완료되었습니다."),
+            @ApiResponse(responseCode = "201", description = "회원가입이 완료되었습니다!"),
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
@@ -127,13 +127,13 @@ public class AccountController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
-            throws IOException, UserNotFoundException {
-        if (customUserDetails != null && customUserDetails.getUserDto().getUserID() != userDto.getUserID()) {
-
+            throws IOException, UserNotFoundException, UserAlreadyExistsException {
+        if (customUserDetails != null) {
             accountService.updateProfile(profileImage, userDto);
-            return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
         }
-        return new ResponseEntity<>("인증되지 않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
+        accountService.register(userDto);
+        return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.CREATED);
     }
 
     @Operation(summary = "비밀번호 변경", description = "인증된 이용자의 비밀번호를 변경합니다.")
