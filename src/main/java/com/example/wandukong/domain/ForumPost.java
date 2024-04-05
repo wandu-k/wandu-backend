@@ -41,5 +41,20 @@ public class ForumPost {
 
     private int state;
 
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void changeWriteDate(LocalDate writeDate) {
+        this.writeDate = writeDate;
+    }
+
+    public void changeState(int state) {
+        this.state = state;
+    }
     
 }
