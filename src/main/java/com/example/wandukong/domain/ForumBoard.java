@@ -31,4 +31,9 @@ public class ForumBoard {
 
     @OneToMany(mappedBy = "forumBoard")
     private List<ForumPost> boards;
+
+    public void changeBoardName(String boardName) {
+        this.boardName = boardName;
+    }
+    
 }
