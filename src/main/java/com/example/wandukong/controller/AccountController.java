@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.security.jwt.JwtToken;
@@ -130,6 +132,26 @@ public class AccountController {
 
             accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("프로필 업데이트가 완료 되었습니다.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("인증되지 않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
+    }
+
+    @Operation(summary = "비밀번호 변경", description = "인증된 이용자의 비밀번호를 변경합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경이 완료되었습니다."),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
+            @ApiResponse(responseCode = "422", description = "비밀번호가 일치 하지 않습니다.")
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PatchMapping
+    public ResponseEntity<?> updatePassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam String currentPassword, @RequestParam String newPassword)
+            throws UserNotFoundException, IncorrectPasswordException {
+        if (customUserDetails != null) {
+            Long userID = customUserDetails.getUserDto().getUserID();
+
+            accountService.updatePassword(userID, currentPassword, newPassword);
+            return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);
         }
         return new ResponseEntity<>("인증되지 않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
     }

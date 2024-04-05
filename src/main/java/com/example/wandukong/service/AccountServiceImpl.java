@@ -1,6 +1,8 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -19,7 +21,7 @@ import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import com.example.wandukong.dto.UserDto;
-import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
@@ -175,6 +177,19 @@ public class AccountServiceImpl implements AccountService {
         JwtToken token = jwtTokenProvider.createToken(authentication);
 
         return token;
+    }
+
+    @Transactional
+    @Override
+    public void updatePassword(Long userID, String currentPassword, String newPassword)
+            throws UserNotFoundException, IncorrectPasswordException {
+        UserDo userDo = accountRepository.findById(userID).orElseThrow(() -> new UserNotFoundException());
+
+        if (!passwordEncoder.matches(currentPassword, userDo.getPassword())) {
+            throw new IncorrectPasswordException();
+        }
+        String encodedPw = passwordEncoder.encode(newPassword);
+        userDo.changePassword(encodedPw);
     }
 
     // 필요없는 부분

@@ -92,4 +92,8 @@ public class UserDo {
         this.gender = gender;
     }
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
 }
