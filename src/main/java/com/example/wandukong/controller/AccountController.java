@@ -132,7 +132,7 @@ public class AccountController {
             accountService.updateProfile(profileImage, userDto);
             return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
         }
-        accountService.register(userDto);
+        accountService.register(profileImage, userDto);
         return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.CREATED);
     }
 

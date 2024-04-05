@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
     // 회원가입
     @Transactional
     @Override
-    public void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException {
+    public void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException, IOException {
         String encodedPw = passwordEncoder.encode(userDto.getPassword());
 
         // Check for duplicate username before saving
@@ -68,6 +68,12 @@ public class AccountServiceImpl implements AccountService {
                     .nickname(userDto.getNickname())
                     .build();
 
+            if (profileImage != null) {
+
+                String profileImagePath = profileUpload(profileImage, userDto);
+
+                userDto.setProfileImage(profileImagePath);
+            }
             userDo = accountRepository.save(userDo);
 
             log.info("회원가입된 회원 아이디" + userDo.getUserID());

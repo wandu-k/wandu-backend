@@ -10,11 +10,11 @@ import com.example.wandukong.security.jwt.JwtToken;
 
 public interface AccountService {
 
-    void register(UserDto userDto) throws UserAlreadyExistsException;
+    void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException, IOException;
 
     void deleteAccount(Long userID);
 
-    void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException;
+    void updateProfile(MultipartFile profileImage, UserDto userDto) throws UserNotFoundException, IOException;
 
     UserDto getMyInfo(String username);
 
