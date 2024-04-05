@@ -34,9 +34,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
         UserDto userDto = UserDto.builder()
                 .userID(userDo.getUserID())
-                .email(userDo.getEmail()).build();
-
-        userDto.changePassword(userDo.getPassword());
+                .email(userDo.getEmail())
+                .password(userDo.getPassword())
+                .build();
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userDto);
 
