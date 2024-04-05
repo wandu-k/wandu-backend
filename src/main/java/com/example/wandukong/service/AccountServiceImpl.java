@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
     // 회원가입
     @Transactional
     @Override
-    public void register(UserDto userDto) throws UserAlreadyExistsException {
+    public void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException {
         String encodedPw = passwordEncoder.encode(userDto.getPassword());
 
         // Check for duplicate username before saving
@@ -102,27 +102,36 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(profileImage.getContentType());
 
-            String filePath = "users/" + userDto.getUserID() + "/profile/";
+            String profileImagePath = profileUpload(profileImage, userDto);
 
-            String extension = profileImage.getOriginalFilename()
-                    .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
-
-            String filename = "profile" + "_" + userDto.getUserID() + extension;
-
-            amazonS3
-                    .putObject(new PutObjectRequest(bucketName, filePath + filename,
-                            profileImage.getInputStream(), objectMetadata)
-                            .withCannedAcl(CannedAccessControlList.PublicRead));
-
-            userDto.setProfileImage(filePath + filename);
+            userDto.setProfileImage(profileImagePath);
         }
 
         userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
                 userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
 
+    }
+
+    // 프로필 이미지 업로드
+    private String profileUpload(MultipartFile profileImage, UserDto userDto) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(profileImage.getContentType());
+
+        String filePath = "users/" + userDto.getUserID() + "/profile/";
+
+        String extension = profileImage.getOriginalFilename()
+                .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
+
+        String filename = "profile" + "_" + userDto.getUserID() + extension;
+
+        String profileImagePath = filePath + filename;
+
+        amazonS3
+                .putObject(new PutObjectRequest(bucketName, profileImagePath,
+                        profileImage.getInputStream(), objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+        return profileImagePath;
     }
 
     @Override
