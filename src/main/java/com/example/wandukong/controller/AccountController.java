@@ -43,12 +43,12 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @Operation(summary = "JWT 인증", description = "이용자를 JWT로 인증합니다.")
+    @Operation(summary = "액세스 토큰 요청", description = "토큰 발급 요청")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JWT 생성 성공"),
             @ApiResponse(responseCode = "401", description = "회원 인증 실패")
     })
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         JwtToken token = accountService.login(username, password);
         return ResponseEntity.ok(token);
@@ -76,7 +76,7 @@ public class AccountController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
-    @GetMapping("/myinfo")
+    @GetMapping
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         if (customUserDetails != null) {
