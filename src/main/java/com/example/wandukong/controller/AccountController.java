@@ -87,16 +87,17 @@ public class AccountController {
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
-    // 다른 사람 정보 조회
-    @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
-    @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
-    @GetMapping("{userID}")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long userID) throws UserNotFoundException {
+    // // 다른 사람 정보 조회
+    // @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
+    // @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
+    // @GetMapping("{userID}")
+    // public ResponseEntity<?> getUserInfo(@PathVariable Long userID) throws
+    // UserNotFoundException {
 
-        UserDto userDto = accountService.getUserInfo(userID);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    // UserDto userDto = accountService.getUserInfo(userID);
+    // return new ResponseEntity<>(userDto, HttpStatus.OK);
 
-    }
+    // }
 
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")
     @ApiResponses(value = {
