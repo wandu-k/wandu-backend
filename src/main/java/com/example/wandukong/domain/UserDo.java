@@ -31,6 +31,9 @@ public class UserDo {
     @Column(name = "userID", unique = true)
     private Long userID;
 
+    @Column(name = "hpID")
+    private Long hpID;
+
     @Column(name = "email")
     private String email;
 
@@ -94,6 +97,10 @@ public class UserDo {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void sethpID(Long hpID) {
+        this.hpID = hpID;
     }
 
 }

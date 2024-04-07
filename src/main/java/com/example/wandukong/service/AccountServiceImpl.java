@@ -86,7 +86,10 @@ public class AccountServiceImpl implements AccountService {
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
 
-            miniHpRepository.save(miniHome);
+            miniHome = miniHpRepository.save(miniHome);
+            // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
+            userDo.sethpID(miniHome.getHpID());
+
         } else {
             throw new UserAlreadyExistsException();
         }
