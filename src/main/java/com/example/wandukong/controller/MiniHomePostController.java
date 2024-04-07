@@ -51,11 +51,13 @@ public class MiniHomePostController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
-    public ResponseEntity<?> putPost(@RequestBody MiniHomePostDto miniHomePostDto) {
+    public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException {
+        if (customUserDetails != null) {
+            ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
 
-        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
-
-        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+            return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+        }
+        throw new PermissionDeniedException();
     }
-
 }
