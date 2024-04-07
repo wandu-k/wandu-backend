@@ -2,6 +2,8 @@ package com.example.wandukong.domain.MiniHome;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class MiniHomePost {
     @Column(name = "content")
     private String content;
 
+    @CreationTimestamp
     @Column(name = "writeDay")
     private Date writeDay;
 
