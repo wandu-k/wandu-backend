@@ -50,4 +50,11 @@ public class MiniHomePost {
         this.writeDay = writeDay;
     }
 
+    // 필드 업데이트 메서드
+    public void updatePost(Long boardID, String title, String content) {
+        this.boardID = boardID;
+        this.title = title;
+        this.content = content;
+    }
+
 }

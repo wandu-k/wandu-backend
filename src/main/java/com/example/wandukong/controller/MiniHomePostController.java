@@ -13,9 +13,12 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
+import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.service.MiniHomePostService;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RequestMapping("/api/minihome/post")
 @RestController
@@ -39,6 +42,13 @@ public class MiniHomePostController {
         miniHomePostService.deletePost(userID, postID);
         return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
 
+    }
+
+    @PutMapping
+    public ResponseEntity<?> putPost(@RequestBody MiniHomePostDto miniHomePostDto) {
+        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
+
+        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 
 }
