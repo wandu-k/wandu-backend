@@ -54,8 +54,10 @@ public class MiniHomePostController {
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserID();
-            ApiResponse apiResponse = miniHomePostService.putPost(userID, miniHomePostDto);
+            miniHomePostDto = MiniHomePostDto.builder()
+                    .userID(customUserDetails.getUserDto().getUserID())
+                    .build();
+            ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
 
             return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
         }
