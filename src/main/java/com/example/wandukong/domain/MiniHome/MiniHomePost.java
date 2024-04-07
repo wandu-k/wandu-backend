@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
 @Entity
 @Table(name = "MiniHomePost")
@@ -38,5 +37,17 @@ public class MiniHomePost {
 
     @Column(name = "writeDay")
     private Date writeDay;
+
+    @Builder
+    public MiniHomePost(Long postID, Long boardID, Long userID, Long hpID, String title, String content,
+            Date writeDay) {
+        this.postID = postID;
+        this.boardID = boardID;
+        this.userID = userID;
+        this.hpID = hpID;
+        this.title = title;
+        this.content = content;
+        this.writeDay = writeDay;
+    }
 
 }

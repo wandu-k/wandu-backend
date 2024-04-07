@@ -27,6 +27,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException e) {
+        String message = "비밀번호가 일치 하지 않습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> handleHomeNotFoundException(HomeNotFoundException e) {
         String message = "해당하는 미니홈이 없습니다.";
         log.info(message);
@@ -34,8 +41,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleIncorrectPasswordException(IncorrectPasswordException e) {
-        String message = "비밀번호가 일치 하지 않습니다.";
+    public ResponseEntity<?> handlePostNotFoundException(PostNotFoundException e) {
+        String message = "게시글을 찾을 수 없습니다.";
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
     }
