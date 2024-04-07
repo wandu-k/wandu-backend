@@ -56,6 +56,7 @@ public class MiniHomePostController {
         if (customUserDetails != null) {
             miniHomePostDto = MiniHomePostDto.builder()
                     .userID(customUserDetails.getUserDto().getUserID())
+                    .hpID(customUserDetails.getUserDto().getHpID())
                     .build();
             ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
 
