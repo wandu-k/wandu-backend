@@ -25,8 +25,8 @@ public class MiniHomeController {
     @Autowired
     MiniHomeService miniHomeService;
 
-    @GetMapping("/{hpID}")
-    public ResponseEntity<?> getMiniHome(@PathVariable Long hpID) throws HomeNotFoundException {
+    @GetMapping
+    public ResponseEntity<?> getMiniHome(@RequestParam Long hpID) throws HomeNotFoundException {
 
         MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(hpID);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
