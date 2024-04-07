@@ -31,4 +31,10 @@ public class CustomException extends Exception {
         }
     }
 
+    public static class PermissionDeniedException extends Exception {
+        public PermissionDeniedException() {
+            // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
+        }
+    }
+
 }

@@ -46,4 +46,11 @@ public class GlobalExceptionHandler {
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handlePermissionDeniedException(PermissionDeniedException e) {
+        String message = "권한이 없습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }
