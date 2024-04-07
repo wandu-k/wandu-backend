@@ -16,6 +16,8 @@ import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.service.MiniHomePostService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,17 +37,22 @@ public class MiniHomePostController {
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postID)
             throws PostNotFoundException, PermissionDeniedException {
-        Long userID = customUserDetails.getUserDto().getUserID();
-        miniHomePostService.deletePost(userID, postID);
-        return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
-
+        if (customUserDetails != null) {
+            Long userID = customUserDetails.getUserDto().getUserID();
+            miniHomePostService.deletePost(userID, postID);
+            return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
+        }
+        throw new PermissionDeniedException();
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@RequestBody MiniHomePostDto miniHomePostDto) {
+
         ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
