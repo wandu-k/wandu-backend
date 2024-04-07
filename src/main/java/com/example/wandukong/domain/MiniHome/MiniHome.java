@@ -47,4 +47,9 @@ public class MiniHome {
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userDo;
 
+    public void viewCount(int allVisit, int hpToday) {
+        this.hpToday = hpToday;
+        this.allVisit = allVisit;
+    }
+
 }

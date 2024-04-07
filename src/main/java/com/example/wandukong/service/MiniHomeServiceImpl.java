@@ -13,6 +13,8 @@ import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.repository.MiniHomeBoardRepository;
 import com.example.wandukong.repository.MiniHomeRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class MiniHomeServiceImpl implements MiniHomeService {
 
@@ -22,19 +24,22 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     @Autowired
     MiniHomeBoardRepository miniHomeBoardRepository;
 
+    @Transactional
     @Override
     public MiniHomeDto getMiniHome(Long hpID) throws HomeNotFoundException {
 
         MiniHome miniHome = miniHomeRepository.findById(hpID)
                 .orElseThrow(() -> new HomeNotFoundException());
 
+        miniHome.viewCount(miniHome.getHpToday() + 1, miniHome.getAllVisit() + 1);
+
         MiniHomeDto miniHomeDto = MiniHomeDto.builder()
                 .userID(miniHome.getUserDo().getUserID())
                 .hpID(miniHome.getHpID())
                 .statusM(miniHome.getStatusM())
                 .introduction(miniHome.getIntroduction())
-                .hpToday(miniHome.getHpToday() + 1)
-                .allVisit(miniHome.getAllVisit() + 1)
+                .hpToday(miniHome.getHpToday())
+                .allVisit(miniHome.getAllVisit())
                 .build();
 
         return miniHomeDto;
