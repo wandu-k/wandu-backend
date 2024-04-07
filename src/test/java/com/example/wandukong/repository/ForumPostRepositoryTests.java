@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.example.wandukong.domain.ForumPost;
 
@@ -27,14 +30,17 @@ public class ForumPostRepositoryTests {
   @Test
   public void testInsert() {
     
-    ForumPost forumPost = ForumPost.builder()
-      .title("Board")
-      .content("Board content")
-      .writeDate(LocalDate.of(2024, 04, 06))
-      .state(1)
-      .build();
+    for (int i = 0; i < 20; i++) {
+      ForumPost forumPost = ForumPost.builder()
+        .title("Board" + i)
+        .content("Board content" + i)
+        .writeDate(LocalDate.of(2024, 04, 06))
+        .state(1)
+        .build();
 
-    forumPostRepository.save(forumPost);
+      forumPostRepository.save(forumPost);
+    }
+    
   }
 
   @Test
@@ -70,5 +76,13 @@ public class ForumPostRepositoryTests {
     Long postID = 1L;
 
     forumPostRepository.deleteById(postID);
+  }
+
+  @Test
+  public void testPaging() {
+
+    Pageable pageable = PageRequest.of(0, 10, Sort.by("postID").descending());
+
+    forumPostRepository.findAll(pageable);
   }
 }
