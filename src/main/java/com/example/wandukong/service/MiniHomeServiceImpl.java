@@ -33,6 +33,8 @@ public class MiniHomeServiceImpl implements MiniHomeService {
                 .hpID(miniHome.getHpID())
                 .statusM(miniHome.getStatusM())
                 .introduction(miniHome.getIntroduction())
+                .hpToday(miniHome.getHpToday() + 1)
+                .allVisit(miniHome.getAllVisit() + 1)
                 .build();
 
         return miniHomeDto;
