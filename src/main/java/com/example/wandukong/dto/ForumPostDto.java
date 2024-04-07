@@ -1,6 +1,6 @@
 package com.example.wandukong.dto;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
