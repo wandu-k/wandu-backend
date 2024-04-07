@@ -9,6 +9,7 @@ import lombok.Getter;
 public class UserDto {
 
     private Long userID;
+    private Long hpID;
     private String email;
     private String password;
     private String profileImage;
@@ -21,10 +22,12 @@ public class UserDto {
     private int role;
 
     @Builder
-    public UserDto(Long userID, String email, String password, String profileImage, String nickname, String name,
+    public UserDto(Long userID, Long hpID, String email, String password, String profileImage, String nickname,
+            String name,
             String phone,
             String gender, Date signupDay, Date birthday, int role) {
         this.userID = userID;
+        this.hpID = hpID;
         this.email = email;
         this.password = password;
         this.profileImage = profileImage;

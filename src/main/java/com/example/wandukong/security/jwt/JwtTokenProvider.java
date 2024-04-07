@@ -43,6 +43,7 @@ public class JwtTokenProvider {
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .claim("userid", customUserDetails.getUserDto().getUserID())
+                .claim("hpID", customUserDetails.getUserDto().getHpID())
                 .claim("email", customUserDetails.getUserDto().getEmail())
                 .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
