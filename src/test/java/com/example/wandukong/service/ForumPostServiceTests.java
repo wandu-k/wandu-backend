@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.example.wandukong.dto.ForumPostDto;
+import com.example.wandukong.dto.PageRequestDto;
 
 @SpringBootTest
 public class ForumPostServiceTests {
@@ -60,6 +61,13 @@ public class ForumPostServiceTests {
     // remove 메서드 호출
     forumPostService.remove(postID);
 
+  }
+
+  @Test
+  public void testGetList() {
+    PageRequestDto pageRequestDto = PageRequestDto.builder().page(2).build();
+
+    forumPostService.getList(pageRequestDto);
   }
 
 
