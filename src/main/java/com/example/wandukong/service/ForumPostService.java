@@ -2,6 +2,8 @@ package com.example.wandukong.service;
 
 import com.example.wandukong.domain.ForumPost;
 import com.example.wandukong.dto.ForumPostDto;
+import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.PageResponseDto;
 
 import jakarta.transaction.Transactional;
 
@@ -15,6 +17,8 @@ public interface ForumPostService {
   void modify(ForumPostDto forumPostDto);
 
   void remove(Long postID);
+
+  PageResponseDto<ForumPostDto> getList(PageRequestDto pageRequestDto);
 
   default ForumPostDto entityToDto(ForumPost forumPost) {
 

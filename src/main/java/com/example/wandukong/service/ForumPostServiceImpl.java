@@ -1,11 +1,16 @@
 package com.example.wandukong.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.example.wandukong.domain.ForumPost;
 import com.example.wandukong.dto.ForumPostDto;
+import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.repository.ForumPostRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +57,25 @@ public class ForumPostServiceImpl implements ForumPostService{
   public void remove(Long postID) {
     
     forumPostRepository.deleteById(postID);
+  }
+
+  @Override
+  public PageResponseDto<ForumPostDto> getList(PageRequestDto pageRequestDto) {
+
+    // JPA
+    Page<ForumPost> result = forumPostRepository.search(pageRequestDto);
+
+    List<ForumPostDto> dtoList = result.get()
+                                  .map(ForumPost -> entityToDto(ForumPost)).collect(Collectors.toList());
+
+    PageResponseDto<ForumPostDto> responseDto =
+            PageResponseDto.<ForumPostDto>withAll()
+                    .dtoList(dtoList)
+                    .pageRequestDto(pageRequestDto)
+                    .total(result.getTotalElements())
+                    .build();
+
+    return responseDto;
   }
 
 }
