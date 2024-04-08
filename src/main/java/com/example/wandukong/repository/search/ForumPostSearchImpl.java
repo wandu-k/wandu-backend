@@ -1,6 +1,9 @@
 package com.example.wandukong.repository.search;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -8,6 +11,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import com.example.wandukong.domain.ForumPost;
 import com.example.wandukong.domain.QForumPost;
+import com.example.wandukong.dto.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 
 public class ForumPostSearchImpl extends QuerydslRepositorySupport implements ForumPostSearch{
@@ -17,23 +21,21 @@ public class ForumPostSearchImpl extends QuerydslRepositorySupport implements Fo
   }
 
   @Override
-  public Page<ForumPost> search() {
+  public Page<ForumPost> search(PageRequestDto pageRequestDto) {
     
     QForumPost forumPost = QForumPost.forumPost;
 
     JPQLQuery<ForumPost> query = from(forumPost);
 
-    query.where(forumPost.title.contains("1"));
-
-    Pageable pageable = PageRequest.of(1, 10, Sort.by("postID").descending());
+    Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(), Sort.by("postID").descending());
 
     this.getQuerydsl().applyPagination(pageable, query);
 
-    query.fetch();
+    List<ForumPost> list = query.fetch();
 
-    query.fetchCount();
+    long total = query.fetchCount();
 
-    return null;
+    return new PageImpl<>(list, pageable, total);
   }
   
 }
