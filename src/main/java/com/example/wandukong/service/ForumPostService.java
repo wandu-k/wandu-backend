@@ -10,6 +10,12 @@ public interface ForumPostService {
 
   ForumPostDto get(Long postID);
 
+  Long register(ForumPostDto forumPostDto);
+
+  void modify(ForumPostDto forumPostDto);
+
+  void remove(Long postID);
+
   default ForumPostDto entityToDto(ForumPost forumPost) {
 
     return ForumPostDto.builder()

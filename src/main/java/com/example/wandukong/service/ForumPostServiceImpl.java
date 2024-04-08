@@ -26,4 +26,32 @@ public class ForumPostServiceImpl implements ForumPostService{
     return entityToDto(forumPost);
   }
 
+  @Override
+  public Long register(ForumPostDto forumPostDto) {
+    ForumPost forumPost = dtoToEntity(forumPostDto);
+
+    ForumPost result = forumPostRepository.save(forumPost);
+
+    return result.getPostID();
+  }
+
+  @Override
+  public void modify(ForumPostDto forumPostDto) {
+    Optional<ForumPost> result = forumPostRepository.findById(forumPostDto.getPostID());
+
+    ForumPost forumPost = result.orElseThrow();
+
+    forumPost.changeTitle(forumPostDto.getTitle());
+    forumPost.changeContent(forumPostDto.getContent());
+    forumPost.changeState(forumPostDto.getState());
+
+    forumPostRepository.save(forumPost);
+  }
+
+  @Override
+  public void remove(Long postID) {
+    
+    forumPostRepository.deleteById(postID);
+  }
+
 }
