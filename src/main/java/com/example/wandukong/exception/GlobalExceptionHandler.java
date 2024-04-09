@@ -2,6 +2,7 @@ package com.example.wandukong.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.example.wandukong.exception.CustomException.*;
@@ -52,5 +53,21 @@ public class GlobalExceptionHandler {
         String message = "권한이 없습니다.";
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleNoSuchElementException(NoSuchElementException e) {
+
+        String message = "해당하는 게시물이 없습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
+        String message = "해당하는 페이지가 없습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
     }
 }
