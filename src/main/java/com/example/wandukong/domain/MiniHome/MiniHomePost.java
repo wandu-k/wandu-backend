@@ -5,7 +5,6 @@ import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.domain.UserDo.UserDoBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,8 +37,9 @@ public class MiniHomePost {
     @JoinColumn(name = "userID")
     private UserDo userDo;
 
-    @Column(name = "hpID")
-    private Long hpID;
+    @ManyToOne
+    @JoinColumn(name = "hpID")
+    private MiniHome miniHome;
 
     @Column(name = "title")
     private String title;
@@ -52,13 +52,14 @@ public class MiniHomePost {
     private Date writeDay;
 
     @Builder
-    public MiniHomePost(Long postID, MiniHomeBoard miniHomeBoard, UserDo userDo, Long hpID, String title,
+    public MiniHomePost(Long postID, MiniHomeBoard miniHomeBoard, UserDo userDo, MiniHome miniHome,
+            String title,
             String content,
             Date writeDay) {
         this.postID = postID;
         this.miniHomeBoard = miniHomeBoard;
         this.userDo = userDo;
-        this.hpID = hpID;
+        this.miniHome = miniHome;
         this.title = title;
         this.content = content;
         this.writeDay = writeDay;

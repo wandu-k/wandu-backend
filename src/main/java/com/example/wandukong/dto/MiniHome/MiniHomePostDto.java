@@ -27,4 +27,8 @@ public class MiniHomePostDto {
         this.writeDay = writeDay;
     }
 
+    public MiniHomePostDto() {
+        // TODO Auto-generated constructor stub
+    }
+
 }

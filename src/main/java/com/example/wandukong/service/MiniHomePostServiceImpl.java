@@ -1,15 +1,15 @@
 package com.example.wandukong.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.dto.PageRequestDto;
@@ -46,7 +46,7 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                                 .postID(minihomePost.getPostID())
                                 .boardID(minihomePost.getMiniHomeBoard().getBoardID())
                                 .userID(minihomePost.getUserDo().getUserID())
-                                .hpID(minihomePost.getHpID())
+                                .hpID(minihomePost.getMiniHome().getHpID())
                                 .title(minihomePost.getTitle())
                                 .content(minihomePost.getContent())
                                 .writeDay(minihomePost.getWriteDay()).build();
@@ -89,7 +89,7 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                         log.info("게시글이 없습니다. 게시글 등록을 시작합니다.");
                         MiniHomePost newPost = MiniHomePost.builder()
                                         .userDo(UserDo.builder().userID(miniHomePostDto.getUserID()).build())
-                                        .hpID(miniHomePostDto.getHpID())
+                                        .miniHome(MiniHome.builder().hpID(miniHomePostDto.getHpID()).build())
                                         .miniHomeBoard(miniHomeBoard)
                                         .title(miniHomePostDto.getTitle())
                                         .content(miniHomePostDto.getContent())
@@ -108,6 +108,25 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         public List<MiniHomePostDto> getPostList(PageRequestDto pageRequestDto) {
 
                 Page<MiniHomePost> result = miniHomePostRepository.search(pageRequestDto);
-                throw new UnsupportedOperationException("Unimplemented method 'getPostList'");
+
+                // 페이지 결과에서 포스트 목록 추출
+                List<MiniHomePost> posts = result.getContent();
+
+                // 포스트 목록을 MiniHomePostDto로 변환
+                List<MiniHomePostDto> postDtos = new ArrayList<>();
+                for (MiniHomePost post : posts) {
+                        MiniHomePostDto postDto = new MiniHomePostDto();
+                        postDto = MiniHomePostDto.builder()
+                                        .postID(post.getPostID())
+                                        .boardID(post.getMiniHomeBoard().getBoardID())
+                                        .userID(post.getUserDo().getUserID())
+                                        .hpID(post.getMiniHome().getHpID())
+                                        .title(post.getTitle())
+                                        .content(post.getContent())
+                                        .writeDay(post.getWriteDay())
+                                        .build();
+                        postDtos.add(postDto);
+                }
+                return postDtos;
         }
 }

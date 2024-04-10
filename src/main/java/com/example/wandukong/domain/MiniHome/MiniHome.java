@@ -1,24 +1,27 @@
 package com.example.wandukong.domain.MiniHome;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.wandukong.domain.UserDo;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "MiniHome")
 public class MiniHome {
@@ -46,6 +49,22 @@ public class MiniHome {
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userDo;
+
+    @OneToMany(mappedBy = "miniHome", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MiniHomePost> miniHomePost = new ArrayList<>();
+
+    @Builder
+    public MiniHome(Long hpID, String statusM, String introduction, int hpToday, int allVisit, int hpOpen,
+            UserDo userDo, List<MiniHomePost> miniHomePost) {
+        this.hpID = hpID;
+        this.statusM = statusM;
+        this.introduction = introduction;
+        this.hpToday = hpToday;
+        this.allVisit = allVisit;
+        this.hpOpen = hpOpen;
+        this.userDo = userDo;
+        this.miniHomePost = miniHomePost;
+    }
 
     public void viewCount(int allVisit, int hpToday) {
         this.hpToday = hpToday;
