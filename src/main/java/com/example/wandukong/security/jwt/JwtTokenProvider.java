@@ -62,7 +62,9 @@ public class JwtTokenProvider {
 
         String email = parsedToken.getPayload().get("email").toString();
         String strUserID = parsedToken.getPayload().get("userid").toString();
+        String strHpID = parsedToken.getPayload().get("hpID").toString();
         Long userID = Long.valueOf(strUserID);
+        Long hpID = Long.valueOf(strHpID);
         String role = parsedToken.getPayload().get("rol").toString();
 
         log.info("토큰 데이터 추출 완료");
@@ -74,6 +76,7 @@ public class JwtTokenProvider {
         UserDto userDto = UserDto.builder()
                 .email(email)
                 .userID(userID)
+                .hpID(hpID)
                 .build();
 
         // GrantedAuthority 객체로 변환
