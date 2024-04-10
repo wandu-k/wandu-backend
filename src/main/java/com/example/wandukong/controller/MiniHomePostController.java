@@ -20,13 +20,16 @@ import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.service.MiniHomePostService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Tag(name = "미니홈 게시글", description = "미니홈 게시글 API")
 @RequestMapping("/api/minihome/post")
 @RestController
 public class MiniHomePostController {
@@ -34,6 +37,7 @@ public class MiniHomePostController {
     @Autowired
     MiniHomePostService miniHomePostService;
 
+    @Operation(summary = "미니홈 게시글 번호로 내용 조회", description = "특정 게시글 내용 조회")
     @GetMapping
     public ResponseEntity<?> getPost(@RequestParam Long postID) throws PostNotFoundException {
 
@@ -42,6 +46,7 @@ public class MiniHomePostController {
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "미니홈 전체 게시글 리스트 조회", description = "미니홈 모든 게시글 내용 조회")
     @PostMapping
     public ResponseEntity<?> getPostList(@RequestBody PageRequestDto pageRequestDto) {
         List<MiniHomePostDto> postList = miniHomePostService.getPostList(pageRequestDto);
@@ -49,6 +54,7 @@ public class MiniHomePostController {
         return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
+    @Operation(summary = "미니홈 게시글 번호로 게시글 삭제", description = "인증된 이용자의 자기 자신의 미니홈 게시글을 삭제")
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postID)
@@ -61,6 +67,7 @@ public class MiniHomePostController {
         throw new PermissionDeniedException();
     }
 
+    @Operation(summary = "미니홈 게시글 등록 / 수정", description = "인증된 사용자의 자기자신의 특정 게시글 등록 또는 수정")
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
