@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class MiniHomePostDto {
-    private Long postID;
+    private Long postID = (long) 0;
     private Long boardID;
     private Long userID;
     private Long hpID;

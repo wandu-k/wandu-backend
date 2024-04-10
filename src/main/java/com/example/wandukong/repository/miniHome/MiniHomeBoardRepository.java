@@ -1,4 +1,4 @@
-package com.example.wandukong.repository;
+package com.example.wandukong.repository.miniHome;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

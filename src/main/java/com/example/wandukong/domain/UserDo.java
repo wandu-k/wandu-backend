@@ -1,11 +1,14 @@
 package com.example.wandukong.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
+import com.example.wandukong.domain.MiniHome.MiniHomePost;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,6 +16,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -68,6 +72,9 @@ public class UserDo {
 
     @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome miniHome;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MiniHomePost> minihomePost = new ArrayList<>();
 
     @Builder
     public UserDo(Long userID, String email, String password, String name, String nickname, String profileImage,

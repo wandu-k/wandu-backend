@@ -1,5 +1,7 @@
 package com.example.wandukong.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
+import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
@@ -21,6 +25,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RequestMapping("/api/minihome/post")
 @RestController
@@ -35,6 +40,13 @@ public class MiniHomePostController {
         MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postID);
 
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> getPostList(@RequestBody PageRequestDto pageRequestDto) {
+        List<MiniHomePostDto> postList = miniHomePostService.getPostList(pageRequestDto);
+
+        return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -52,11 +64,16 @@ public class MiniHomePostController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException {
+            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException, BoardNotFoundException {
         if (customUserDetails != null) {
+
             miniHomePostDto = MiniHomePostDto.builder()
+                    .postID(miniHomePostDto.getUserID())
                     .userID(customUserDetails.getUserDto().getUserID())
                     .hpID(customUserDetails.getUserDto().getHpID())
+                    .boardID(miniHomePostDto.getBoardID())
+                    .title(miniHomePostDto.getTitle())
+                    .content(miniHomePostDto.getContent())
                     .build();
             ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
 

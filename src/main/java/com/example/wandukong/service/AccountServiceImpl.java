@@ -22,7 +22,7 @@ import com.example.wandukong.exception.CustomException.IncorrectPasswordExceptio
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
-import com.example.wandukong.repository.MiniHomeRepository;
+import com.example.wandukong.repository.miniHome.MiniHomeRepository;
 import com.example.wandukong.security.jwt.JwtToken;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 

@@ -12,6 +12,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class PageRequestDto {
 
+  private Long boardID;
+
   @Builder.Default
   private int page = 1;
 

@@ -1,88 +1,113 @@
 package com.example.wandukong.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
+import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
+import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
-import com.example.wandukong.repository.MiniHomePostRepository;
-
+import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
+import com.example.wandukong.repository.miniHome.MiniHomePostRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class MiniHomePostServiceImpl implements MiniHomePostService {
 
-    @Autowired
-    MiniHomePostRepository miniHomePostRepository;
+        @Autowired
+        MiniHomePostRepository miniHomePostRepository;
 
-    @Autowired
-    ApiResponse apiResponse;
+        @Autowired
+        MiniHomeBoardRepository miniHomeBoardRepository;
 
-    @Override
-    public MiniHomePostDto getPost(Long postID) throws PostNotFoundException {
+        @Autowired
+        ApiResponse apiResponse;
 
-        MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
-                .orElseThrow(() -> new PostNotFoundException());
+        @Override
+        public MiniHomePostDto getPost(Long postID) throws PostNotFoundException {
 
-        MiniHomePostDto miniHomePostDto = MiniHomePostDto.builder()
-                .postID(minihomePost.getPostID())
-                .boardID(minihomePost.getBoardID())
-                .userID(minihomePost.getUserID())
-                .hpID(minihomePost.getHpID())
-                .title(minihomePost.getTitle())
-                .content(minihomePost.getContent())
-                .writeDay(minihomePost.getWriteDay()).build();
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+                                .orElseThrow(() -> new PostNotFoundException());
 
-        return miniHomePostDto;
-    }
+                MiniHomePostDto miniHomePostDto = MiniHomePostDto.builder()
+                                .postID(minihomePost.getPostID())
+                                .boardID(minihomePost.getMiniHomeBoard().getBoardID())
+                                .userID(minihomePost.getUserDo().getUserID())
+                                .hpID(minihomePost.getHpID())
+                                .title(minihomePost.getTitle())
+                                .content(minihomePost.getContent())
+                                .writeDay(minihomePost.getWriteDay()).build();
 
-    @Override
-    public void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException {
-        MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
-                .orElseThrow(() -> new PostNotFoundException());
-
-        if (minihomePost.getUserID() != userID) {
-            throw new PermissionDeniedException();
+                return miniHomePostDto;
         }
-        miniHomePostRepository.deleteById(postID);
-    }
 
-    @Transactional
-    public ApiResponse putPost(MiniHomePostDto miniHomePostDto) {
+        @Override
+        public void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException {
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+                                .orElseThrow(() -> new PostNotFoundException());
 
-        Optional<MiniHomePost> optionalMiniHomePost = miniHomePostRepository.findByPostIDAndUserID(
-                miniHomePostDto.getPostID(),
-                miniHomePostDto.getUserID());
-
-        if (optionalMiniHomePost.isPresent()) {
-            optionalMiniHomePost.get().updatePost(miniHomePostDto.getBoardID(), miniHomePostDto.getTitle(),
-                    miniHomePostDto.getContent());
-
-            return ApiResponse.builder()
-                    .message("게시글 수정이 완료되었습니다.")
-                    .status(HttpStatus.OK)
-                    .build();
-        } else {
-            MiniHomePost newPost = MiniHomePost.builder()
-                    .userID(miniHomePostDto.getUserID())
-                    .hpID(miniHomePostDto.getHpID())
-                    .boardID(miniHomePostDto.getBoardID())
-                    .title(miniHomePostDto.getTitle())
-                    .content(miniHomePostDto.getContent())
-                    .build();
-
-            miniHomePostRepository.save(newPost);
-
-            return ApiResponse.builder()
-                    .message("게시글 등록이 완료되었습니다.")
-                    .status(HttpStatus.CREATED)
-                    .build();
+                if (minihomePost.getUserDo().getUserID() != userID) {
+                        throw new PermissionDeniedException();
+                }
+                miniHomePostRepository.deleteById(postID);
         }
-    }
+
+        @Transactional
+        public ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException {
+
+                System.out.println(miniHomePostDto.getBoardID());
+                MiniHomeBoard miniHomeBoard = miniHomeBoardRepository.findById(miniHomePostDto.getBoardID())
+                                .orElseThrow(() -> new BoardNotFoundException());
+
+                Optional<MiniHomePost> optionalMiniHomePost = miniHomePostRepository.findById(
+                                miniHomePostDto.getPostID());
+
+                if (optionalMiniHomePost.isPresent()) {
+                        log.info("게시글이 이미 있습니다. 게시글 수정을 시작합니다.");
+                        optionalMiniHomePost.get()
+                                        .updatePost(miniHomeBoard, miniHomePostDto.getTitle(),
+                                                        miniHomePostDto.getContent());
+
+                        return ApiResponse.builder()
+                                        .message("게시글 수정이 완료되었습니다.")
+                                        .status(HttpStatus.OK)
+                                        .build();
+                } else {
+                        log.info("게시글이 없습니다. 게시글 등록을 시작합니다.");
+                        MiniHomePost newPost = MiniHomePost.builder()
+                                        .userDo(UserDo.builder().userID(miniHomePostDto.getUserID()).build())
+                                        .hpID(miniHomePostDto.getHpID())
+                                        .miniHomeBoard(miniHomeBoard)
+                                        .title(miniHomePostDto.getTitle())
+                                        .content(miniHomePostDto.getContent())
+                                        .build();
+
+                        miniHomePostRepository.save(newPost);
+
+                        return ApiResponse.builder()
+                                        .message("게시글 등록이 완료되었습니다.")
+                                        .status(HttpStatus.CREATED)
+                                        .build();
+                }
+        }
+
+        @Override
+        public List<MiniHomePostDto> getPostList(PageRequestDto pageRequestDto) {
+
+                Page<MiniHomePost> result = miniHomePostRepository.search(pageRequestDto);
+                throw new UnsupportedOperationException("Unimplemented method 'getPostList'");
+        }
 }
