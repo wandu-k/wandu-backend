@@ -64,6 +64,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<?> handleBoardNotFoundException(NoSuchElementException e) {
+
+        String message = "해당하는 게시판이 없습니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 
         String message = "해당하는 페이지가 없습니다.";
