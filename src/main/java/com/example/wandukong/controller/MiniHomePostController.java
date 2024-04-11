@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
@@ -49,9 +50,9 @@ public class MiniHomePostController {
     @Operation(summary = "미니홈 전체 게시글 리스트 조회", description = "미니홈 모든 게시글 내용 조회")
     @PostMapping
     public ResponseEntity<?> getPostList(@RequestBody PageRequestDto pageRequestDto) {
-        List<MiniHomePostDto> postList = miniHomePostService.getPostList(pageRequestDto);
+        PageResponseDto<MiniHomePostDto> responseDto = miniHomePostService.getPostList(pageRequestDto);
 
-        return new ResponseEntity<>(postList, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "미니홈 게시글 번호로 게시글 삭제", description = "인증된 이용자의 자기 자신의 미니홈 게시글을 삭제")

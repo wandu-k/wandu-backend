@@ -13,6 +13,7 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
@@ -68,7 +69,6 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         @Transactional
         public ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException {
 
-                System.out.println(miniHomePostDto.getBoardID());
                 MiniHomeBoard miniHomeBoard = miniHomeBoardRepository.findById(miniHomePostDto.getBoardID())
                                 .orElseThrow(() -> new BoardNotFoundException());
 
@@ -105,7 +105,7 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Override
-        public List<MiniHomePostDto> getPostList(PageRequestDto pageRequestDto) {
+        public PageResponseDto<MiniHomePostDto> getPostList(PageRequestDto pageRequestDto) {
 
                 Page<MiniHomePost> result = miniHomePostRepository.search(pageRequestDto);
 
@@ -113,7 +113,7 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                 List<MiniHomePost> posts = result.getContent();
 
                 // 포스트 목록을 MiniHomePostDto로 변환
-                List<MiniHomePostDto> postDtos = new ArrayList<>();
+                List<MiniHomePostDto> dtoList = new ArrayList<>();
                 for (MiniHomePost post : posts) {
                         MiniHomePostDto postDto = new MiniHomePostDto();
                         postDto = MiniHomePostDto.builder()
@@ -125,8 +125,14 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                                         .content(post.getContent())
                                         .writeDay(post.getWriteDay())
                                         .build();
-                        postDtos.add(postDto);
+                        dtoList.add(postDto);
                 }
-                return postDtos;
+
+                PageResponseDto<MiniHomePostDto> responseDto = PageResponseDto.<MiniHomePostDto>withAll()
+                                .dtoList(dtoList)
+                                .pageRequestDto(pageRequestDto)
+                                .total(result.getTotalElements())
+                                .build();
+                return responseDto;
         }
 }
