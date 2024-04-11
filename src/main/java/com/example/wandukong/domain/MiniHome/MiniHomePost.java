@@ -1,8 +1,7 @@
 package com.example.wandukong.domain.MiniHome;
 
-import java.util.Date;
-
 import org.hibernate.annotations.CreationTimestamp;
+import org.joda.time.LocalDate;
 
 import com.example.wandukong.domain.UserDo;
 
@@ -49,13 +48,13 @@ public class MiniHomePost {
 
     @CreationTimestamp
     @Column(name = "writeDay")
-    private Date writeDay;
+    private LocalDate writeDay;
 
     @Builder
     public MiniHomePost(Long postID, MiniHomeBoard miniHomeBoard, UserDo userDo, MiniHome miniHome,
             String title,
             String content,
-            Date writeDay) {
+            LocalDate writeDay) {
         this.postID = postID;
         this.miniHomeBoard = miniHomeBoard;
         this.userDo = userDo;
