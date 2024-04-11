@@ -1,10 +1,10 @@
 package com.example.wandukong.domain.MiniHome;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.joda.time.LocalDate;
 
 import com.example.wandukong.domain.UserDo;
 
+import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

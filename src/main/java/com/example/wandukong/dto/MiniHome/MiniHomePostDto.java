@@ -1,8 +1,6 @@
 package com.example.wandukong.dto.MiniHome;
 
-import java.util.Date;
-
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import lombok.Builder;
 import lombok.Getter;
