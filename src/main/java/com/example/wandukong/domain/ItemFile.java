@@ -28,8 +28,9 @@ public class ItemFile {
     private Shop shop;
 
     @Column(name = "uuid")
-    private Long uuid;
+    private String uuid;
 
     @Column(name = "fileName")
     private String fileName;
+
 }

@@ -43,6 +43,18 @@ public class CustomException extends Exception {
         }
     }
 
+    public static class itemlistNotFoundException extends Exception {
+        public itemlistNotFoundException() {
+            // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
+        }
+    }
+
+    public static class itemUploadNotFoundException extends Exception {
+        public itemUploadNotFoundException(String string) {
+            // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
+        }
+    }
+
     public static class NoSuchElementException extends Exception {
         public NoSuchElementException() {
             // 만약 예외처리 될때 추가적으로 뭔갈 더 하고싶다면 여기에 작성
@@ -56,4 +68,5 @@ public class CustomException extends Exception {
         }
 
     }
+
 }

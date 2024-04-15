@@ -16,7 +16,7 @@ public class ItemFileDto {
   private Long userID;
   private Long itemID;
   private String fileName;
-  private Long uuid;
+  private String uuid;
 
   /* 유저 음악 인벤토리 */
   public ItemFile toEntity() {
