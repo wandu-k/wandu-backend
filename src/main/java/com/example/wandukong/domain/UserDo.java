@@ -16,8 +16,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -84,11 +82,11 @@ public class UserDo {
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shop;
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MyBgm mybgm;
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyBgm> mybgm;
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MyAvatar myavatar;
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyAvatar> myavatar;
 
     @Builder
     public UserDo(Long userID, String email, String password, String name, String nickname, String profileImage,

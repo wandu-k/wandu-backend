@@ -1,5 +1,7 @@
 package com.example.wandukong.domain;
 
+import java.util.List;
+
 import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -36,4 +39,7 @@ public class Playlist {
     //플리 삭제시에 홈피도 사라질지 테스트필요(자네...아직도 jpa를 믿나..?)
     @OneToOne(mappedBy = "minihome", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome minihome;
+
+    @OneToMany(mappedBy = "myplaylists", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyPlaylists> myPlaylists;
 }

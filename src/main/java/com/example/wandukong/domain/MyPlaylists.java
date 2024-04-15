@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -30,8 +31,12 @@ public class MyPlaylists {
     @Column(name = "myplID", unique = true)
     private Long myplID;
 
-    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Playlist> playlist;
+    @Column(name = "playlistID", unique = true)
+    private Long playlistID;
+
+    @ManyToOne
+    @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
+    private Playlist playlist;
 
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")

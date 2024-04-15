@@ -2,9 +2,9 @@ package com.example.wandukong.dto.ShopInfo.Music;
 
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.MyBgm;
 import com.example.wandukong.domain.MyPlaylists;
 import com.example.wandukong.domain.Playlist;
+import com.example.wandukong.domain.UserDo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,19 +13,19 @@ import lombok.Setter;
 @Setter
 @Component
 public class MyPlaylistsDto {
-  private Long musicBuyID;
+  private Long userID;
   private Long myplID;
   private Long playlistID;
 
   /* 내 플레이리스트 */
   public MyPlaylists toEntity() {
 
-    MyPlaylists mybgm = MyPlaylists.builder()
+    MyPlaylists myPlaylists = MyPlaylists.builder()
         .myplID(myplID)
-        .mybgm(MyBgm.builder().musicBuyID(musicBuyID).build())
+        .userDo(UserDo.builder().userID(userID).build())
         .playlist(Playlist.builder().playlistID(playlistID).build())
         .build();
-    return mybgm;
+    return myPlaylists;
   }
 
 }
