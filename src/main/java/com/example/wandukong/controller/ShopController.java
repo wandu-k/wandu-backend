@@ -55,6 +55,8 @@ public class ShopController {
 
   }
 
+  // 내가 등록한 아이템
+
   // 아이템 정보 및 아이템 파일 업로드"
   @Operation(summary = "아이템 정보 추가/수정")
   @ApiResponses(value = {
@@ -71,7 +73,7 @@ public class ShopController {
 
     if (customUserDetails.getUserDto().getUserID() != null) {
 
-      if (shopInfoDto != null) {
+      if (shopInfoDto.getShopDto().getItemID() != null) {
 
         shopservice.updateItemFile(itemfile, shopInfoDto, customUserDetails);
 
