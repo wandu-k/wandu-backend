@@ -10,11 +10,11 @@ import com.example.wandukong.exception.CustomException.itemUploadNotFoundExcepti
 
 public interface ShopService {
 
-    List<ShopInfoDto> getShopitemList();
+        List<ShopInfoDto> getShopitemList();
 
-    String putPost(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
-            throws itemUploadNotFoundException;
+        String putPost(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+                        throws itemUploadNotFoundException;
 
-    void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
-            throws itemUploadNotFoundException;
+        void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+                        throws itemUploadNotFoundException;
 }
