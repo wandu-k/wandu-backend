@@ -2,6 +2,7 @@ package com.example.wandukong.domain;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,11 +33,7 @@ public class Playlist {
     @Column(name = "plName")
     private String plName;
 
-    @ManyToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userDo;
-
-    @ManyToOne
-    @JoinColumn(name = "hpID", referencedColumnName = "hpID")
+    //플리 삭제시에 홈피도 사라질지 테스트필요(자네...아직도 jpa를 믿나..?)
+    @OneToOne(mappedBy = "minihome", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome minihome;
 }

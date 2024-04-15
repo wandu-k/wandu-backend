@@ -3,6 +3,7 @@ package com.example.wandukong.domain.MiniHome;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.wandukong.domain.Playlist;
 import com.example.wandukong.domain.UserDo;
 
 import jakarta.persistence.CascadeType;
@@ -49,6 +50,10 @@ public class MiniHome {
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userDo;
+
+    @OneToOne
+    @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
+    private Playlist playlist;
 
     @OneToMany(mappedBy = "miniHome", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MiniHomePost> miniHomePost = new ArrayList<>();

@@ -1,12 +1,16 @@
 package com.example.wandukong.domain;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +30,10 @@ public class MyPlaylists {
     @Column(name = "myplID", unique = true)
     private Long myplID;
 
-    @ManyToOne
-    @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
-    private Playlist playlist;
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Playlist> playlist;
 
-    @ManyToOne
-    @JoinColumn(name = "musicBuyID", referencedColumnName = "musicBuyID")
-    private MyBgm mybgm;
+    @OneToOne
+    @JoinColumn(name = "userID", referencedColumnName = "userID")
+    private UserDo userDo;
 }

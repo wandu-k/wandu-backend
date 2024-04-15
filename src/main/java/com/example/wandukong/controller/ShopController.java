@@ -49,6 +49,7 @@ public class ShopController {
     if (shopitemList.isEmpty()) {
       return new ResponseEntity<>("현재 등록된 아이템이 없습니다", HttpStatus.OK);
     }
+    
 
     return new ResponseEntity<>(shopitemList, HttpStatus.OK);
 
