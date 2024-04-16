@@ -1,6 +1,8 @@
-package com.example.wandukong.domain;
+package com.example.wandukong.domain.ShopInfo;
 
 import java.util.List;
+
+import com.example.wandukong.domain.UserDo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,19 +25,28 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "MyBgm")
-public class MyBgm {
+@Table(name = "Shop")
+public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "musicBuyID", unique = true)
-    private Long musicBuyID;
+    @Column(name = "itemID", unique = true)
+    private Long itemID;
 
-    @OneToOne
+    @Column(name = "itemName")
+    private String itemName;
+
+    @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userDo;
 
     @ManyToOne
-    @JoinColumn(name = "itemID", referencedColumnName = "itemID")
-    private Shop shop;
+    @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
+    private Category category;
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BuyItem> buyItem;
+
+    @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ItemFile itemFile;
 }

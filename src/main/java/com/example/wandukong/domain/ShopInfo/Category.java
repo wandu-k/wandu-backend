@@ -1,4 +1,4 @@
-package com.example.wandukong.domain;
+package com.example.wandukong.domain.ShopInfo;
 
 import java.util.List;
 
@@ -8,10 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,18 +20,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "MyPlaylists")
-public class MyPlaylists {
+@Table(name = "Category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "myplID", unique = true)
-    private Long myplID;
+    @Column(name = "categoryID", unique = true)
+    private Long categoryID;
 
-    @OneToMany(mappedBy = "myPlaylists", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Playlist> playlist;
+    @Column(name = "categoryName")
+    private String categoryName;
 
-    @OneToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
-    private UserDo userDo;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Shop> shop;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BuyItem> buyItem;
+
 }

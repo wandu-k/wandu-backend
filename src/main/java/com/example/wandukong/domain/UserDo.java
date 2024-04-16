@@ -1,6 +1,5 @@
 package com.example.wandukong.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
+import com.example.wandukong.domain.ShopInfo.BuyItem;
+import com.example.wandukong.domain.ShopInfo.Playlist;
+import com.example.wandukong.domain.ShopInfo.Shop;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -77,16 +79,13 @@ public class UserDo {
     private List<MiniHomePost> minihomePost;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyPlaylists> myplaylists;
+    private List<Playlist> playlist;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shop;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyBgm> mybgm;
-
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyAvatar> myavatar;
+    private List<BuyItem> buyItem;
 
     @Builder
     public UserDo(Long userID, String email, String password, String name, String nickname, String profileImage,

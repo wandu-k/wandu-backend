@@ -2,9 +2,9 @@ package com.example.wandukong.dto.ShopInfo;
 
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.Category;
-import com.example.wandukong.domain.Shop;
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.ShopInfo.Category;
+import com.example.wandukong.domain.ShopInfo.Shop;
 
 import lombok.Getter;
 import lombok.Setter;

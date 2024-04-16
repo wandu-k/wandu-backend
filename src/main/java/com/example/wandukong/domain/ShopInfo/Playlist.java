@@ -1,6 +1,9 @@
-package com.example.wandukong.domain;
+package com.example.wandukong.domain.ShopInfo;
 
 import java.util.List;
+
+import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,31 +26,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "Shop")
-public class Shop {
+@Table(name = "Playlist")
+public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemID", unique = true)
-    private Long itemID;
+    @Column(name = "playlistID", unique = true)
+    private Long playlistID;
 
-    @Column(name = "itemName")
-    private String itemName;
+    @Column(name = "plName")
+    private String plName;
+
+    // 플리 삭제시에 홈피도 사라질지 테스트필요(자네...아직도 jpa를 믿나..?)
+    @OneToOne(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MiniHome miniHome;
+
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BgmList> bgmList;
 
     @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     private UserDo userDo;
 
-    @ManyToOne
-    @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
-    private Category category;
-
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyBgm> myBgms;
-
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyAvatar> myAvatars;
-
-    @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ItemFile itemFile;
 }

@@ -1,8 +1,8 @@
 package com.example.wandukong.repository.ShopInfo;
 
-import com.example.wandukong.domain.Category;
-import com.example.wandukong.domain.ItemFile;
-import com.example.wandukong.domain.Shop;
+import com.example.wandukong.domain.ShopInfo.Category;
+import com.example.wandukong.domain.ShopInfo.ItemFile;
+import com.example.wandukong.domain.ShopInfo.Shop;
 
 public class ShopInfoRepository {
 
