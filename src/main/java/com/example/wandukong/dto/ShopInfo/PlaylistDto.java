@@ -1,8 +1,7 @@
-package com.example.wandukong.dto.ShopInfo.Music;
+package com.example.wandukong.dto.ShopInfo;
 
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 
