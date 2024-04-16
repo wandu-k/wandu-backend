@@ -31,12 +31,8 @@ public class MyPlaylists {
     @Column(name = "myplID", unique = true)
     private Long myplID;
 
-    @Column(name = "playlistID", unique = true)
-    private Long playlistID;
-
-    @ManyToOne
-    @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
-    private Playlist playlist;
+    @OneToMany(mappedBy = "myPlaylists", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Playlist> playlist;
 
     @OneToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID")

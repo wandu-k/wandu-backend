@@ -74,7 +74,7 @@ public class UserDo {
     private MiniHome miniHome;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MiniHomePost> minihomePost = new ArrayList<>();
+    private List<MiniHomePost> minihomePost;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MyPlaylists> myplaylists;

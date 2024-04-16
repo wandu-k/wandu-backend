@@ -15,7 +15,6 @@ import lombok.Setter;
 public class MyPlaylistsDto {
   private Long userID;
   private Long myplID;
-  private Long playlistID;
 
   /* 내 플레이리스트 */
   public MyPlaylists toEntity() {
@@ -23,7 +22,6 @@ public class MyPlaylistsDto {
     MyPlaylists myPlaylists = MyPlaylists.builder()
         .myplID(myplID)
         .userDo(UserDo.builder().userID(userID).build())
-        .playlist(Playlist.builder().playlistID(playlistID).build())
         .build();
     return myPlaylists;
   }

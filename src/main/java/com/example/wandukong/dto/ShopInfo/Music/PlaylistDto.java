@@ -13,9 +13,10 @@ import lombok.Setter;
 @Setter
 @Component
 public class PlaylistDto {
-  private Long userID;
+
   private Long playlistID;
   private String plName;
+  private Long musicBuyID;
   private Long hpID;
 
   /* 모든 사용자의 플레이리스트 */
@@ -23,8 +24,7 @@ public class PlaylistDto {
 
     Playlist playlist = Playlist.builder()
         .playlistID(playlistID)
-        .userDo(UserDo.builder().userID(userID).build())
-        .minihome(MiniHome.builder().hpID(hpID).build())
+        .miniHome(MiniHome.builder().hpID(hpID).build())
         .plName(plName)
         .build();
     return playlist;

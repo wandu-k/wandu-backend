@@ -42,12 +42,12 @@ public class Shop {
     @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
     private Category category;
 
-    @OneToMany(mappedBy = "mybgm", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyBgm> mybgm;
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyBgm> myBgms;
 
-    @OneToMany(mappedBy = "myavatar", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyAvatar> myavatar;
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyAvatar> myAvatars;
 
     @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ItemFile itemfile;
+    private ItemFile itemFile;
 }
