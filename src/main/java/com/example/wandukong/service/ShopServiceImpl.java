@@ -22,7 +22,6 @@ import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
@@ -41,12 +40,6 @@ public class ShopServiceImpl implements ShopService {
 
   @Autowired
   AmazonS3 amazonS3;
-
-  @Autowired
-  private ShopDto shopDto;
-
-  @Autowired
-  private UserDto userDto;
 
   @Value(value = "${cloud.aws.s3.bucket}")
   private String bucketName;
