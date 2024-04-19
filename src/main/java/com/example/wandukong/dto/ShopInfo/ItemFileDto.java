@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Component
+@Builder
 public class ItemFileDto {
   private Long musicBuyID;
   private Long userID;

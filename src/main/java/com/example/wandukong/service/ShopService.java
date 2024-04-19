@@ -1,20 +1,24 @@
 package com.example.wandukong.service;
 
-import java.util.List;
+import java.io.IOException;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
 
 public interface ShopService {
 
-        List<ShopInfoDto> getShopitemList();
+        PageResponseDto<ShopInfoDto> getShopitemList(PageRequestDto pageRequestDto);
 
-        String putPost(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
-                        throws itemUploadNotFoundException;
+        void putPost(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+                        throws itemUploadNotFoundException, IOException;
 
         void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
                         throws itemUploadNotFoundException;
+
+        PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto);
 }
