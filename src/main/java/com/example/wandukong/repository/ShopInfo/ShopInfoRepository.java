@@ -1,26 +1,17 @@
 package com.example.wandukong.repository.ShopInfo;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.example.wandukong.domain.ShopInfo.Category;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.PageRequestDto;
 
-public class ShopInfoRepository {
+@Repository
+public interface ShopInfoRepository extends JpaRepository<Shop, Long> {
 
-  public Shop findByItemID(Long itemID) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findByItemID'");
-  }
+  Shop findByItemID(Long itemID);
 
-  public void save(Shop shop, Category category) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'save'");
-  }
-
-  public Page<Shop> findAll(PageRequestDto pageRequestDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findAll'");
-  }
+  Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto);
 
 }

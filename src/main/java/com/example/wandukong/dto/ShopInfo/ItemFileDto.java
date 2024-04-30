@@ -24,7 +24,7 @@ public class ItemFileDto {
   public ItemFile toEntity() {
 
     ItemFile itemfile = ItemFile.builder()
-        .shop(Shop.builder().itemID(itemID).build())
+        .itemID(Shop.builder().itemID(itemID).build())
         .fileName(fileName)
         .uuid(uuid)
         .build();

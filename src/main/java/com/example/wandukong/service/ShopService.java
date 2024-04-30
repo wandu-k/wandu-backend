@@ -18,7 +18,7 @@ public interface ShopService {
                         throws itemUploadNotFoundException, IOException;
 
         void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
-                        throws itemUploadNotFoundException;
+                        throws itemUploadNotFoundException, IOException;
 
         PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto);
 }

@@ -26,6 +26,8 @@ import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
+import com.example.wandukong.repository.ShopInfo.CategoryRepository;
+import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
 
 import jakarta.transaction.Transactional;
@@ -37,6 +39,12 @@ public class ShopServiceImpl implements ShopService {
 
   @Autowired
   ShopInfoRepository shopInfoRepository;
+
+  @Autowired
+  ItemFileRepository itemFileRepository;
+
+  @Autowired
+  CategoryRepository categoryRepository;
 
   @Autowired
   AmazonS3 amazonS3;
@@ -64,14 +72,15 @@ public class ShopServiceImpl implements ShopService {
           .category(Category.builder().categoryID(shopInfoDto.getCategoryDto().getCategoryID()).build())
           .build();
 
+      shopInfoRepository.save(shop);
+      categoryRepository.save(category);
+
       if (shopInfoDto.getItemFileDto().getFileName().isEmpty()) {
 
         itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 
       }
       log.info("각 아이템 정보들" + shopInfoDto);
-
-      shopInfoRepository.save(shop, category);
 
     } else {
       throw new itemUploadNotFoundException();
@@ -83,9 +92,17 @@ public class ShopServiceImpl implements ShopService {
   @Transactional
   @Override
   public void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
-      throws itemUploadNotFoundException {
+      throws itemUploadNotFoundException, IOException {
 
-    Shop shop = shopInfoRepository.findByItemID(shopInfoDto.getShopDto().getItemID());
+    if (customUserDetails != null) {
+      Shop shop = shopInfoRepository.findByItemID(shopInfoDto.getShopDto().getItemID());
+
+      itemfileUpload(itemfile, shopInfoDto, customUserDetails);
+
+      shop.updateItem(shopInfoDto.getShopDto().getItemName());
+    } else {
+      throw new itemUploadNotFoundException();
+    }
 
   }
 
@@ -104,11 +121,11 @@ public class ShopServiceImpl implements ShopService {
     String uuID = UUID.randomUUID().toString();
     shopInfoDto.getItemFileDto().setUuid(uuID);
 
-    // 확장자 구분
-    String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
-
     // 아이템 명을 파일 이름으로 저장
     shopInfoDto.getItemFileDto().setFileName(shopInfoDto.getShopDto().getItemName());
+
+    // 확장자 구분
+    String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
 
     String filename = shopInfoDto.getItemFileDto().getUuid() + shopInfoDto.getItemFileDto().getFileName() + extension;
 
@@ -118,6 +135,15 @@ public class ShopServiceImpl implements ShopService {
         .putObject(new PutObjectRequest(bucketName, itemfilepath,
             itemfile.getInputStream(), objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
+
+    // ItemFile 엔티티 생성 및 저장
+    ItemFile itemFile = ItemFile.builder()
+        .uuid(shopInfoDto.getItemFileDto().getUuid())
+        .fileName(shopInfoDto.getItemFileDto().getFileName())
+        .build();
+
+    itemFileRepository.save(itemFile);
+
     return itemfilepath;
   }
 
@@ -126,7 +152,7 @@ public class ShopServiceImpl implements ShopService {
   public PageResponseDto<ShopInfoDto> getShopitemList(PageRequestDto pageRequestDto) {
 
     // JPA를 사용하여 페이지 단위로 상점 정보를 가져옴
-    Page<Shop> shopPage = shopInfoRepository.findAll(pageRequestDto);
+    Page<Shop> shopPage = shopInfoRepository.findAllByCategoryAndItemFileIsNotNull(pageRequestDto);
 
     // 가져온 상점 정보를 ShopInfoDto로 변환
     List<ShopInfoDto> dtoList = shopPage.getContent().stream()

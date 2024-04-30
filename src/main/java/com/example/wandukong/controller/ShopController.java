@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +50,7 @@ public class ShopController {
       @RequestBody UserDto userDto)
       throws itemlistNotFoundException {
 
-    PageResponseDto<ShopInfoDto> shopitemList = shopservice.getShopitemList(pageRequestDto, userDto);
+    PageResponseDto<ShopInfoDto> shopitemList = shopservice.getShopitemList(pageRequestDto);
 
     if (shopDto == null) {
       return new ResponseEntity<>("현재 등록된 아이템이 없습니다", HttpStatus.OK);
@@ -59,7 +60,7 @@ public class ShopController {
 
   }
 
-  // 내가 등록한 아이템
+  // 내가 등록한 아이템 불러오기
   @SecurityRequirement(name = "Baerer Authentication")
   @GetMapping("/{nickName}/myitemList")
   public ResponseEntity<?> getItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -75,7 +76,7 @@ public class ShopController {
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
       } else {
-        return new ResponseEntity<>("해당 아이템들의 정보에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>("해당 아이템의 정보에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
       }
     } else {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
@@ -83,9 +84,8 @@ public class ShopController {
   }
 
   // 아이템 정보 및 아이템 파일 업로드
-  @Operation(summary = "아이템 정보 추가/수정")
+  @Operation(summary = "아이템 등록")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "아이템 수정이 완료되었습니다."),
       @ApiResponse(responseCode = "201", description = "아이템 등록이 완료되었습니다."),
       @ApiResponse(responseCode = "400", description = "오류 입니다.")
   })
@@ -93,17 +93,10 @@ public class ShopController {
   @PutMapping(value = "/itemupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> itemupload(@AuthenticationPrincipal CustomUserDetails customUserDetails,
       @RequestPart(required = false, value = "itemfile") MultipartFile itemfile,
-      @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto,
-      @PathVariable Long itemID) throws itemUploadNotFoundException, UserNotFoundException, IOException {
+      @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto)
+      throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
     if (customUserDetails.getUserDto().getUserID() != null) {
-
-      if (shopInfoDto.getShopDto().getItemID() != null) {
-
-        shopservice.updateItemFile(itemfile, shopInfoDto, customUserDetails);
-
-        return new ResponseEntity<>("아이템 정보 수정이 완료되었습니다.", HttpStatus.OK);
-      }
       shopservice.putPost(itemfile, shopInfoDto, customUserDetails);
 
       return new ResponseEntity<>("아이템 등록이 완료되었습니다.", HttpStatus.CREATED);
@@ -111,6 +104,31 @@ public class ShopController {
     } else {
 
       return new ResponseEntity<>("인증되지않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  // 아이템 정보 및 아이템 파일 수정
+  @Operation(summary = "아이템 수정")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "아이템 수정이 완료되었습니다."),
+      @ApiResponse(responseCode = "400", description = "오류 입니다.")
+  })
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PatchMapping(value = "/{itemID}/itemupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<?> updateItemFile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+      @RequestPart(required = false, value = "itemfile") MultipartFile itemfile,
+      @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto,
+      @PathVariable Long itemID) throws itemUploadNotFoundException, UserNotFoundException, IOException {
+
+    if (customUserDetails.getUserDto().getUserID() != null) {
+
+      shopservice.updateItemFile(itemfile, shopInfoDto, customUserDetails);
+
+      return new ResponseEntity<>("아이템 수정이 완료되었습니다.", HttpStatus.OK);
+
+    } else {
+
+      return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
     }
   }
 

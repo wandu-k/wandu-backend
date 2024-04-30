@@ -2,27 +2,27 @@ package com.example.wandukong.domain.ShopInfo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Table(name = "ItemFile")
 public class ItemFile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "itemID")
+    private Shop itemID;
+
     @OneToOne
     @JoinColumn(name = "itemID", referencedColumnName = "itemID", unique = true)
     private Shop shop;
@@ -33,4 +33,10 @@ public class ItemFile {
     @Column(name = "fileName")
     private String fileName;
 
+    @Builder
+    public ItemFile(Shop itemID, String fileName, String uuid) {
+        this.itemID = itemID;
+        this.fileName = fileName;
+        this.uuid = uuid;
+    }
 }
