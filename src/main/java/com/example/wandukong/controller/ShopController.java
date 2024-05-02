@@ -21,5 +21,5 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/shop")
 public class ShopController {
-
+    // test
 }
