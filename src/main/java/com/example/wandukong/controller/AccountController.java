@@ -10,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -22,7 +21,6 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.security.jwt.JwtToken;
 import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,32 +39,6 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
-
-    @Operation(summary = "액세스 토큰 요청", description = "토큰 발급 요청")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JWT 생성 성공"),
-            @ApiResponse(responseCode = "401", description = "회원 인증 실패")
-    })
-    @PostMapping
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        JwtToken token = accountService.login(username, password);
-        return ResponseEntity.ok(token);
-
-    }
-
-    // 회원가입
-
-    // @Operation(summary = "회원가입", description = "회원가입을 합니다.")
-    // @ApiResponses(value = {
-    // @ApiResponse(responseCode = "200", description = "회원가입이 완료되었습니다!"),
-    // @ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
-    // })
-    // @PostMapping("/register")
-    // public ResponseEntity<?> register(@RequestBody UserDto userDto) throws
-    // UserAlreadyExistsException {
-    // accountService.register(userDto);
-    // return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
-    // }
 
     @SecurityRequirement(name = "Bearer Authentication")
     // 내 정보 조회

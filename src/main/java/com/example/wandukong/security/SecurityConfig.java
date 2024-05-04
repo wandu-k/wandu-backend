@@ -19,14 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.example.wandukong.security.jwt.JwtAuthenticationFilter;
 import com.example.wandukong.security.jwt.JwtRequestFilter;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -36,54 +35,49 @@ public class SecurityConfig {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Configuration
-    @EnableWebSecurity
-    public class WebSecurityConfig {
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
-        private AuthenticationManager authenticationManager;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // 원하는 인코더 타입 사용
+    }
 
-        @Bean
-        public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-                throws Exception {
-            this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
-            return authenticationManager;
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationConfiguration configuration)
+            throws Exception {
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder(); // 원하는 인코더 타입 사용
-        }
+        return httpSecurity
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(Collections.singletonList("*"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowCredentials(false);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setMaxAge(3600L); // 1시간
+                        return config;
+                    }
+                }))
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+                .addFilterAfter(new JwtAuthenticationFilter(configuration.getAuthenticationManager(), jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(requests -> {
+                    requests.requestMatchers("/api/**", "/v3/**", "/swagger-ui/**", "/error").permitAll();
+                    requests.requestMatchers(HttpMethod.POST, "/api/articles").authenticated();
+                })
 
-            return httpSecurity
-                    .httpBasic(AbstractHttpConfigurer::disable)
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                        @Override
-                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                            CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(Collections.singletonList("*"));
-                            config.setAllowedMethods(Collections.singletonList("*"));
-                            config.setAllowCredentials(false);
-                            config.setAllowedHeaders(Collections.singletonList("*"));
-                            config.setMaxAge(3600L); // 1시간
-                            return config;
-                        }
-                    }))
-                    .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                    .authorizeHttpRequests(requests -> {
-                        requests.requestMatchers("/api/**", "/v3/**", "/swagger-ui/**", "/error").permitAll();
-                        requests.requestMatchers(HttpMethod.POST, "/api/articles").authenticated();
-                    })
-
-                    .sessionManagement(
-                            sessionManagement -> sessionManagement
-                                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .userDetailsService(customUserDetailService)
-                    .build();
-        }
+                .sessionManagement(
+                        sessionManagement -> sessionManagement
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .userDetailsService(customUserDetailService)
+                .build();
     }
 
 }

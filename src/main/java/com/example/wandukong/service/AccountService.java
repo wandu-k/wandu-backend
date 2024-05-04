@@ -20,10 +20,7 @@ public interface AccountService {
 
     UserDto getUserInfo(Long userID) throws UserNotFoundException;
 
-    JwtToken login(String username, String password);
-
     void updatePassword(Long userID, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException;
 
-    // void login(UserDto userDto, HttpServletRequest request);
 }

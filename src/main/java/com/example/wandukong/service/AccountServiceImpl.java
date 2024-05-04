@@ -182,18 +182,6 @@ public class AccountServiceImpl implements AccountService {
         return userDto;
     }
 
-    @Override
-    public JwtToken login(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
-                password);
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        JwtToken token = jwtTokenProvider.createToken(authentication);
-
-        return token;
-    }
-
     @Transactional
     @Override
     public void updatePassword(Long userID, String currentPassword, String newPassword)
@@ -206,28 +194,4 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(newPassword);
         userDo.changePassword(encodedPw);
     }
-
-    // 필요없는 부분
-
-    // @Override
-    // public void login(UserDto userDto, HttpServletRequest request) {
-    // log.info(userDto.getEmail());
-    // log.info(userDto.getPassword());
-
-    // // 인증 토큰 생성
-    // UsernamePasswordAuthenticationToken token = new
-    // UsernamePasswordAuthenticationToken(userDto.getEmail(),
-    // userDto.getPassword());
-
-    // // 토큰에 요청정보 등록
-    // token.setDetails(new WebAuthenticationDetails(request));
-
-    // // 토큰을 이용하여 인증 요청 로그인
-    // Authentication authentication = authenticationManager.authenticate(token);
-    // log.info("인증 정보 : " + authentication.isAuthenticated());
-
-    // User authUser = (User) authentication.getPrincipal();
-    // log.info("인증된 사용자 : " + authUser.getUsername());
-
-    // }
 }
