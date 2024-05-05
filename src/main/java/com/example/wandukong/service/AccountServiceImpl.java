@@ -3,9 +3,7 @@ package com.example.wandukong.service;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +21,6 @@ import com.example.wandukong.exception.CustomException.UserAlreadyExistsExceptio
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
-import com.example.wandukong.security.jwt.JwtToken;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;

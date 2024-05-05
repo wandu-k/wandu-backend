@@ -6,7 +6,6 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.security.jwt.JwtToken;
 
 public interface AccountService {
 

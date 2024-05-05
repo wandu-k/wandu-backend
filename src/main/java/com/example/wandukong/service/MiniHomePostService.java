@@ -1,7 +1,5 @@
 package com.example.wandukong.service;
 
-import java.util.List;
-
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;

@@ -1,6 +1,5 @@
 package com.example.wandukong.security.jwt;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,7 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication) throws IOException, ServletException {
         log.info("인증 성공...");
 
-        JwtToken jwt = jwtTokenProvider.createToken(authentication);
+        String jwt = jwtTokenProvider.createToken(authentication);
 
         response.addHeader(JwtConstants.TOKEN_HEADER, JwtConstants.TOKEN_PREFIX + jwt);
         response.setStatus(200);
