@@ -15,7 +15,7 @@ public interface AccountService {
 
     void updateProfile(MultipartFile profileImage, UserDto userDto) throws UserNotFoundException, IOException;
 
-    UserDto getMyInfo(String username);
+    UserDto getMyInfo(Long userID) throws UserNotFoundException;
 
     UserDto getUserInfo(Long userID) throws UserNotFoundException;
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@DynamicInsert
 @Entity
 @Table(name = "Users")
 public class UserDo {
@@ -66,9 +68,9 @@ public class UserDo {
     @Column(name = "gender")
     private String gender;
 
-    @ColumnDefault("0")
+    @ColumnDefault("ROLE_USER")
     @Column(name = "role")
-    private int role;
+    private String role;
 
     @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private MiniHome miniHome;

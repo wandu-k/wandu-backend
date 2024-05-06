@@ -40,35 +40,18 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    // 내 정보 조회
-    @Operation(summary = "내 정보 조회", description = "자기자신의 회원 정보를 조회를 합니다.")
+    // 회원정보 조회
+    @Operation(summary = "회원 조회", description = "회원 정보를 조회를 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
+            @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @GetMapping
-    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> getMyInfo(@RequestParam Long userID) throws UserNotFoundException {
 
-        if (customUserDetails != null) {
-            UserDto userDto = accountService.getMyInfo(customUserDetails.getUsername());
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+        UserDto userDto = accountService.getMyInfo(userID);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
-
-    // // 다른 사람 정보 조회
-    // @Operation(summary = "회원 정보 조회", description = "다른 회원 정보를 조회를 합니다.")
-    // @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
-    // @GetMapping("{userID}")
-    // public ResponseEntity<?> getUserInfo(@PathVariable Long userID) throws
-    // UserNotFoundException {
-
-    // UserDto userDto = accountService.getUserInfo(userID);
-    // return new ResponseEntity<>(userDto, HttpStatus.OK);
-
-    // }
 
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")
     @ApiResponses(value = {

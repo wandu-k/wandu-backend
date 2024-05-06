@@ -19,13 +19,13 @@ public class UserDto {
     private String gender;
     private Date signupDay;
     private Date birthday;
-    private int role;
+    private String role;
 
     @Builder
     public UserDto(Long userID, Long hpID, String email, String password, String profileImage, String nickname,
             String name,
             String phone,
-            String gender, Date signupDay, Date birthday, int role) {
+            String gender, Date signupDay, Date birthday, String role) {
         this.userID = userID;
         this.hpID = hpID;
         this.email = email;

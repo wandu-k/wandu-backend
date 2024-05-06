@@ -1,6 +1,8 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -141,9 +143,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public UserDto getMyInfo(String username) {
+    public UserDto getMyInfo(Long userID) throws UserNotFoundException {
 
-        UserDo userDo = accountRepository.findByEmail(username);
+        UserDo userDo = accountRepository.findById(userID)
+                .orElseThrow(() -> new UserNotFoundException());
 
         String objectKey = userDo.getProfileImage();
 

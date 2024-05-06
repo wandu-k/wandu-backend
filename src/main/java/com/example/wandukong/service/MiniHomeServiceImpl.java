@@ -40,6 +40,9 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     @Override
     public MiniHomeDto getMiniHome(Long hpID) throws HomeNotFoundException {
 
+        MiniHome miniHome = miniHomeRepository.findById(hpID)
+                .orElseThrow(() -> new HomeNotFoundException());
+
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
 
@@ -51,12 +54,8 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         if (!redisTemplate.opsForValue().getOperations().hasKey(visitorkey)) {
             redisTemplate.opsForValue().set(visitorkey, userAgent, Duration.ofHours(24));
             redisTemplate.opsForValue().increment(viewKey);
+            miniHome.viewCount(miniHome.getAllVisit() + 1);
         }
-
-        MiniHome miniHome = miniHomeRepository.findById(hpID)
-                .orElseThrow(() -> new HomeNotFoundException());
-
-        miniHome.viewCount(miniHome.getAllVisit() + 1);
 
         MiniHomeDto miniHomeDto = MiniHomeDto.builder()
                 .userID(miniHome.getUserDo().getUserID())
