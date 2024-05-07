@@ -1,10 +1,11 @@
 package com.example.wandukong.domain.MiniHome;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.UserDo;
 
-import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,10 +14,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -25,19 +26,19 @@ import lombok.AccessLevel;
 public class MiniHomePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postID", unique = true)
-    private Long postID;
+    @Column(name = "postId", unique = true)
+    private Long postId;
 
     @ManyToOne
-    @JoinColumn(name = "boardID")
+    @JoinColumn(name = "boardId")
     private MiniHomeBoard miniHomeBoard;
 
     @ManyToOne
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "userId")
     private UserDo userDo;
 
     @ManyToOne
-    @JoinColumn(name = "hpID")
+    @JoinColumn(name = "hpId")
     private MiniHome miniHome;
 
     @Column(name = "title")
@@ -51,11 +52,11 @@ public class MiniHomePost {
     private LocalDate writeDay;
 
     @Builder
-    public MiniHomePost(Long postID, MiniHomeBoard miniHomeBoard, UserDo userDo, MiniHome miniHome,
+    public MiniHomePost(Long postId, MiniHomeBoard miniHomeBoard, UserDo userDo, MiniHome miniHome,
             String title,
             String content,
             LocalDate writeDay) {
-        this.postID = postID;
+        this.postId = postId;
         this.miniHomeBoard = miniHomeBoard;
         this.userDo = userDo;
         this.miniHome = miniHome;

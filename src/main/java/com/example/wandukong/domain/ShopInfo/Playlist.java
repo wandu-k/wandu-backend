@@ -31,8 +31,8 @@ public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "playlistID", unique = true)
-    private Long playlistID;
+    @Column(name = "playlistId", unique = true)
+    private Long playlistId;
 
     @Column(name = "plName")
     private String plName;
@@ -45,7 +45,7 @@ public class Playlist {
     private List<BgmList> bgmList;
 
     @ManyToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
 }

@@ -22,12 +22,16 @@ import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
+import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
+import com.example.wandukong.repository.ShopInfo.ShopInfoPageRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
 
 import jakarta.transaction.Transactional;
@@ -41,10 +45,16 @@ public class ShopServiceImpl implements ShopService {
   ShopInfoRepository shopInfoRepository;
 
   @Autowired
+  ShopInfoPageRepository shopInfoPageRepository;
+
+  @Autowired
   ItemFileRepository itemFileRepository;
 
   @Autowired
   CategoryRepository categoryRepository;
+
+  @Autowired
+  AccountRepository accountRepository;
 
   @Autowired
   AmazonS3 amazonS3;
@@ -68,8 +78,8 @@ public class ShopServiceImpl implements ShopService {
       // 등록할 아이템 정보 설정
       Shop shop = Shop.builder()
           .itemName(shopInfoDto.getShopDto().getItemName())
-          .userDo(UserDo.builder().userID(customUserDetails.getUserDto().getUserID()).build())
-          .category(Category.builder().categoryID(shopInfoDto.getCategoryDto().getCategoryID()).build())
+          .userDo(UserDo.builder().userId(customUserDetails.getUserDto().getUserId()).build())
+          .category(Category.builder().categoryId(shopInfoDto.getCategoryDto().getCategoryId()).build())
           .build();
 
       shopInfoRepository.save(shop);
@@ -95,7 +105,7 @@ public class ShopServiceImpl implements ShopService {
       throws itemUploadNotFoundException, IOException {
 
     if (customUserDetails != null) {
-      Shop shop = shopInfoRepository.findByItemID(shopInfoDto.getShopDto().getItemID());
+      Shop shop = shopInfoRepository.findByItemID(shopInfoDto.getShopDto().getItemId());
 
       itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 
@@ -152,7 +162,7 @@ public class ShopServiceImpl implements ShopService {
   public PageResponseDto<ShopInfoDto> getShopitemList(PageRequestDto pageRequestDto) {
 
     // JPA를 사용하여 페이지 단위로 상점 정보를 가져옴
-    Page<Shop> shopPage = shopInfoRepository.findAllByCategoryAndItemFileIsNotNull(pageRequestDto);
+    Page<Shop> shopPage = shopInfoPageRepository.findAllByCategoryAndItemFileIsNotNull(pageRequestDto);
 
     // 가져온 상점 정보를 ShopInfoDto로 변환
     List<ShopInfoDto> dtoList = shopPage.getContent().stream()
@@ -162,9 +172,9 @@ public class ShopServiceImpl implements ShopService {
 
           // ShopDto를 생성하여 설정
           ShopDto shopDto = ShopDto.builder()
-              .itemID(shop.getItemID())
+              .itemId(shop.getItemId())
               .itemName(shop.getItemName())
-              .categoryID(shop.getCategory().getCategoryID())
+              .categoryId(shop.getCategory().getCategoryId())
               .build();
 
           // ItemFile 엔티티를 가져와서 ItemFileDto로 변환하여 설정
@@ -195,10 +205,56 @@ public class ShopServiceImpl implements ShopService {
     return responseDto; // 생성된 PageResponseDto 반환
   }
 
+  // 내가 등록한 아이템의 정보들 불러오기
+  @Transactional
   @Override
-  public PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getMyitemUploadList'");
+  public PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto,
+      UserDto userDto) throws UserNotFoundException {
+
+    UserDo userID = accountRepository.findById(userDto.getUserId()).orElseThrow(() -> new UserNotFoundException());
+
+    // JPA를 사용하여 페이지 단위로 상점 정보를 가져옴
+    Page<Shop> shopPage = shopInfoPageRepository.findAllByCategoryAndItemFileIsNotNull(pageRequestDto, userID);
+
+    // 가져온 상점 정보를 ShopInfoDto로 변환
+    List<ShopInfoDto> dtoList = shopPage.getContent().stream()
+        .map(shop -> {
+          // 유저의 닉네임을 가져옴
+          String nickName = shop.getUserDo().getNickname();
+
+          // ShopDto를 생성하여 설정
+          ShopDto shopDto = ShopDto.builder()
+              .itemId(shop.getItemId())
+              .itemName(shop.getItemName())
+              .categoryId(shop.getCategory().getCategoryId())
+              .build();
+
+          // ItemFile 엔티티를 가져와서 ItemFileDto로 변환하여 설정
+          ItemFile itemFile = shop.getItemFile(); // ItemFile 엔티티 가져오기
+          ItemFileDto itemFileDto = null;
+          if (itemFile != null) { // ItemFile이 존재하는 경우에만 처리
+            itemFileDto = ItemFileDto.builder()
+                .uuid(itemFile.getUuid())
+                .fileName(itemFile.getFileName())
+                .build();
+          }
+
+          // ShopInfoDto를 생성하여 반환
+          return ShopInfoDto.builder()
+              .shopDto(shopDto)
+              .nickName(nickName) // 닉네임 설정
+              .itemFileDto(itemFileDto) // 아이템 파일 정보 설정
+              .build();
+        }).collect(Collectors.toList());
+
+    // 변환된 목록을 포함하는 PageResponseDto를 생성
+    PageResponseDto<ShopInfoDto> responseDto = PageResponseDto.<ShopInfoDto>withAll()
+        .dtoList(dtoList) // 변환된 목록 설정
+        .pageRequestDto(pageRequestDto) // 페이지 요청 설정
+        .total(shopPage.getTotalElements()) // 전체 상점 수 설정
+        .build();
+
+    return responseDto; // 생성된 PageResponseDto 반환
   }
 
 }

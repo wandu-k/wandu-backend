@@ -34,11 +34,11 @@ public class UserDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userID", unique = true)
-    private Long userID;
+    @Column(name = "userId", unique = true)
+    private Long userId;
 
-    @Column(name = "hpID")
-    private Long hpID;
+    @Column(name = "hpId")
+    private Long hpId;
 
     @Column(name = "email")
     private String email;
@@ -88,9 +88,9 @@ public class UserDo {
     private List<BuyItem> buyItem;
 
     @Builder
-    public UserDo(Long userID, String email, String password, String name, String nickname, String profileImage,
+    public UserDo(Long userId, String email, String password, String name, String nickname, String profileImage,
             Date birthday, String phone, String gender) {
-        this.userID = userID;
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -117,8 +117,8 @@ public class UserDo {
         this.password = password;
     }
 
-    public void sethpID(Long hpID) {
-        this.hpID = hpID;
+    public void sethpID(Long hpId) {
+        this.hpId = hpId;
     }
 
 }

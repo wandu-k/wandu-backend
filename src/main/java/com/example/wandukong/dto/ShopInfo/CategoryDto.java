@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @Component
 public class CategoryDto {
-  private Long categoryID;
+  private Long categoryId;
   private String categoryName;
 
   /* 상점 분류-음악, 아바타 부위분류 */
   public Category toEntity() {
 
     Category category = Category.builder()
-        .categoryID(categoryID)
+        .categoryId(categoryId)
         .categoryName(categoryName)
         .build();
     return category;

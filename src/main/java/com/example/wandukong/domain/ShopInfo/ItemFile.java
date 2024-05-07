@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -20,11 +21,12 @@ import lombok.NoArgsConstructor;
 public class ItemFile {
 
     @Id
-    @Column(name = "itemID")
-    private Shop itemID;
+    private Long itemfileId;
+    private String shopitemfile;
 
+    @MapsId
     @OneToOne
-    @JoinColumn(name = "itemID", referencedColumnName = "itemID", unique = true)
+    @JoinColumn(name = "itemId", referencedColumnName = "itemId", unique = true)
     private Shop shop;
 
     @Column(name = "uuid")
@@ -34,9 +36,11 @@ public class ItemFile {
     private String fileName;
 
     @Builder
-    public ItemFile(Shop itemID, String fileName, String uuid) {
-        this.itemID = itemID;
+    public ItemFile(Shop shop, String fileName, String uuid, Long itemfileId, String shopitemfile) {
+        this.itemfileId = itemfileId;
+        this.shop = shop;
         this.fileName = fileName;
         this.uuid = uuid;
+        this.shopitemfile = shopitemfile;
     }
 }

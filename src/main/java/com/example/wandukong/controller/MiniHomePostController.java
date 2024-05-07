@@ -1,14 +1,16 @@
 package com.example.wandukong.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.CustomUserDetails;
@@ -24,11 +26,6 @@ import com.example.wandukong.service.MiniHomePostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Tag(name = "미니홈 게시글", description = "미니홈 게시글 API")
 @RequestMapping("/api/minihome/post")
@@ -61,7 +58,7 @@ public class MiniHomePostController {
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postID)
             throws PostNotFoundException, PermissionDeniedException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserID();
+            Long userID = customUserDetails.getUserDto().getUserId();
             miniHomePostService.deletePost(userID, postID);
             return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
         }
@@ -76,10 +73,10 @@ public class MiniHomePostController {
         if (customUserDetails != null) {
 
             miniHomePostDto = MiniHomePostDto.builder()
-                    .postID(miniHomePostDto.getUserID())
-                    .userID(customUserDetails.getUserDto().getUserID())
-                    .hpID(customUserDetails.getUserDto().getHpID())
-                    .boardID(miniHomePostDto.getBoardID())
+                    .postId(miniHomePostDto.getUserId())
+                    .userId(customUserDetails.getUserDto().getUserId())
+                    .hpId(customUserDetails.getUserDto().getHpId())
+                    .boardId(miniHomePostDto.getBoardId())
                     .title(miniHomePostDto.getTitle())
                     .content(miniHomePostDto.getContent())
                     .build();

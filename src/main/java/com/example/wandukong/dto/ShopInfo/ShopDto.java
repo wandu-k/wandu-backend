@@ -15,19 +15,19 @@ import lombok.Setter;
 @Component
 @Builder
 public class ShopDto {
-  private Long userID;
-  private Long itemID;
+  private Long userId;
+  private Long itemId;
   private String itemName;
-  private Long categoryID;
+  private Long categoryId;
 
   /* 상점 */
   public Shop toEntity() {
 
     Shop shop = Shop.builder()
-        .itemID(itemID)
+        .itemId(itemId)
         .itemName(itemName)
-        .userDo(UserDo.builder().userID(userID).build())
-        .category(Category.builder().categoryID(categoryID).build())
+        .userDo(UserDo.builder().userId(userId).build())
+        .category(Category.builder().categoryId(categoryId).build())
         .build();
     return shop;
   }

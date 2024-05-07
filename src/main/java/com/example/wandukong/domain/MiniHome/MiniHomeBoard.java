@@ -11,10 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -24,8 +24,8 @@ public class MiniHomeBoard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "boardID", unique = true)
-    private Long boardID;
+    @Column(name = "boardId", unique = true)
+    private Long boardId;
 
     @Column(name = "categoryName")
     private String boardName;
@@ -34,8 +34,8 @@ public class MiniHomeBoard {
     private List<MiniHomePost> miniHomePost = new ArrayList<>();
 
     @Builder
-    public MiniHomeBoard(Long boardID, String boardName, List<MiniHomePost> miniHomePost) {
-        this.boardID = boardID;
+    public MiniHomeBoard(Long boardId, String boardName, List<MiniHomePost> miniHomePost) {
+        this.boardId = boardId;
         this.boardName = boardName;
         this.miniHomePost = miniHomePost;
     }

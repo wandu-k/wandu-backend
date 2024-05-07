@@ -2,6 +2,7 @@ package com.example.wandukong.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,8 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         miniHome.viewCount(miniHome.getHpToday() + 1, miniHome.getAllVisit() + 1);
 
         MiniHomeDto miniHomeDto = MiniHomeDto.builder()
-                .userID(miniHome.getUserDo().getUserID())
-                .hpID(miniHome.getHpID())
+                .userId(miniHome.getUserDo().getUserId())
+                .hpId(miniHome.getHpId())
                 .statusM(miniHome.getStatusM())
                 .introduction(miniHome.getIntroduction())
                 .hpToday(miniHome.getHpToday())
@@ -54,7 +55,7 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
         for (MiniHomeBoard miniHomeBoard : miniHomeBoards) {
             MiniHomeBoardDto miniHomeBoardDto = new MiniHomeBoardDto();
-            miniHomeBoardDto.setBoardID(miniHomeBoard.getBoardID());
+            miniHomeBoardDto.setBoardId(miniHomeBoard.getBoardId());
             miniHomeBoardDto.setBoardName(miniHomeBoard.getBoardName());
         }
 

@@ -1,6 +1,7 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +17,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
-
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
@@ -76,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
             }
             userDo = accountRepository.save(userDo);
 
-            log.info("회원가입된 회원 아이디" + userDo.getUserID());
+            log.info("회원가입된 회원 아이디" + userDo.getUserId());
 
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHome miniHome = MiniHome.builder()
@@ -84,11 +84,11 @@ public class AccountServiceImpl implements AccountService {
                     .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
 
-            log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
+            log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 
             miniHome = miniHpRepository.save(miniHome);
             // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
-            userDo.sethpID(miniHome.getHpID());
+            userDo.sethpID(miniHome.getHpId());
 
         } else {
             throw new UserAlreadyExistsException();
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userDto.getUserID())
+        UserDo userDo = accountRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
@@ -127,12 +127,12 @@ public class AccountServiceImpl implements AccountService {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + userDto.getUserID() + "/profile/";
+        String filePath = "users/" + userDto.getUserId() + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
 
-        String filename = "profile" + "_" + userDto.getUserID() + extension;
+        String filename = "profile" + "_" + userDto.getUserId() + extension;
 
         String profileImagePath = filePath + filename;
 
@@ -161,7 +161,7 @@ public class AccountServiceImpl implements AccountService {
         // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
         UserDto userDto = UserDto.builder()
-                .userID(userDo.getUserID())
+                .userId(userDo.getUserId())
                 .email(userDo.getEmail())
                 .profileImage(amazonS3.getUrl(bucketName, objectKey).toString())
                 .build();
@@ -175,7 +175,7 @@ public class AccountServiceImpl implements AccountService {
         UserDo userDo = accountRepository.findById(userID)
                 .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = UserDto.builder()
-                .userID(userDo.getUserID())
+                .userId(userDo.getUserId())
                 .nickname(userDo.getNickname())
                 .build();
 

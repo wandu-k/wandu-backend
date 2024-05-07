@@ -29,19 +29,19 @@ public class BuyItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemBuyID", unique = true)
-    private Long itemBuyID;
+    @Column(name = "itemBuyId", unique = true)
+    private Long itemBuyId;
 
     @ManyToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
     @ManyToOne
-    @JoinColumn(name = "itemID", referencedColumnName = "itemID")
+    @JoinColumn(name = "itemId", referencedColumnName = "itemId")
     private Shop shop;
 
     @ManyToOne
-    @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
+    @JoinColumn(name = "categoryID", referencedColumnName = "categoryId")
     private Category category;
 
     @OneToMany(mappedBy = "buyItem", cascade = CascadeType.ALL)

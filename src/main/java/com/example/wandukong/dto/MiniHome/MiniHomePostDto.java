@@ -7,21 +7,21 @@ import lombok.Getter;
 
 @Getter
 public class MiniHomePostDto {
-    private Long postID = (long) 0;
-    private Long boardID;
-    private Long userID;
-    private Long hpID;
+    private Long postId = (long) 0;
+    private Long boardId;
+    private Long userId;
+    private Long hpId;
     private String title;
     private String content;
     private LocalDate writeDay;
 
     @Builder
-    public MiniHomePostDto(Long postID, Long boardID, Long userID, Long hpID, String title, String content,
+    public MiniHomePostDto(Long postId, Long boardId, Long userId, Long hpId, String title, String content,
             LocalDate writeDay) {
-        this.postID = postID;
-        this.boardID = boardID;
-        this.userID = userID;
-        this.hpID = hpID;
+        this.postId = postId;
+        this.boardId = boardId;
+        this.userId = userId;
+        this.hpId = hpId;
         this.title = title;
         this.content = content;
         this.writeDay = writeDay;

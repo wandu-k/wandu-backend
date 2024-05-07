@@ -20,7 +20,6 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.UserDto;
-import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
@@ -46,13 +45,12 @@ public class ShopController {
 
   // 업로드된 아이템 정보(아이템정보, 아이템 이미지, 등록자 조회)
   @GetMapping("/itemlist")
-  public ResponseEntity<?> getShopitemlist(@RequestBody PageRequestDto pageRequestDto, @RequestBody ShopDto shopDto,
-      @RequestBody UserDto userDto)
+  public ResponseEntity<?> getShopitemlist(@RequestBody PageRequestDto pageRequestDto)
       throws itemlistNotFoundException {
 
     PageResponseDto<ShopInfoDto> shopitemList = shopservice.getShopitemList(pageRequestDto);
 
-    if (shopDto == null) {
+    if (shopitemList == null) {
       return new ResponseEntity<>("현재 등록된 아이템이 없습니다", HttpStatus.OK);
     }
 
@@ -65,14 +63,15 @@ public class ShopController {
   @GetMapping("/{nickName}/myitemList")
   public ResponseEntity<?> getItemList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
       @PathVariable String nickName,
-      @RequestBody ShopInfoDto shopInfoDto, @RequestBody PageRequestDto pageRequestDto) {
+      @RequestBody ShopInfoDto shopInfoDto, @RequestBody PageRequestDto pageRequestDto) throws UserNotFoundException {
 
     if (customUserDetails != null) {
       UserDto loginUser = customUserDetails.getUserDto();
 
-      if (loginUser.getUserID().equals(shopInfoDto.getShopDto().getUserID()) && shopInfoDto != null) {
+      if (loginUser.getUserId().equals(shopInfoDto.getShopDto().getUserId()) && shopInfoDto != null) {
 
-        PageResponseDto<ShopInfoDto> responseDto = shopservice.getMyitemUploadList(pageRequestDto);
+        PageResponseDto<ShopInfoDto> responseDto = shopservice.getMyitemUploadList(pageRequestDto,
+            loginUser);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
       } else {
@@ -96,7 +95,7 @@ public class ShopController {
       @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto)
       throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
-    if (customUserDetails.getUserDto().getUserID() != null) {
+    if (customUserDetails.getUserDto().getUserId() != null) {
       shopservice.putPost(itemfile, shopInfoDto, customUserDetails);
 
       return new ResponseEntity<>("아이템 등록이 완료되었습니다.", HttpStatus.CREATED);
@@ -120,7 +119,7 @@ public class ShopController {
       @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto,
       @PathVariable Long itemID) throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
-    if (customUserDetails.getUserDto().getUserID() != null) {
+    if (customUserDetails.getUserDto().getUserId() != null) {
 
       shopservice.updateItemFile(itemfile, shopInfoDto, customUserDetails);
 

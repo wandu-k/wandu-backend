@@ -13,17 +13,17 @@ import lombok.Setter;
 @Component
 public class PlaylistDto {
 
-  private Long playlistID;
+  private Long playlistId;
   private String plName;
-  private Long musicBuyID;
-  private Long hpID;
+  private Long musicBuyId;
+  private Long hpId;
 
   /* 모든 사용자의 플레이리스트 */
   public Playlist toEntity() {
 
     Playlist playlist = Playlist.builder()
-        .playlistID(playlistID)
-        .miniHome(MiniHome.builder().hpID(hpID).build())
+        .playlistId(playlistId)
+        .miniHome(MiniHome.builder().hpId(hpId).build())
         .plName(plName)
         .build();
     return playlist;

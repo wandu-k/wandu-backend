@@ -23,11 +23,11 @@ public class Ask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "askID", unique = true)
-    private Long askID;
+    @Column(name = "askId", unique = true)
+    private Long askId;
 
-    @Column(name = "userID")
-    private String userID;
+    @Column(name = "userId")
+    private String userId;
 
     @Column(name = "title")
     private String title;

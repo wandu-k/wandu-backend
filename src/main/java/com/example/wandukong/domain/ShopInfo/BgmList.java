@@ -23,14 +23,14 @@ public class BgmList {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "bgmListID", unique = true)
-  private Long bgmListID;
+  @Column(name = "bgmListId", unique = true)
+  private Long bgmListId;
 
   @ManyToOne
-  @JoinColumn(name = "itemBuyID", referencedColumnName = "itemBuyID")
+  @JoinColumn(name = "itemBuyId", referencedColumnName = "itemBuyId")
   private BuyItem buyItem;
 
   @ManyToOne
-  @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
+  @JoinColumn(name = "playlistId", referencedColumnName = "playlistId")
   private Playlist playlist;
 }

@@ -14,19 +14,19 @@ import lombok.Setter;
 @Setter
 @Component
 public class BuyItemDto {
-  private Long itemBuyID;
-  private Long userID;
-  private Long itemID;
-  private Long categoryID;
+  private Long itemBuyId;
+  private Long userId;
+  private Long itemId;
+  private Long categoryId;
 
   /* 내 아바타 인벤토리 */
   public BuyItem toEntity() {
 
     BuyItem buyItem = BuyItem.builder()
-        .itemBuyID(itemBuyID)
-        .userDo(UserDo.builder().userID(userID).build())
-        .shop(Shop.builder().itemID(itemID).build())
-        .category(Category.builder().categoryID(categoryID).build())
+        .itemBuyId(itemBuyId)
+        .userDo(UserDo.builder().userId(userId).build())
+        .shop(Shop.builder().itemId(itemId).build())
+        .category(Category.builder().categoryId(categoryId).build())
         .build();
     return buyItem;
   }

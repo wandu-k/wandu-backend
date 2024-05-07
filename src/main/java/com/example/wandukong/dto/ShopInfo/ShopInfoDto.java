@@ -13,17 +13,17 @@ public class ShopInfoDto {
   private UserDto userDto;
   private ItemFileDto itemFileDto;
   private CategoryDto categoryDto;
-  private Long userID;
+  private Long userId;
   private String nickName;
 
   @Builder
   public ShopInfoDto(ShopDto shopDto, UserDto userDto, UserDo userDo, ItemFileDto itemFileDto, CategoryDto categoryDto,
-      Long userID,
-      String nickName) {
+      Long userId, String nickName) {
     this.shopDto = shopDto;
     this.userDto = userDto;
     this.itemFileDto = itemFileDto;
     this.categoryDto = categoryDto;
+    this.userId = userId;
     this.nickName = userDto != null ? userDto.getNickname() : null;
   }
 

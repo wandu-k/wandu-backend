@@ -14,19 +14,22 @@ import lombok.Setter;
 @Component
 @Builder
 public class ItemFileDto {
-  private Long musicBuyID;
-  private Long userID;
-  private Long itemID;
+  private Long itemfileId;
+  private Long userId;
+  private Long itemId;
   private String fileName;
   private String uuid;
+  private String shopitemfile;
 
   /* 유저 음악 인벤토리 */
   public ItemFile toEntity() {
 
     ItemFile itemfile = ItemFile.builder()
-        .itemID(Shop.builder().itemID(itemID).build())
+        .itemfileId(itemfileId)
+        .shop(Shop.builder().itemId(itemId).build())
         .fileName(fileName)
         .uuid(uuid)
+        .shopitemfile(shopitemfile)
         .build();
     return itemfile;
   }

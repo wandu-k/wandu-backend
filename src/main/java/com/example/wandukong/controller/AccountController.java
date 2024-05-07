@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -32,7 +33,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @Tag(name = "계정", description = "계정 API")
 @RequestMapping("/api/user")
@@ -108,7 +108,7 @@ public class AccountController {
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             UserDto userDto = customUserDetails.getUserDto();
-            accountService.deleteAccount(userDto.getUserID());
+            accountService.deleteAccount(userDto.getUserId());
             return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
         }
 
@@ -148,7 +148,7 @@ public class AccountController {
             @RequestParam String currentPassword, @RequestParam String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserID();
+            Long userID = customUserDetails.getUserDto().getUserId();
 
             accountService.updatePassword(userID, currentPassword, newPassword);
             return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);

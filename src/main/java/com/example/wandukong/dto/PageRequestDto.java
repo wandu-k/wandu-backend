@@ -27,4 +27,8 @@ public class PageRequestDto {
 
     return PageRequest.of(page, size);
   }
+
+  public int getOffset() {
+    return (page - 1) * size;
+  }
 }

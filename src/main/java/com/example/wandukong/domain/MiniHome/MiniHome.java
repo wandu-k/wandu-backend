@@ -16,10 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,8 +29,8 @@ public class MiniHome {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hpID", unique = true)
-    private Long hpID;
+    @Column(name = "hpId", unique = true)
+    private Long hpId;
 
     @Column(name = "statusM")
     private String statusM;
@@ -59,9 +59,9 @@ public class MiniHome {
     private List<MiniHomePost> miniHomePost = new ArrayList<>();
 
     @Builder
-    public MiniHome(Long hpID, String statusM, String introduction, int hpToday, int allVisit, int hpOpen,
+    public MiniHome(Long hpId, String statusM, String introduction, int hpToday, int allVisit, int hpOpen,
             UserDo userDo, List<MiniHomePost> miniHomePost) {
-        this.hpID = hpID;
+        this.hpId = hpId;
         this.statusM = statusM;
         this.introduction = introduction;
         this.hpToday = hpToday;
