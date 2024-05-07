@@ -23,7 +23,7 @@ public class ItemFile {
     @EmbeddedId
     private ItemFileId itemfileId;
 
-    @MapsId("itemId")
+    @MapsId(value = "itemId")
     @OneToOne
     @JoinColumn(name = "itemId", referencedColumnName = "itemId", unique = true)
     private Shop shop;

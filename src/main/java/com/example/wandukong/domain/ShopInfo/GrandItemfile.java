@@ -12,9 +12,9 @@ import jakarta.persistence.Table;
 @Table(name = "GrandItemfile")
 public class GrandItemfile {
   @EmbeddedId
-  private GrandItemfileId id;
+  private GrandItemfileId grandItemfileId;
 
-  @MapsId("itemfileId") // GrandChildId.childId 매핑
+  @MapsId(value = "itemfileId") // GrandChildId.childId 매핑
   @OneToOne
   @JoinColumns({
       @JoinColumn(name = "itemId", referencedColumnName = "itemId"),

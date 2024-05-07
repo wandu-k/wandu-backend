@@ -14,6 +14,6 @@ public class ItemFileId implements Serializable {
 
   private String itemId;
 
-  @Column
+  @Column(name = "itemfileId")
   private String itemfileId;
 }
