@@ -34,7 +34,7 @@ public class Shop {
     @Column(name = "itemId", unique = true)
     private Long itemId;
 
-    private String shopmain;
+    private String name;
 
     @Column(name = "itemName")
     private String itemName;

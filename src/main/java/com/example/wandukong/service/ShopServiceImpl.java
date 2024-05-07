@@ -105,7 +105,7 @@ public class ShopServiceImpl implements ShopService {
       throws itemUploadNotFoundException, IOException {
 
     if (customUserDetails != null) {
-      Shop shop = shopInfoRepository.findByItemID(shopInfoDto.getShopDto().getItemId());
+      Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
 
       itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 

@@ -41,7 +41,7 @@ public class BuyItem {
     private Shop shop;
 
     @ManyToOne
-    @JoinColumn(name = "categoryID", referencedColumnName = "categoryId")
+    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     private Category category;
 
     @OneToMany(mappedBy = "buyItem", cascade = CascadeType.ALL)

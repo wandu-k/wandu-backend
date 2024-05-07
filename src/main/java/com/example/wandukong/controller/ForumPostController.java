@@ -1,5 +1,7 @@
 package com.example.wandukong.controller;
 
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +15,7 @@ import com.example.wandukong.dto.ForumPostDto;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.service.ForumPostService;
-import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -44,9 +46,9 @@ public class ForumPostController {
   }
 
   @PutMapping("/{postID}")
-  public Map<String, String> modify(@PathVariable Long postID, @RequestBody ForumPostDto forumPostDto) {
+  public Map<String, String> modify(@PathVariable Long postId, @RequestBody ForumPostDto forumPostDto) {
 
-    forumPostDto.setPostID(postID);
+    forumPostDto.setPostId(postId);
 
     forumPostService.modify(forumPostDto);
 

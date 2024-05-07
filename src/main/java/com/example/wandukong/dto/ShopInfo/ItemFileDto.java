@@ -3,6 +3,7 @@ package com.example.wandukong.dto.ShopInfo;
 import org.springframework.stereotype.Component;
 
 import com.example.wandukong.domain.ShopInfo.ItemFile;
+import com.example.wandukong.domain.ShopInfo.ItemFileId;
 import com.example.wandukong.domain.ShopInfo.Shop;
 
 import lombok.Builder;
@@ -14,12 +15,11 @@ import lombok.Setter;
 @Component
 @Builder
 public class ItemFileDto {
-  private Long itemfileId;
+  private ItemFileId itemfileId;
   private Long userId;
   private Long itemId;
   private String fileName;
   private String uuid;
-  private String shopitemfile;
 
   /* 유저 음악 인벤토리 */
   public ItemFile toEntity() {
@@ -29,7 +29,6 @@ public class ItemFileDto {
         .shop(Shop.builder().itemId(itemId).build())
         .fileName(fileName)
         .uuid(uuid)
-        .shopitemfile(shopitemfile)
         .build();
     return itemfile;
   }

@@ -1,8 +1,8 @@
 package com.example.wandukong.domain.ShopInfo;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
@@ -20,14 +20,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "ItemFile")
 public class ItemFile {
 
-    @Id
-    private Long itemfileId;
-    private String shopitemfile;
+    @EmbeddedId
+    private ItemFileId itemfileId;
 
-    @MapsId
+    @MapsId("itemId")
     @OneToOne
     @JoinColumn(name = "itemId", referencedColumnName = "itemId", unique = true)
     private Shop shop;
+
+    private String name;
 
     @Column(name = "uuid")
     private String uuid;
@@ -36,11 +37,11 @@ public class ItemFile {
     private String fileName;
 
     @Builder
-    public ItemFile(Shop shop, String fileName, String uuid, Long itemfileId, String shopitemfile) {
+    public ItemFile(Shop shop, String fileName, String uuid, ItemFileId itemfileId, String name) {
         this.itemfileId = itemfileId;
         this.shop = shop;
         this.fileName = fileName;
         this.uuid = uuid;
-        this.shopitemfile = shopitemfile;
+        this.name = name;
     }
 }

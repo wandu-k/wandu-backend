@@ -23,11 +23,11 @@ public class ShopInfoPageRepositoryImpl extends QuerydslRepositorySupport implem
   }
 
   @Override
-  public Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto, UserDo userID) {
+  public Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto, UserDo userId) {
     QShop shop = QShop.shop;
     JPQLQuery<Shop> query = from(shop);
 
-    query.where(shop.userDo.eq(userID))
+    query.where(shop.userDo.eq(userId))
         .leftJoin(shop.category).fetchJoin()
         .leftJoin(shop.itemFile).fetchJoin();
 

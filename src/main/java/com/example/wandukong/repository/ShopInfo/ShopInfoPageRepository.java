@@ -10,5 +10,5 @@ public interface ShopInfoPageRepository {
 
   Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto);
 
-  Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto, UserDo userID);
+  Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto, UserDo userId);
 }

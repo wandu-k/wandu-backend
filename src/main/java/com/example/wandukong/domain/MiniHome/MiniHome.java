@@ -48,11 +48,11 @@ public class MiniHome {
     private int hpOpen;
 
     @OneToOne
-    @JoinColumn(name = "userID", referencedColumnName = "userID")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
     @OneToOne
-    @JoinColumn(name = "playlistID", referencedColumnName = "playlistID")
+    @JoinColumn(name = "playlistId", referencedColumnName = "playlistId")
     private Playlist playlist;
 
     @OneToMany(mappedBy = "miniHome", cascade = CascadeType.ALL, orphanRemoval = true)

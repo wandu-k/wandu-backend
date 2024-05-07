@@ -8,6 +8,6 @@ import com.example.wandukong.domain.ShopInfo.Shop;
 @Repository
 public interface ShopInfoRepository extends JpaRepository<Shop, Long> {
 
-  Shop findByItemID(Long itemID);
+  Shop findByItemId(Long itemId);
 
 }
