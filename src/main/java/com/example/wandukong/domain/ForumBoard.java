@@ -25,7 +25,7 @@ public class ForumBoard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardID;
+    private Long boardId;
 
     private String boardName;
 
@@ -35,5 +35,5 @@ public class ForumBoard {
     public void changeBoardName(String boardName) {
         this.boardName = boardName;
     }
-    
+
 }

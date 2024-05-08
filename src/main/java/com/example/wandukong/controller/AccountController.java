@@ -47,9 +47,9 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @GetMapping
-    public ResponseEntity<?> getMyInfo(@RequestParam Long userID) throws UserNotFoundException {
+    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
 
-        UserDto userDto = accountService.getMyInfo(userID);
+        UserDto userDto = accountService.getUserInfo(userID);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class AccountController {
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             UserDto userDto = customUserDetails.getUserDto();
-            accountService.deleteAccount(userDto.getUserID());
+            accountService.deleteAccount(userDto.getUserId());
             return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
         }
 
@@ -103,7 +103,7 @@ public class AccountController {
             @RequestParam String currentPassword, @RequestParam String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserID();
+            Long userID = customUserDetails.getUserDto().getUserId();
 
             accountService.updatePassword(userID, currentPassword, newPassword);
             return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);

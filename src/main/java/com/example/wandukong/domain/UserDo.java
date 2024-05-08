@@ -1,15 +1,16 @@
 package com.example.wandukong.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
+import com.example.wandukong.domain.ShopInfo.BuyItem;
+import com.example.wandukong.domain.ShopInfo.Playlist;
+import com.example.wandukong.domain.ShopInfo.Shop;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,7 +18,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -27,7 +27,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicInsert
 @Getter
 @Entity
 @Table(name = "Users")
@@ -37,6 +36,9 @@ public class UserDo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId", unique = true)
     private Long userId;
+
+    @Column(name = "hpId")
+    private Long hpId;
 
     @Column(name = "email")
     private String email;
@@ -66,20 +68,28 @@ public class UserDo {
     @Column(name = "gender")
     private String gender;
 
-    @ColumnDefault("'ROLE_USER'")
+    @ColumnDefault("0")
     @Column(name = "role")
-    private String role = "ROLE_USER";
+    private int role;
 
     @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "hpId")
     private MiniHome miniHome;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MiniHomePost> minihomePost;
 
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Playlist> playlist;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Shop> shop;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BuyItem> buyItem;
+
     @Builder
     public UserDo(Long userId, String email, String password, String name, String nickname, String profileImage,
-            Date birthday, String phone, String gender, String role) {
+            Date birthday, String phone, String gender) {
         this.userId = userId;
         this.email = email;
         this.password = password;

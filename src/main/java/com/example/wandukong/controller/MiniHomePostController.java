@@ -38,9 +38,9 @@ public class MiniHomePostController {
 
     @Operation(summary = "미니홈 게시글 번호로 내용 조회", description = "특정 게시글 내용 조회")
     @GetMapping
-    public ResponseEntity<?> getPost(@RequestParam Long postID) throws PostNotFoundException {
+    public ResponseEntity<?> getPost(@RequestParam Long postId) throws PostNotFoundException {
 
-        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postID);
+        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postId);
 
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
     }
@@ -59,7 +59,7 @@ public class MiniHomePostController {
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postID)
             throws PostNotFoundException, PermissionDeniedException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserID();
+            Long userID = customUserDetails.getUserDto().getUserId();
             miniHomePostService.deletePost(userID, postID);
             return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
         }
@@ -74,10 +74,10 @@ public class MiniHomePostController {
         if (customUserDetails != null) {
 
             miniHomePostDto = MiniHomePostDto.builder()
-                    .postID(miniHomePostDto.getUserID())
-                    .userID(customUserDetails.getUserDto().getUserID())
-                    .hpID(customUserDetails.getUserDto().getHpID())
-                    .boardID(miniHomePostDto.getBoardID())
+                    .postId(miniHomePostDto.getUserId())
+                    .userId(customUserDetails.getUserDto().getUserId())
+                    .hpId(customUserDetails.getUserDto().getHpId())
+                    .boardId(miniHomePostDto.getBoardId())
                     .title(miniHomePostDto.getTitle())
                     .content(miniHomePostDto.getContent())
                     .build();

@@ -24,9 +24,9 @@ public class ForumPostController {
   private final ForumPostService forumPostService;
 
   @GetMapping("/{postID}")
-  public ForumPostDto get(@PathVariable Long postID) {
+  public ForumPostDto get(@PathVariable Long postId) {
 
-    return forumPostService.get(postID);
+    return forumPostService.get(postId);
   }
 
   @GetMapping("/list")
@@ -44,9 +44,9 @@ public class ForumPostController {
   }
 
   @PutMapping("/{postID}")
-  public Map<String, String> modify(@PathVariable Long postID, @RequestBody ForumPostDto forumPostDto) {
+  public Map<String, String> modify(@PathVariable Long postId, @RequestBody ForumPostDto forumPostDto) {
 
-    forumPostDto.setPostID(postID);
+    forumPostDto.setPostId(postId);
 
     forumPostService.modify(forumPostDto);
 
