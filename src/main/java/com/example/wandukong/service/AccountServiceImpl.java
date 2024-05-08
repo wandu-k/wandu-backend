@@ -1,8 +1,6 @@
 package com.example.wandukong.service;
 
 import java.io.IOException;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -75,9 +73,7 @@ public class AccountServiceImpl implements AccountService {
             }
             userDo = accountRepository.save(userDo);
 
-            log.info(userDo.getRole());
-
-            log.info("회원가입된 회원 아이디" + userDo.getUserID());
+            log.info("회원가입된 회원 아이디" + userDo.getUserId());
 
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
             MiniHome miniHome = MiniHome.builder()
@@ -85,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
                     .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
 
-            log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserID());
+            log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 
             miniHome = miniHpRepository.save(miniHome);
             // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
@@ -97,9 +93,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccount(Long userID) {
-        accountRepository.deleteById(userID);
-        amazonS3.deleteObject(bucketName, "users/" + userID + "/");
+    public void deleteAccount(Long userId) {
+        accountRepository.deleteById(userId);
+        amazonS3.deleteObject(bucketName, "users/" + userId + "/");
 
     }
 
@@ -108,7 +104,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userDto.getUserID())
+        UserDo userDo = accountRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
@@ -128,12 +124,12 @@ public class AccountServiceImpl implements AccountService {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + userDto.getUserID() + "/profile/";
+        String filePath = "users/" + userDto.getUserId() + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
 
-        String filename = "profile" + "_" + userDto.getUserID() + extension;
+        String filename = "profile" + "_" + userDto.getUserId() + extension;
 
         String profileImagePath = filePath + filename;
 
@@ -145,39 +141,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public UserDto getMyInfo(Long userID) throws UserNotFoundException {
+    public UserDto getUserInfo(Long userId) throws UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userID)
-                .orElseThrow(() -> new UserNotFoundException());
-
-        String objectKey = userDo.getProfileImage();
-
-        // KMS 암호화 파일 주소 만들때 쓰는 코드
-
-        // Date expiration = new Date(System.currentTimeMillis() + 3600000);
-        // GeneratePresignedUrlRequest generatePresignedUrlRequest = new
-        // GeneratePresignedUrlRequest(bucketName, objectKey)
-        // .withMethod(HttpMethod.GET)
-        // .withExpiration(expiration);
-
-        // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-
-        UserDto userDto = UserDto.builder()
-                .userID(userDo.getUserID())
-                .email(userDo.getEmail())
-                .profileImage(amazonS3.getUrl(bucketName, objectKey).toString())
-                .build();
-
-        return userDto;
-    }
-
-    @Override
-    public UserDto getUserInfo(Long userID) throws UserNotFoundException {
-
-        UserDo userDo = accountRepository.findById(userID)
+        UserDo userDo = accountRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = UserDto.builder()
-                .userID(userDo.getUserID())
+                .userId(userDo.getUserId())
                 .nickname(userDo.getNickname())
                 .build();
 
@@ -186,9 +155,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public void updatePassword(Long userID, String currentPassword, String newPassword)
+    public void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
-        UserDo userDo = accountRepository.findById(userID).orElseThrow(() -> new UserNotFoundException());
+        UserDo userDo = accountRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
         if (!passwordEncoder.matches(currentPassword, userDo.getPassword())) {
             throw new IncorrectPasswordException();
@@ -196,4 +165,28 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(newPassword);
         userDo.changePassword(encodedPw);
     }
+
+    // 필요없는 부분
+
+    // @Override
+    // public void login(UserDto userDto, HttpServletRequest request) {
+    // log.info(userDto.getEmail());
+    // log.info(userDto.getPassword());
+
+    // // 인증 토큰 생성
+    // UsernamePasswordAuthenticationToken token = new
+    // UsernamePasswordAuthenticationToken(userDto.getEmail(),
+    // userDto.getPassword());
+
+    // // 토큰에 요청정보 등록
+    // token.setDetails(new WebAuthenticationDetails(request));
+
+    // // 토큰을 이용하여 인증 요청 로그인
+    // Authentication authentication = authenticationManager.authenticate(token);
+    // log.info("인증 정보 : " + authentication.isAuthenticated());
+
+    // User authUser = (User) authentication.getPrincipal();
+    // log.info("인증된 사용자 : " + authUser.getUsername());
+
+    // }
 }

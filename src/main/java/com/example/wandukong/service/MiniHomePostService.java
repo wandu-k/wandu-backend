@@ -10,9 +10,9 @@ import com.example.wandukong.model.ApiResponse;
 
 public interface MiniHomePostService {
 
-    MiniHomePostDto getPost(Long postID) throws PostNotFoundException;
+    MiniHomePostDto getPost(Long postId) throws PostNotFoundException;
 
-    void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException;
+    void deletePost(Long userID, Long postId) throws PostNotFoundException, PermissionDeniedException;
 
     ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException;
 

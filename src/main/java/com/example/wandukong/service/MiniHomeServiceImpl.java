@@ -38,9 +38,9 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
     @Transactional
     @Override
-    public MiniHomeDto getMiniHome(Long hpID) throws HomeNotFoundException {
+    public MiniHomeDto getMiniHome(Long hpId) throws HomeNotFoundException {
 
-        MiniHome miniHome = miniHomeRepository.findById(hpID)
+        MiniHome miniHome = miniHomeRepository.findById(hpId)
                 .orElseThrow(() -> new HomeNotFoundException());
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
@@ -48,8 +48,8 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
         String userIp = getIpUtil.getIp(request);
         String userAgent = request.getHeader("User-Agent");
-        String visitorkey = "visit" + ":" + hpID + ":" + userIp;
-        String viewKey = "view" + ":" + hpID;
+        String visitorkey = "visit" + ":" + hpId + ":" + userIp;
+        String viewKey = "view" + ":" + hpId;
 
         if (!redisTemplate.opsForValue().getOperations().hasKey(visitorkey)) {
             redisTemplate.opsForValue().set(visitorkey, userAgent, Duration.ofHours(24));
@@ -58,8 +58,8 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         }
 
         MiniHomeDto miniHomeDto = MiniHomeDto.builder()
-                .userID(miniHome.getUserDo().getUserID())
-                .hpID(miniHome.getHpID())
+                .userId(miniHome.getUserDo().getUserId())
+                .hpId(miniHome.getHpId())
                 .statusM(miniHome.getStatusM())
                 .introduction(miniHome.getIntroduction())
                 .hpToday(Integer.parseInt(redisTemplate.opsForValue().get(viewKey)))
@@ -78,7 +78,7 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
         for (MiniHomeBoard miniHomeBoard : miniHomeBoards) {
             MiniHomeBoardDto miniHomeBoardDto = new MiniHomeBoardDto();
-            miniHomeBoardDto.setBoardID(miniHomeBoard.getBoardID());
+            miniHomeBoardDto.setBoardId(miniHomeBoard.getBoardId());
             miniHomeBoardDto.setBoardName(miniHomeBoard.getBoardName());
             boardList.add(miniHomeBoardDto);
         }

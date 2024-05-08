@@ -38,15 +38,15 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         ApiResponse apiResponse;
 
         @Override
-        public MiniHomePostDto getPost(Long postID) throws PostNotFoundException {
+        public MiniHomePostDto getPost(Long postId) throws PostNotFoundException {
 
-                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
                                 .orElseThrow(() -> new PostNotFoundException());
 
                 MiniHomePostDto miniHomePostDto = MiniHomePostDto.builder()
-                                .postID(minihomePost.getPostID())
-                                .boardID(minihomePost.getMiniHomeBoard().getBoardID())
-                                .userID(minihomePost.getUserDo().getUserID())
+                                .postId(minihomePost.getPostId())
+                                .boardID(minihomePost.getMiniHomeBoard().getBoardId())
+                                .userID(minihomePost.getUserDo().getUserId())
                                 .hpID(minihomePost.getMiniHome().getHpID())
                                 .title(minihomePost.getTitle())
                                 .content(minihomePost.getContent())
@@ -56,24 +56,24 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Override
-        public void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException {
-                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+        public void deletePost(Long userID, Long postId) throws PostNotFoundException, PermissionDeniedException {
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
                                 .orElseThrow(() -> new PostNotFoundException());
 
-                if (minihomePost.getUserDo().getUserID() != userID) {
+                if (minihomePost.getUserDo().getUserId() != userID) {
                         throw new PermissionDeniedException();
                 }
-                miniHomePostRepository.deleteById(postID);
+                miniHomePostRepository.deleteById(postId);
         }
 
         @Transactional
         public ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException {
 
-                MiniHomeBoard miniHomeBoard = miniHomeBoardRepository.findById(miniHomePostDto.getBoardID())
+                MiniHomeBoard miniHomeBoard = miniHomeBoardRepository.findById(miniHomePostDto.getBoardId())
                                 .orElseThrow(() -> new BoardNotFoundException());
 
                 Optional<MiniHomePost> optionalMiniHomePost = miniHomePostRepository.findById(
-                                miniHomePostDto.getPostID());
+                                miniHomePostDto.getPostId());
 
                 if (optionalMiniHomePost.isPresent()) {
                         log.info("게시글이 이미 있습니다. 게시글 수정을 시작합니다.");
@@ -88,7 +88,7 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                 } else {
                         log.info("게시글이 없습니다. 게시글 등록을 시작합니다.");
                         MiniHomePost newPost = MiniHomePost.builder()
-                                        .userDo(UserDo.builder().userID(miniHomePostDto.getUserID()).build())
+                                        .userDo(UserDo.builder().userID(miniHomePostDto.getUserId()).build())
                                         .miniHome(MiniHome.builder().hpID(miniHomePostDto.getHpID()).build())
                                         .miniHomeBoard(miniHomeBoard)
                                         .title(miniHomePostDto.getTitle())
@@ -117,9 +117,9 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                 for (MiniHomePost post : posts) {
                         MiniHomePostDto postDto = new MiniHomePostDto();
                         postDto = MiniHomePostDto.builder()
-                                        .postID(post.getPostID())
-                                        .boardID(post.getMiniHomeBoard().getBoardID())
-                                        .userID(post.getUserDo().getUserID())
+                                        .postId(post.getPostId())
+                                        .boardID(post.getMiniHomeBoard().getBoardId())
+                                        .userID(post.getUserDo().getUserId())
                                         .hpID(post.getMiniHome().getHpID())
                                         .title(post.getTitle())
                                         .content(post.getContent())

@@ -10,35 +10,35 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface ForumPostService {
 
-  ForumPostDto get(Long postID);
+  ForumPostDto get(Long postId);
 
   Long register(ForumPostDto forumPostDto);
 
   void modify(ForumPostDto forumPostDto);
 
-  void remove(Long postID);
+  void remove(Long postId);
 
   PageResponseDto<ForumPostDto> getList(PageRequestDto pageRequestDto);
 
   default ForumPostDto entityToDto(ForumPost forumPost) {
 
     return ForumPostDto.builder()
-      .postID(forumPost.getPostID())
-      .title(forumPost.getTitle())
-      .content(forumPost.getContent())
-      .writeDate(forumPost.getWriteDate())
-      .state(forumPost.getState())
-      .build();
+        .postId(forumPost.getPostId())
+        .title(forumPost.getTitle())
+        .content(forumPost.getContent())
+        .writeDate(forumPost.getWriteDate())
+        .state(forumPost.getState())
+        .build();
   }
 
   default ForumPost dtoToEntity(ForumPostDto forumPostDto) {
 
     return ForumPost.builder()
-      .postID(forumPostDto.getPostID())
-      .title(forumPostDto.getTitle())
-      .content(forumPostDto.getContent())
-      .writeDate(forumPostDto.getWriteDate())
-      .state(forumPostDto.getState())
-      .build();
+        .postId(forumPostDto.getPostId())
+        .title(forumPostDto.getTitle())
+        .content(forumPostDto.getContent())
+        .writeDate(forumPostDto.getWriteDate())
+        .state(forumPostDto.getState())
+        .build();
   }
 }

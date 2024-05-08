@@ -11,15 +11,13 @@ public interface AccountService {
 
     void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException, IOException;
 
-    void deleteAccount(Long userID);
+    void deleteAccount(Long userId);
 
     void updateProfile(MultipartFile profileImage, UserDto userDto) throws UserNotFoundException, IOException;
 
-    UserDto getMyInfo(Long userID) throws UserNotFoundException;
+    UserDto getUserInfo(Long userId) throws UserNotFoundException;
 
-    UserDto getUserInfo(Long userID) throws UserNotFoundException;
-
-    void updatePassword(Long userID, String currentPassword, String newPassword)
+    void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException;
 
 }
