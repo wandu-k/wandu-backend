@@ -27,7 +27,7 @@ public class MiniHomePostSearchRepoImpl extends QuerydslRepositorySupport implem
         JPQLQuery<MiniHomePost> query = from(miniHomePost);
 
         if (pageRequestDto.getBoardId() != null && pageRequestDto.getBoardId() != 0) {
-            query.where(miniHomePost.miniHomeBoard.boardID.eq(pageRequestDto.getBoardId()));
+            query.where(miniHomePost.miniHomeBoard.boardId.eq(pageRequestDto.getBoardId()));
         }
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
                 Sort.by("postId").descending());
