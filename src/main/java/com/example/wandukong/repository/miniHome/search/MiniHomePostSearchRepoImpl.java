@@ -26,11 +26,11 @@ public class MiniHomePostSearchRepoImpl extends QuerydslRepositorySupport implem
 
         JPQLQuery<MiniHomePost> query = from(miniHomePost);
 
-        if (pageRequestDto.getBoardID() != null && pageRequestDto.getBoardID() != 0) {
-            query.where(miniHomePost.miniHomeBoard.boardID.eq(pageRequestDto.getBoardID()));
+        if (pageRequestDto.getBoardId() != null && pageRequestDto.getBoardId() != 0) {
+            query.where(miniHomePost.miniHomeBoard.boardID.eq(pageRequestDto.getBoardId()));
         }
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
-                Sort.by("postID").descending());
+                Sort.by("postId").descending());
 
         this.getQuerydsl().applyPagination(pageable, query);
 

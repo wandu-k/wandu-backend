@@ -43,8 +43,8 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder().header()
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
-                .claim("userid", customUserDetails.getUserDto().getUserID())
-                .claim("hpID", customUserDetails.getUserDto().getHpID())
+                .claim("userId", customUserDetails.getUserDto().getUserId())
+                .claim("hpId", customUserDetails.getUserDto().getHpId())
                 .claim("email", customUserDetails.getUserDto().getEmail())
                 .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
@@ -62,10 +62,10 @@ public class JwtTokenProvider {
         Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
 
         String email = parsedToken.getPayload().get("email").toString();
-        String strUserID = parsedToken.getPayload().get("userid").toString();
-        String strHpID = parsedToken.getPayload().get("hpID").toString();
-        Long userID = Long.valueOf(strUserID);
-        Long hpID = Long.valueOf(strHpID);
+        String strUserId = parsedToken.getPayload().get("userId").toString();
+        String strHpId = parsedToken.getPayload().get("hpId").toString();
+        Long userId = Long.valueOf(strUserId);
+        Long hpId = Long.valueOf(strHpId);
         String role = parsedToken.getPayload().get("rol").toString();
 
         log.info("토큰 데이터 추출 완료");
@@ -76,8 +76,8 @@ public class JwtTokenProvider {
 
         UserDto userDto = UserDto.builder()
                 .email(email)
-                .userID(userID)
-                .hpID(hpID)
+                .userId(userId)
+                .hpId(hpId)
                 .build();
 
         // GrantedAuthority 객체로 변환

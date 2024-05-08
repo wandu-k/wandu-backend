@@ -117,7 +117,7 @@ public class UserDo {
         this.password = password;
     }
 
-    public void sethpID(Long hpId) {
+    public void setHpId(Long hpId) {
         this.hpId = hpId;
     }
 

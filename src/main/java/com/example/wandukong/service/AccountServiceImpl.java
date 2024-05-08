@@ -85,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
 
             miniHome = miniHpRepository.save(miniHome);
             // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
-            userDo.sethpId(miniHome.getHpId());
+            userDo.setHpId(miniHome.getHpId());
 
         } else {
             throw new UserAlreadyExistsException();

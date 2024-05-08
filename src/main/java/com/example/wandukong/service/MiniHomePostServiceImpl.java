@@ -45,9 +45,9 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
 
                 MiniHomePostDto miniHomePostDto = MiniHomePostDto.builder()
                                 .postId(minihomePost.getPostId())
-                                .boardID(minihomePost.getMiniHomeBoard().getBoardId())
-                                .userID(minihomePost.getUserDo().getUserId())
-                                .hpID(minihomePost.getMiniHome().getHpID())
+                                .boardId(minihomePost.getMiniHomeBoard().getBoardId())
+                                .userId(minihomePost.getUserDo().getUserId())
+                                .hpId(minihomePost.getMiniHome().getHpId())
                                 .title(minihomePost.getTitle())
                                 .content(minihomePost.getContent())
                                 .writeDay(minihomePost.getWriteDay()).build();
@@ -88,8 +88,8 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                 } else {
                         log.info("게시글이 없습니다. 게시글 등록을 시작합니다.");
                         MiniHomePost newPost = MiniHomePost.builder()
-                                        .userDo(UserDo.builder().userID(miniHomePostDto.getUserId()).build())
-                                        .miniHome(MiniHome.builder().hpID(miniHomePostDto.getHpID()).build())
+                                        .userDo(UserDo.builder().userId(miniHomePostDto.getUserId()).build())
+                                        .miniHome(MiniHome.builder().hpId(miniHomePostDto.getHpId()).build())
                                         .miniHomeBoard(miniHomeBoard)
                                         .title(miniHomePostDto.getTitle())
                                         .content(miniHomePostDto.getContent())
@@ -118,9 +118,9 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
                         MiniHomePostDto postDto = new MiniHomePostDto();
                         postDto = MiniHomePostDto.builder()
                                         .postId(post.getPostId())
-                                        .boardID(post.getMiniHomeBoard().getBoardId())
-                                        .userID(post.getUserDo().getUserId())
-                                        .hpID(post.getMiniHome().getHpID())
+                                        .boardId(post.getMiniHomeBoard().getBoardId())
+                                        .userId(post.getUserDo().getUserId())
+                                        .hpId(post.getMiniHome().getHpId())
                                         .title(post.getTitle())
                                         .content(post.getContent())
                                         .writeDay(post.getWriteDay())

@@ -71,8 +71,7 @@ public class MiniHome {
         this.miniHomePost = miniHomePost;
     }
 
-    public void viewCount(int allVisit, int hpToday) {
-        this.hpToday = hpToday;
+    public void viewCount(int allVisit) {
         this.allVisit = allVisit;
     }
 
