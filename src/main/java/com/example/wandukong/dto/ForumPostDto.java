@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ForumPostDto {
 
-  private Long postID;
+  private Long postId;
 
   private String title;
 

@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MiniHomeBoardDto {
-    private Long boardID;
+    private Long boardId;
     private String boardName;
 
     public MiniHomeBoard toEntity() {
 
         MiniHomeBoard miniHomeBoard = MiniHomeBoard.builder()
-                .boardID(boardID)
+                .boardId(boardId)
                 .boardName(boardName)
                 .build();
 

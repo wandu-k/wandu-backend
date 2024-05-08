@@ -26,10 +26,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 사용자 권한 정보 추출
-        String role = userDto.getRole();
+        int role = userDto.getRole();
 
         // GrantedAuthority 객체로 변환
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(Integer.toString(role));
 
         // 권한 목록 반환
         List<GrantedAuthority> authorities = new ArrayList<>();
