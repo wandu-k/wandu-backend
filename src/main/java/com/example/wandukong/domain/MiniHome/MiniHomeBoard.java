@@ -27,7 +27,7 @@ public class MiniHomeBoard {
     @Column(name = "boardID", unique = true)
     private Long boardID;
 
-    @Column(name = "categoryName")
+    @Column(name = "boardName")
     private String boardName;
 
     @OneToMany(mappedBy = "miniHomeBoard", cascade = CascadeType.ALL, orphanRemoval = true)

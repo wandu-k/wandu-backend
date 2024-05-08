@@ -80,6 +80,7 @@ public class MiniHomeServiceImpl implements MiniHomeService {
             MiniHomeBoardDto miniHomeBoardDto = new MiniHomeBoardDto();
             miniHomeBoardDto.setBoardID(miniHomeBoard.getBoardID());
             miniHomeBoardDto.setBoardName(miniHomeBoard.getBoardName());
+            boardList.add(miniHomeBoardDto);
         }
 
         return boardList;

@@ -22,10 +22,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ForumPost {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postID;
+    private Long postId;
 
     @ManyToOne
     private ForumBoard forumBoard;
@@ -56,5 +56,5 @@ public class ForumPost {
     public void changeState(int state) {
         this.state = state;
     }
-    
+
 }

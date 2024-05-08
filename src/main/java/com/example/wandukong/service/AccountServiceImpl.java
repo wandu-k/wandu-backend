@@ -75,6 +75,8 @@ public class AccountServiceImpl implements AccountService {
             }
             userDo = accountRepository.save(userDo);
 
+            log.info(userDo.getRole());
+
             log.info("회원가입된 회원 아이디" + userDo.getUserID());
 
             // 회원가입이 완료되면 그 유저아이디로 미니홈도 생성
