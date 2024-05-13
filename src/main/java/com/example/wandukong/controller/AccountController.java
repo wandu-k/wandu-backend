@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @Tag(name = "계정", description = "계정 API")
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/auth")
 @RestController
 public class AccountController {
 
@@ -46,6 +46,7 @@ public class AccountController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
 
@@ -59,7 +60,7 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping
+    @DeleteMapping()
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             UserDto userDto = customUserDetails.getUserDto();
@@ -70,10 +71,9 @@ public class AccountController {
         return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
-    @Operation(summary = "계정 추가 / 수정", description = "계정을 추가하거나 수정을 합니다.")
+    @Operation(summary = "계정 수정", description = "계정을 수정을 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정이 완료되었습니다."),
-            @ApiResponse(responseCode = "201", description = "회원가입이 완료되었습니다!"),
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
@@ -83,12 +83,9 @@ public class AccountController {
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
             throws IOException, UserNotFoundException, UserAlreadyExistsException {
-        if (customUserDetails != null) {
-            accountService.updateProfile(profileImage, userDto);
-            return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
-        }
-        accountService.register(profileImage, userDto);
-        return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.CREATED);
+        accountService.updateProfile(profileImage, userDto);
+        return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
+
     }
 
     @Operation(summary = "비밀번호 변경", description = "인증된 이용자의 비밀번호를 변경합니다.")

@@ -9,6 +9,7 @@ import com.example.wandukong.domain.ShopInfo.Playlist;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,15 +48,15 @@ public class MiniHome {
     @Column(name = "hpOpen")
     private int hpOpen;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlistId", referencedColumnName = "playlistId")
     private Playlist playlist;
 
-    @OneToMany(mappedBy = "miniHome", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "miniHome", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MiniHomePost> miniHomePost = new ArrayList<>();
 
     @Builder

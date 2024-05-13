@@ -6,6 +6,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.wandukong.dto.UserDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,18 +27,29 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
-        setFilterProcessesUrl("/api/user/login");
+        setFilterProcessesUrl("/api/public/login");
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        log.info("username : " + request.getParameter("username"));
+        ObjectMapper mapper = new ObjectMapper();
+        UserDto userDto = new UserDto();
+
+        try {
+            userDto = mapper.readValue(request.getInputStream(), UserDto.class);
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+        log.info("Email (username) : " + userDto.getUsername());
+        log.info("Password : " + userDto.getPassword());
 
         // 사용자 인증정보 객체 생성
-        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getParameter("username"),
-                request.getParameter("password"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDto.getUsername(),
+                userDto.getPassword());
 
         log.info("사용자 인증정보 객체 생성 완료");
 

@@ -13,6 +13,7 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
@@ -70,21 +71,14 @@ public class MiniHomePostController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException, BoardNotFoundException {
-        if (customUserDetails != null) {
-
-            miniHomePostDto = MiniHomePostDto.builder()
-                    .postId(miniHomePostDto.getUserId())
-                    .userId(customUserDetails.getUserDto().getUserId())
-                    .hpId(customUserDetails.getUserDto().getHpId())
-                    .boardId(miniHomePostDto.getBoardId())
-                    .title(miniHomePostDto.getTitle())
-                    .content(miniHomePostDto.getContent())
-                    .build();
-            ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
-
-            return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+            @RequestBody MiniHomePostDto miniHomePostDto)
+            throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
+        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
+            throw new BadRequestException();
         }
-        throw new PermissionDeniedException();
+
+        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
+
+        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 }

@@ -10,7 +10,7 @@ public class UserDto {
 
     private Long userId;
     private Long hpId;
-    private String email;
+    private String username;
     private String password;
     private String profileImage;
     private String nickname;
@@ -19,16 +19,16 @@ public class UserDto {
     private String gender;
     private Date signupDay;
     private Date birthday;
-    private int role;
+    private String role;
 
     @Builder
-    public UserDto(Long userId, Long hpId, String email, String password, String profileImage, String nickname,
+    public UserDto(Long userId, Long hpId, String username, String password, String profileImage, String nickname,
             String name,
             String phone,
-            String gender, Date signupDay, Date birthday, int role) {
+            String gender, Date signupDay, Date birthday, String role) {
         this.userId = userId;
         this.hpId = hpId;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.profileImage = profileImage;
         this.nickname = nickname;
@@ -38,6 +38,10 @@ public class UserDto {
         this.signupDay = signupDay;
         this.birthday = birthday;
         this.role = role;
+    }
+
+    public UserDto() {
+        // TODO Auto-generated constructor stub
     }
 
     public void setProfileImage(String profileImage) {

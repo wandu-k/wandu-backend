@@ -58,9 +58,9 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(userDto.getPassword());
 
         // Check for duplicate username before saving
-        if (accountRepository.findByEmail(userDto.getEmail()) == null) {
+        if (accountRepository.findByEmail(userDto.getUsername()) == null) {
             UserDo userDo = UserDo.builder()
-                    .email(userDto.getEmail())
+                    .email(userDto.getUsername())
                     .password(encodedPw)
                     .nickname(userDto.getNickname())
                     .build();
@@ -84,8 +84,6 @@ public class AccountServiceImpl implements AccountService {
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 
             miniHome = miniHpRepository.save(miniHome);
-            // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
-            userDo.setHpId(miniHome.getHpId());
 
         } else {
             throw new UserAlreadyExistsException();
@@ -114,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
             userDto.setProfileImage(profileImagePath);
         }
 
-        userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
+        userDo.updateProfile(userDto.getUsername(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
                 userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
 
     }
@@ -147,7 +145,10 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = UserDto.builder()
                 .userId(userDo.getUserId())
+                .hpId(userDo.getMiniHome().getHpId())
                 .nickname(userDo.getNickname())
+                .role(userDo.getRole())
+                .birthday(userDo.getBirthday())
                 .build();
 
         return userDto;
@@ -165,28 +166,4 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(newPassword);
         userDo.changePassword(encodedPw);
     }
-
-    // 필요없는 부분
-
-    // @Override
-    // public void login(UserDto userDto, HttpServletRequest request) {
-    // log.info(userDto.getEmail());
-    // log.info(userDto.getPassword());
-
-    // // 인증 토큰 생성
-    // UsernamePasswordAuthenticationToken token = new
-    // UsernamePasswordAuthenticationToken(userDto.getEmail(),
-    // userDto.getPassword());
-
-    // // 토큰에 요청정보 등록
-    // token.setDetails(new WebAuthenticationDetails(request));
-
-    // // 토큰을 이용하여 인증 요청 로그인
-    // Authentication authentication = authenticationManager.authenticate(token);
-    // log.info("인증 정보 : " + authentication.isAuthenticated());
-
-    // User authUser = (User) authentication.getPrincipal();
-    // log.info("인증된 사용자 : " + authUser.getUsername());
-
-    // }
 }

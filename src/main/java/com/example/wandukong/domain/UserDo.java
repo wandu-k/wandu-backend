@@ -15,6 +15,7 @@ import com.example.wandukong.domain.ShopInfo.Shop;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,9 +37,6 @@ public class UserDo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId", unique = true)
     private Long userId;
-
-    @Column(name = "hpId")
-    private Long hpId;
 
     @Column(name = "email")
     private String email;
@@ -68,23 +66,23 @@ public class UserDo {
     @Column(name = "gender")
     private String gender;
 
-    @ColumnDefault("0")
+    @ColumnDefault("'ROLE_USER'")
     @Column(name = "role")
-    private int role;
+    private String role = "ROLE_USER";
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private MiniHome miniHome;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MiniHomePost> minihomePost;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Playlist> playlist;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Shop> shop;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BuyItem> buyItem;
 
     @Builder
@@ -116,9 +114,4 @@ public class UserDo {
     public void changePassword(String password) {
         this.password = password;
     }
-
-    public void setHpId(Long hpId) {
-        this.hpId = hpId;
-    }
-
 }

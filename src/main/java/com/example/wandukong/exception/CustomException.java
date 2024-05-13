@@ -56,4 +56,11 @@ public class CustomException extends Exception {
         }
 
     }
+
+    public static class BadRequestException extends Exception {
+        public BadRequestException() {
+
+        }
+
+    }
 }

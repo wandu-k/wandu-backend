@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
-import com.fasterxml.jackson.core.JsonToken;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -45,7 +44,7 @@ public class JwtTokenProvider {
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .claim("userId", customUserDetails.getUserDto().getUserId())
                 .claim("hpId", customUserDetails.getUserDto().getHpId())
-                .claim("email", customUserDetails.getUserDto().getEmail())
+                .claim("email", customUserDetails.getUserDto().getUsername())
                 .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();
@@ -75,7 +74,7 @@ public class JwtTokenProvider {
         }
 
         UserDto userDto = UserDto.builder()
-                .email(email)
+                .username(email)
                 .userId(userId)
                 .hpId(hpId)
                 .build();
