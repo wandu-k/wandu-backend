@@ -87,6 +87,18 @@ public class ShopServiceImpl implements ShopService {
 
       if (shopInfoDto.getItemFileDto().getFileName().isEmpty()) {
 
+        Long itemId = shop.getItemId();
+
+        String uuid = UUID.randomUUID().toString();
+              // ItemFile 엔티티 생성 및 저장
+        ItemFile itemFile = ItemFile.builder()
+            .itemId(itemId)
+            .uuid(uuid)
+            .fileName(shopInfoDto.getShopDto().getItemName())
+            .build();
+
+        itemFileRepository.save(itemFile);
+
         itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 
       }
@@ -105,11 +117,11 @@ public class ShopServiceImpl implements ShopService {
       throws itemUploadNotFoundException, IOException {
 
     if (customUserDetails != null) {
-      Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
+      /* Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
 
       itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 
-      shop.updateItem(shopInfoDto.getShopDto().getItemName());
+      shop.updateItem(shopInfoDto.getShopDto().getItemName()) */
     } else {
       throw new itemUploadNotFoundException();
     }
@@ -128,16 +140,12 @@ public class ShopServiceImpl implements ShopService {
         + shopInfoDto.getCategoryDto().getCategoryName() + "/";
 
     // uuid설정
-    String uuID = UUID.randomUUID().toString();
-    shopInfoDto.getItemFileDto().setUuid(uuID);
-
-    // 아이템 명을 파일 이름으로 저장
-    shopInfoDto.getItemFileDto().setFileName(shopInfoDto.getShopDto().getItemName());
+    String uuid = shopInfoDto.getItemFileDto().getUuid();
 
     // 확장자 구분
     String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
 
-    String filename = shopInfoDto.getItemFileDto().getUuid() + shopInfoDto.getItemFileDto().getFileName() + extension;
+    String filename = uuid + shopInfoDto.getItemFileDto().getFileName() + extension;
 
     String itemfilepath = filepath + filename;
 
@@ -146,13 +154,6 @@ public class ShopServiceImpl implements ShopService {
             itemfile.getInputStream(), objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
 
-    // ItemFile 엔티티 생성 및 저장
-    ItemFile itemFile = ItemFile.builder()
-        .uuid(shopInfoDto.getItemFileDto().getUuid())
-        .fileName(shopInfoDto.getItemFileDto().getFileName())
-        .build();
-
-    itemFileRepository.save(itemFile);
 
     return itemfilepath;
   }
@@ -182,6 +183,7 @@ public class ShopServiceImpl implements ShopService {
           ItemFileDto itemFileDto = null;
           if (itemFile != null) { // ItemFile이 존재하는 경우에만 처리
             itemFileDto = ItemFileDto.builder()
+                .itemId(shop.getItemId())
                 .uuid(itemFile.getUuid())
                 .fileName(itemFile.getFileName())
                 .build();

@@ -13,9 +13,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 @Table(name = "ItemFile")
 public class ItemFile {
@@ -29,8 +31,6 @@ public class ItemFile {
     @JoinColumn(name = "itemId")
     private Shop shop;
 
-    private String name;
-
     @Column(name = "uuid")
     private String uuid;
 
@@ -38,10 +38,9 @@ public class ItemFile {
     private String fileName;
 
     @Builder
-    public ItemFile(Shop shop, String fileName, String uuid, String name) {
-        this.shop = shop;
+    public ItemFile(String fileName, String uuid, Long itemId) {
+        this.itemId = itemId;
         this.fileName = fileName;
         this.uuid = uuid;
-        this.name = name;
     }
 }

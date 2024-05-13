@@ -30,7 +30,7 @@ public class MiniHomePostSearchRepoImpl extends QuerydslRepositorySupport implem
             query.where(miniHomePost.miniHomeBoard.boardId.eq(pageRequestDto.getBoardId()));
         }
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
-                Sort.by("postID").descending());
+                Sort.by("postId").descending());
 
         this.getQuerydsl().applyPagination(pageable, query);
 

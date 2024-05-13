@@ -113,11 +113,11 @@ public class ShopController {
       @ApiResponse(responseCode = "400", description = "오류 입니다.")
   })
   @SecurityRequirement(name = "Bearer Authentication")
-  @PatchMapping(value = "/{itemID}/itemupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PatchMapping(value = "/{itemId}/itemupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> updateItemFile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
       @RequestPart(required = false, value = "itemfile") MultipartFile itemfile,
       @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto,
-      @PathVariable Long itemID) throws itemUploadNotFoundException, UserNotFoundException, IOException {
+      @PathVariable Long itemId) throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
     if (customUserDetails.getUserDto().getUserId() != null) {
 

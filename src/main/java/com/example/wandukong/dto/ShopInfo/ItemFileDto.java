@@ -3,31 +3,26 @@ package com.example.wandukong.dto.ShopInfo;
 import org.springframework.stereotype.Component;
 
 import com.example.wandukong.domain.ShopInfo.ItemFile;
-import com.example.wandukong.domain.ShopInfo.Shop;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Component
-@Builder
+@NoArgsConstructor
 public class ItemFileDto {
-  private Long userId;
   private Long itemId;
   private String fileName;
   private String uuid;
 
-  /* 유저 음악 인벤토리 */
-  public ItemFile toEntity() {
-
-    ItemFile itemfile = ItemFile.builder()
-        .shop(Shop.builder().itemId(itemId).build())
-        .fileName(fileName)
-        .uuid(uuid)
-        .build();
-    return itemfile;
+  @Builder
+  public ItemFileDto(Long itemId, String uuid, String fileName) {
+      this.itemId = itemId;
+      this.uuid = uuid;
+      this.fileName = fileName;
   }
 
 }
