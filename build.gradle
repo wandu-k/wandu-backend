@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.3'
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
@@ -48,7 +48,7 @@ dependencies {
 
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor
-	implementation 'org.springframework.boot:spring-boot-configuration-processor:3.2.3'
+	implementation 'org.springframework.boot:spring-boot-configuration-processor:3.2.5'
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

@@ -88,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
 
             miniHome = miniHpRepository.save(miniHome);
             // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
-            userDo.sethpID(miniHome.getHpId());
+            userDo.sethpId(miniHome.getHpId());
 
         } else {
             throw new UserAlreadyExistsException();
@@ -96,9 +96,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccount(Long userID) {
-        accountRepository.deleteById(userID);
-        amazonS3.deleteObject(bucketName, "users/" + userID + "/");
+    public void deleteAccount(Long userId) {
+        accountRepository.deleteById(userId);
+        amazonS3.deleteObject(bucketName, "users/" + userId + "/");
 
     }
 
@@ -170,9 +170,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public UserDto getUserInfo(Long userID) throws UserNotFoundException {
+    public UserDto getUserInfo(Long userId) throws UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userID)
+        UserDo userDo = accountRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = UserDto.builder()
                 .userId(userDo.getUserId())
@@ -196,9 +196,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public void updatePassword(Long userID, String currentPassword, String newPassword)
+    public void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
-        UserDo userDo = accountRepository.findById(userID).orElseThrow(() -> new UserNotFoundException());
+        UserDo userDo = accountRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
         if (!passwordEncoder.matches(currentPassword, userDo.getPassword())) {
             throw new IncorrectPasswordException();

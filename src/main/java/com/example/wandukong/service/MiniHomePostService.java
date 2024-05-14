@@ -1,7 +1,5 @@
 package com.example.wandukong.service;
 
-import java.util.List;
-
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
@@ -12,9 +10,9 @@ import com.example.wandukong.model.ApiResponse;
 
 public interface MiniHomePostService {
 
-    MiniHomePostDto getPost(Long postID) throws PostNotFoundException;
+    MiniHomePostDto getPost(Long postId) throws PostNotFoundException;
 
-    void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException;
+    void deletePost(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException;
 
     ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException;
 

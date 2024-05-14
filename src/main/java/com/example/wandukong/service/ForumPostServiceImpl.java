@@ -22,9 +22,9 @@ public class ForumPostServiceImpl implements ForumPostService {
   private final ForumPostRepository forumPostRepository;
 
   @Override
-  public ForumPostDto get(Long postID) {
+  public ForumPostDto get(Long postId) {
 
-    Optional<ForumPost> result = forumPostRepository.findById(postID);
+    Optional<ForumPost> result = forumPostRepository.findById(postId);
 
     ForumPost forumPost = result.orElseThrow();
 
@@ -54,9 +54,9 @@ public class ForumPostServiceImpl implements ForumPostService {
   }
 
   @Override
-  public void remove(Long postID) {
+  public void remove(Long postId) {
 
-    forumPostRepository.deleteById(postID);
+    forumPostRepository.deleteById(postId);
   }
 
   @Override

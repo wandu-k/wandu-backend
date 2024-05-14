@@ -14,7 +14,7 @@ import com.example.wandukong.domain.QForumPost;
 import com.example.wandukong.dto.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 
-public class ForumPostSearchImpl extends QuerydslRepositorySupport implements ForumPostSearch{
+public class ForumPostSearchImpl extends QuerydslRepositorySupport implements ForumPostSearch {
 
   public ForumPostSearchImpl() {
     super(ForumPost.class);
@@ -22,12 +22,13 @@ public class ForumPostSearchImpl extends QuerydslRepositorySupport implements Fo
 
   @Override
   public Page<ForumPost> search(PageRequestDto pageRequestDto) {
-    
+
     QForumPost forumPost = QForumPost.forumPost;
 
     JPQLQuery<ForumPost> query = from(forumPost);
 
-    Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(), Sort.by("postID").descending());
+    Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
+        Sort.by("postId").descending());
 
     this.getQuerydsl().applyPagination(pageable, query);
 
@@ -37,5 +38,5 @@ public class ForumPostSearchImpl extends QuerydslRepositorySupport implements Fo
 
     return new PageImpl<>(list, pageable, total);
   }
-  
+
 }

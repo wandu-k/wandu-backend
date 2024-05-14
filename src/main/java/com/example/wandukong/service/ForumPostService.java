@@ -10,13 +10,13 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface ForumPostService {
 
-  ForumPostDto get(Long postID);
+  ForumPostDto get(Long postId);
 
   Long register(ForumPostDto forumPostDto);
 
   void modify(ForumPostDto forumPostDto);
 
-  void remove(Long postID);
+  void remove(Long postId);
 
   PageResponseDto<ForumPostDto> getList(PageRequestDto pageRequestDto);
 

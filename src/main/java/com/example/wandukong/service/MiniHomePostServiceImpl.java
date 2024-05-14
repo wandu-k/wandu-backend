@@ -40,9 +40,9 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         ApiResponse apiResponse;
 
         @Override
-        public MiniHomePostDto getPost(Long postID) throws PostNotFoundException {
+        public MiniHomePostDto getPost(Long postId) throws PostNotFoundException {
 
-                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
                                 .orElseThrow(() -> new PostNotFoundException());
 
                 MiniHomePostDto miniHomePostDto = MiniHomePostDto.builder()
@@ -58,14 +58,14 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Override
-        public void deletePost(Long userID, Long postID) throws PostNotFoundException, PermissionDeniedException {
-                MiniHomePost minihomePost = miniHomePostRepository.findById(postID)
+        public void deletePost(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException {
+                MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
                                 .orElseThrow(() -> new PostNotFoundException());
 
-                if (minihomePost.getUserDo().getUserId() != userID) {
+                if (minihomePost.getUserDo().getUserId() != userId) {
                         throw new PermissionDeniedException();
                 }
-                miniHomePostRepository.deleteById(postID);
+                miniHomePostRepository.deleteById(postId);
         }
 
         @Transactional
