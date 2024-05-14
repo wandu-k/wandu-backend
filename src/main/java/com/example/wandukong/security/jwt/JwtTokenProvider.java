@@ -37,19 +37,19 @@ public class JwtTokenProvider {
     @Autowired
     CustomUserDetails customUserDetails;
 
-    public JwtToken createToken(Authentication authentication) {
+    public String createToken(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String accessToken = Jwts.builder().header()
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .claim("userId", customUserDetails.getUserDto().getUserId())
                 .claim("hpId", customUserDetails.getUserDto().getHpId())
-                .claim("email", customUserDetails.getUserDto().getEmail())
+                .claim("email", customUserDetails.getUserDto().getUsername())
                 .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();
 
-        return JwtToken.builder().accessToken(accessToken).build();
+        return accessToken;
 
     }
 
@@ -74,7 +74,7 @@ public class JwtTokenProvider {
         }
 
         UserDto userDto = UserDto.builder()
-                .email(email)
+                .username(email)
                 .userId(userId)
                 .hpId(hpId)
                 .build();

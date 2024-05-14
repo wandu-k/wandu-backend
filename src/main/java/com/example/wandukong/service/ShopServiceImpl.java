@@ -90,7 +90,7 @@ public class ShopServiceImpl implements ShopService {
         Long itemId = shop.getItemId();
 
         String uuid = UUID.randomUUID().toString();
-              // ItemFile 엔티티 생성 및 저장
+        // ItemFile 엔티티 생성 및 저장
         ItemFile itemFile = ItemFile.builder()
             .itemId(itemId)
             .uuid(uuid)
@@ -117,11 +117,14 @@ public class ShopServiceImpl implements ShopService {
       throws itemUploadNotFoundException, IOException {
 
     if (customUserDetails != null) {
-      /* Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
-
-      itemfileUpload(itemfile, shopInfoDto, customUserDetails);
-
-      shop.updateItem(shopInfoDto.getShopDto().getItemName()) */
+      /*
+       * Shop shop =
+       * shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
+       * 
+       * itemfileUpload(itemfile, shopInfoDto, customUserDetails);
+       * 
+       * shop.updateItem(shopInfoDto.getShopDto().getItemName())
+       */
     } else {
       throw new itemUploadNotFoundException();
     }
@@ -153,7 +156,6 @@ public class ShopServiceImpl implements ShopService {
         .putObject(new PutObjectRequest(bucketName, itemfilepath,
             itemfile.getInputStream(), objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
-
 
     return itemfilepath;
   }

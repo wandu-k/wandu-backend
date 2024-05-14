@@ -12,7 +12,7 @@ public interface MiniHomePostService {
 
     MiniHomePostDto getPost(Long postId) throws PostNotFoundException;
 
-    void deletePost(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException;
+    void deletePost(Long userID, Long postId) throws PostNotFoundException, PermissionDeniedException;
 
     ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException;
 

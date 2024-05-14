@@ -8,7 +8,6 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.security.jwt.JwtToken;
 
 public interface AccountService {
 
@@ -18,14 +17,9 @@ public interface AccountService {
 
     void updateProfile(MultipartFile profileImage, UserDto userDto) throws UserNotFoundException, IOException;
 
-    UserDto getMyInfo(String username);
-
     UserDto getUserInfo(Long userId) throws UserNotFoundException;
-
-    JwtToken login(String username, String password);
 
     void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException;
 
-    // void login(UserDto userDto, HttpServletRequest request);
 }

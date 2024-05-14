@@ -26,9 +26,9 @@ public class ForumPostController {
   private final ForumPostService forumPostService;
 
   @GetMapping("/{postID}")
-  public ForumPostDto get(@PathVariable Long postID) {
+  public ForumPostDto get(@PathVariable Long postId) {
 
-    return forumPostService.get(postID);
+    return forumPostService.get(postId);
   }
 
   @GetMapping("/list")

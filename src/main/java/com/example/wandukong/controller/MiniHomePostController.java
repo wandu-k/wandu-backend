@@ -17,6 +17,7 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
@@ -37,9 +38,9 @@ public class MiniHomePostController {
 
     @Operation(summary = "미니홈 게시글 번호로 내용 조회", description = "특정 게시글 내용 조회")
     @GetMapping
-    public ResponseEntity<?> getPost(@RequestParam Long postID) throws PostNotFoundException {
+    public ResponseEntity<?> getPost(@RequestParam Long postId) throws PostNotFoundException {
 
-        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postID);
+        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postId);
 
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
     }
@@ -69,21 +70,14 @@ public class MiniHomePostController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException, BoardNotFoundException {
-        if (customUserDetails != null) {
-
-            miniHomePostDto = MiniHomePostDto.builder()
-                    .postId(miniHomePostDto.getUserId())
-                    .userId(customUserDetails.getUserDto().getUserId())
-                    .hpId(customUserDetails.getUserDto().getHpId())
-                    .boardId(miniHomePostDto.getBoardId())
-                    .title(miniHomePostDto.getTitle())
-                    .content(miniHomePostDto.getContent())
-                    .build();
-            ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
-
-            return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+            @RequestBody MiniHomePostDto miniHomePostDto)
+            throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
+        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
+            throw new BadRequestException();
         }
-        throw new PermissionDeniedException();
+
+        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
+
+        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 }

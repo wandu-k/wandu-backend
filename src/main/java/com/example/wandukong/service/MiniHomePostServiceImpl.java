@@ -58,11 +58,11 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Override
-        public void deletePost(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException {
+        public void deletePost(Long userID, Long postId) throws PostNotFoundException, PermissionDeniedException {
                 MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
                                 .orElseThrow(() -> new PostNotFoundException());
 
-                if (minihomePost.getUserDo().getUserId() != userId) {
+                if (minihomePost.getUserDo().getUserId() != userID) {
                         throw new PermissionDeniedException();
                 }
                 miniHomePostRepository.deleteById(postId);

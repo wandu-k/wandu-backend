@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class CustomUserDetails implements UserDetails {
@@ -26,10 +28,12 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 사용자 권한 정보 추출
-        int role = userDto.getRole();
+        String role = userDto.getRole();
+
+        log.info("권한 : " + role);
 
         // GrantedAuthority 객체로 변환
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(Integer.toString(role));
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
 
         // 권한 목록 반환
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -44,7 +48,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userDto.getEmail();
+        return userDto.getUsername();
     }
 
     @Override
