@@ -21,13 +21,15 @@ public class ShopDto {
     private Long itemId;
     private String itemName;
     private Long categoryId;
+    private Long price;
 
     @Builder
-    public ShopDto(Long userId, Long itemId, String itemName, Long categoryId) {
+    public ShopDto(Long userId, Long itemId, String itemName, Long categoryId, Long price) {
         this.userId = userId;
         this.itemId = itemId;
         this.itemName = itemName;
         this.categoryId = categoryId;
+        this.price = price;
     }
 
     /* 상점 */
@@ -35,6 +37,7 @@ public class ShopDto {
         return Shop.builder()
                 .itemId(itemId)
                 .itemName(itemName)
+                .price(price)
                 .userDo(UserDo.builder().userId(userId).build())
                 .category(Category.builder().categoryId(categoryId).build())
                 .build();

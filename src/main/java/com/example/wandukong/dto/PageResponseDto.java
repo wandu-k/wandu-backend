@@ -33,7 +33,7 @@ public class PageResponseDto<E> {
     int start = end - 9;
 
     // 진짜 마지막
-    int last = (int) (Math.ceil(totalCount/(double)pageRequestDto.getSize()));
+    int last = (int) (Math.ceil(totalCount / (double) pageRequestDto.getSize()));
 
     end = end > last ? last : end;
 
@@ -47,4 +47,5 @@ public class PageResponseDto<E> {
 
     this.nextPage = next ? end + 1 : 0;
   }
+
 }

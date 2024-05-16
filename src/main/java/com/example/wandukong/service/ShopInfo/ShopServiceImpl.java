@@ -1,4 +1,4 @@
-package com.example.wandukong.service;
+package com.example.wandukong.service.ShopInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -78,6 +78,7 @@ public class ShopServiceImpl implements ShopService {
       // 등록할 아이템 정보 설정
       Shop shop = Shop.builder()
           .itemName(shopInfoDto.getShopDto().getItemName())
+          .price(shopInfoDto.getShopDto().getPrice())
           .userDo(UserDo.builder().userId(customUserDetails.getUserDto().getUserId()).build())
           .category(Category.builder().categoryId(shopInfoDto.getCategoryDto().getCategoryId()).build())
           .build();
@@ -90,7 +91,7 @@ public class ShopServiceImpl implements ShopService {
         Long itemId = shop.getItemId();
 
         String uuid = UUID.randomUUID().toString();
-              // ItemFile 엔티티 생성 및 저장
+        // ItemFile 엔티티 생성 및 저장
         ItemFile itemFile = ItemFile.builder()
             .itemId(itemId)
             .uuid(uuid)
@@ -117,11 +118,14 @@ public class ShopServiceImpl implements ShopService {
       throws itemUploadNotFoundException, IOException {
 
     if (customUserDetails != null) {
-      /* Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
-
-      itemfileUpload(itemfile, shopInfoDto, customUserDetails);
-
-      shop.updateItem(shopInfoDto.getShopDto().getItemName()) */
+      /*
+       * Shop shop =
+       * shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
+       * 
+       * itemfileUpload(itemfile, shopInfoDto, customUserDetails);
+       * 
+       * shop.updateItem(shopInfoDto.getShopDto().getItemName())
+       */
     } else {
       throw new itemUploadNotFoundException();
     }
@@ -154,8 +158,7 @@ public class ShopServiceImpl implements ShopService {
             itemfile.getInputStream(), objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
 
-
-    return itemfilepath;
+    return amazonS3.getUrl(filename, itemfilepath).toString();
   }
 
   @Transactional
@@ -183,7 +186,7 @@ public class ShopServiceImpl implements ShopService {
           ItemFileDto itemFileDto = null;
           if (itemFile != null) { // ItemFile이 존재하는 경우에만 처리
             itemFileDto = ItemFileDto.builder()
-                .itemId(shop.getItemId())
+                .itemId(shop.getItemFile().getItemId())
                 .uuid(itemFile.getUuid())
                 .fileName(itemFile.getFileName())
                 .build();

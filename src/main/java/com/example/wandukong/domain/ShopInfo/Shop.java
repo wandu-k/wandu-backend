@@ -37,6 +37,9 @@ public class Shop {
     @Column(name = "itemName")
     private String itemName;
 
+    @Column(name = "price")
+    private Long price;
+
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
