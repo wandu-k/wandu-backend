@@ -18,7 +18,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public List<FriendDto> getFollowingList(Long userId) {
-        List<Friend> friends = friendRepository.findAllByUserId(userId);
+        List<Friend> friends = friendRepository.findAllByUserDoUserId(userId);
         List<FriendDto> friendList = new ArrayList<>();
         for (Friend friend : friends) {
             FriendDto friendDto = friend.toDto(friend);
@@ -29,7 +29,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public List<FriendDto> getFollowerList(Long userId) {
-        List<Friend> friends = friendRepository.findAllByFriendId(userId);
+        List<Friend> friends = friendRepository.findAllByFriendDoUserId(userId);
         List<FriendDto> friendList = new ArrayList<>();
         for (Friend friend : friends) {
             FriendDto friendDto = friend.toDto(friend);

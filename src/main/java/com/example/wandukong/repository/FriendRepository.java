@@ -8,8 +8,8 @@ import com.example.wandukong.domain.Friend;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
-    List<Friend> findAllByUserId(Long userId);
+    List<Friend> findAllByUserDoUserId(Long userId);
 
-    List<Friend> findAllByFriendId(Long userId);
+    List<Friend> findAllByFriendDoUserId(Long userId);
 
 }
