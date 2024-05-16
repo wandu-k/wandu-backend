@@ -70,7 +70,7 @@ public class UserDo {
     @Column(name = "role")
     private String role = "ROLE_USER";
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private MiniHome miniHome;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

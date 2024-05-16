@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "미니홈 게시글", description = "미니홈 게시글 API")
-@RequestMapping("/api/minihome/post")
+@RequestMapping("/api/user/minihome/post")
 @RestController
 public class MiniHomePostController {
 

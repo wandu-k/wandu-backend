@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +38,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입이 완료되었습니다!"),
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/register")
-    public ResponseEntity<?> updateProfile(
+    public ResponseEntity<?> register(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)

@@ -11,14 +11,14 @@ import com.example.wandukong.dto.FriendDto;
 import com.example.wandukong.repository.FriendRepository;
 
 @Service
-public class FriendServiceImpl implements FriendService {
+public class FollowServiceImpl implements FollowService {
 
     @Autowired
     FriendRepository friendRepository;
 
     @Override
-    public List<FriendDto> getFriendList() {
-        List<Friend> friends = friendRepository.findAll();
+    public List<FriendDto> getFollowingList(Long userId) {
+        List<Friend> friends = friendRepository.findAllByUserId(userId);
         List<FriendDto> friendList = new ArrayList<>();
         for (Friend friend : friends) {
             FriendDto friendDto = friend.toDto(friend);
@@ -28,7 +28,18 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void addFriend(FriendDto friendDto) {
+    public List<FriendDto> getFollowerList(Long userId) {
+        List<Friend> friends = friendRepository.findAllByFriendId(userId);
+        List<FriendDto> friendList = new ArrayList<>();
+        for (Friend friend : friends) {
+            FriendDto friendDto = friend.toDto(friend);
+            friendList.add(friendDto);
+        }
+        return friendList;
+    }
+
+    @Override
+    public void following(FriendDto friendDto) {
 
         Friend friend = friendDto.toEntity(friendDto);
 
@@ -36,7 +47,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void deleteFriend(FriendDto friendDto) {
+    public void unFollowing(FriendDto friendDto) {
         Friend friend = friendDto.toEntity(friendDto);
 
         friendRepository.delete(friend);
