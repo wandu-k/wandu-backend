@@ -41,4 +41,10 @@ public class ItemFile {
         this.fileName = fileName;
         this.uuid = uuid;
     }
+
+    public void changeFileName(Long itemId, String fileName) {
+        this.itemId = itemId;
+        this.fileName = fileName;
+        throw new UnsupportedOperationException(fileName);
+    }
 }

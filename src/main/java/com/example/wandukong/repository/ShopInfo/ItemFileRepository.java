@@ -6,4 +6,6 @@ import com.example.wandukong.domain.ShopInfo.ItemFile;
 
 public interface ItemFileRepository extends JpaRepository<ItemFile, Long> {
 
+  ItemFile findByItemId(Long itemId);
+
 }

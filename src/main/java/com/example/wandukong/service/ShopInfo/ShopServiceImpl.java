@@ -91,16 +91,16 @@ public class ShopServiceImpl implements ShopService {
         Long itemId = shop.getItemId();
 
         String uuid = UUID.randomUUID().toString();
+
+        String filepath = itemfileUpload(itemfile, shopInfoDto, customUserDetails);
         // ItemFile 엔티티 생성 및 저장
         ItemFile itemFile = ItemFile.builder()
             .itemId(itemId)
             .uuid(uuid)
-            .fileName(shopInfoDto.getShopDto().getItemName())
+            .fileName(filepath)
             .build();
 
         itemFileRepository.save(itemFile);
-
-        itemfileUpload(itemfile, shopInfoDto, customUserDetails);
 
       }
       log.info("각 아이템 정보들" + shopInfoDto);
@@ -117,15 +117,20 @@ public class ShopServiceImpl implements ShopService {
   public void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
       throws itemUploadNotFoundException, IOException {
 
-    if (customUserDetails != null) {
-      /*
-       * Shop shop =
-       * shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
-       * 
-       * itemfileUpload(itemfile, shopInfoDto, customUserDetails);
-       * 
-       * shop.updateItem(shopInfoDto.getShopDto().getItemName())
-       */
+    if (itemfile != null) {
+
+      Shop shop = shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
+
+      shop.updateItem(shopInfoDto.getShopDto().getItemName());
+
+      String filepath = itemfileUpload(itemfile, shopInfoDto, customUserDetails);
+
+      shopInfoDto.getItemFileDto().setFileName(filepath);
+
+      ItemFile itemfileId = itemFileRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
+
+      String fileName = shopInfoDto.getItemFileDto().getFileName();
+      itemfileId.changeFileName(shopInfoDto.getShopDto().getItemId(), fileName);
     } else {
       throw new itemUploadNotFoundException();
     }
@@ -149,7 +154,7 @@ public class ShopServiceImpl implements ShopService {
     // 확장자 구분
     String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
 
-    String filename = uuid + shopInfoDto.getItemFileDto().getFileName() + extension;
+    String filename = uuid + shopInfoDto.getShopDto().getItemName() + extension;
 
     String itemfilepath = filepath + filename;
 

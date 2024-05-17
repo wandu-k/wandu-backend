@@ -1,5 +1,6 @@
 package com.example.wandukong.domain.ShopInfo;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.wandukong.domain.UserDo;
@@ -36,6 +37,9 @@ public class Playlist {
 
     @Column(name = "plName")
     private String plName;
+
+    @Column(name = "plDate")
+    private Date plDate;
 
     // 플리 삭제시에 홈피도 사라질지 테스트필요(자네...아직도 jpa를 믿나..?)
     @OneToOne(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
