@@ -14,6 +14,7 @@ public class ForumPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "postId", unique = true)
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
