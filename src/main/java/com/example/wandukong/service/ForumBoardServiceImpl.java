@@ -37,7 +37,7 @@ public class ForumBoardServiceImpl implements ForumBoardService{
     }
 
     @Override
-    public void deleteBoard(Long boardId) {
+    public void removeBoard(Long boardId) {
         forumBoardRepository.deleteById(boardId);
     }
 }

@@ -7,5 +7,5 @@ public interface ForumBoardService {
 
     ApiResponse modifyBoard(ForumBoardDto forumBoardDto);
 
-    void deleteBoard(Long boardId);
+    void removeBoard(Long boardId);
 }
