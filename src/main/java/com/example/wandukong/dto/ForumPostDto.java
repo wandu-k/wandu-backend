@@ -2,18 +2,17 @@ package com.example.wandukong.dto;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public class ForumPostDto {
 
   private Long postId;
+
+  private Long boardId;
+
+  private Long userId;
 
   private String title;
 
@@ -22,4 +21,15 @@ public class ForumPostDto {
   private LocalDate writeDate;
 
   private int state;
+
+  @Builder
+  public ForumPostDto(Long postId, Long boardId, Long userId, String title, String content, LocalDate writeDate, int state) {
+    this.postId = postId;
+    this.boardId = boardId;
+    this.userId = userId;
+    this.title = title;
+    this.content = content;
+    this.writeDate = writeDate;
+    this.state = state;
+  }
 }
