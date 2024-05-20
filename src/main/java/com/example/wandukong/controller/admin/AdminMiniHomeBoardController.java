@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.admin;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/api/admin/minihome/board")
-public class MiniHomeBoardController {
+public class AdminMiniHomeBoardController {
 
     @Autowired
     MiniHomeBoardService miniHomeBoardservice;

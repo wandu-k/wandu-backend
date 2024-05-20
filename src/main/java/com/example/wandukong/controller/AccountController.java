@@ -25,8 +25,6 @@ import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,16 +39,17 @@ public class AccountController {
     AccountService accountService;
 
     // 회원정보 조회
-    @Operation(summary = "회원 조회", description = "회원 정보를 조회를 합니다.")
+    @Operation(summary = "내 계정 조회", description = "자기자신의 계정 정보를 조회를 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
-    public ResponseEntity<?> getUserInfo(@RequestParam Long userId) throws UserNotFoundException {
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails)
+            throws UserNotFoundException {
 
-        UserDto userDto = accountService.getUserInfo(userId);
+        UserDto userDto = accountService.getUserInfo(customUserDetails.getUserDto().getUserId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 

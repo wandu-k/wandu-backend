@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,7 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,25 +17,23 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
-import com.example.wandukong.exception.CustomException.BoardNotFoundException;
-import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
-import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.service.MiniHomePostService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "미니홈 게시글", description = "미니홈 게시글 API")
-@RequestMapping("/api/user/minihome/post")
+@RequestMapping("/api/admin/minihome/post")
 @RequiredArgsConstructor
 @RestController
-public class MiniHomePostController {
+public class AdminMiniHomePostController {
 
-    MiniHomePostService miniHomePostService;
+    private final MiniHomePostService miniHomePostService;
 
     @Operation(summary = "미니홈 게시글 번호로 내용 조회", description = "특정 게시글 내용 조회")
     @GetMapping
@@ -60,27 +57,9 @@ public class MiniHomePostController {
     @DeleteMapping
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody MiniHomePostDto miniHomePostDto)
-            throws PostNotFoundException, BadRequestException {
-        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
-            throw new BadRequestException();
-
-        }
-        miniHomePostService.deletePost(miniHomePostDto);
+            throws PostNotFoundException {
+        log.info("Admin Delete 컨트롤러");
+        // adminMiniHomePostService.deletePost(miniHomePostDto);
         return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
-    }
-
-    @Operation(summary = "미니홈 게시글 등록 / 수정", description = "인증된 사용자의 자기자신의 특정 게시글 등록 또는 수정")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping
-    public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody MiniHomePostDto miniHomePostDto)
-            throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
-        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
-            throw new BadRequestException();
-        }
-
-        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
-
-        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 }

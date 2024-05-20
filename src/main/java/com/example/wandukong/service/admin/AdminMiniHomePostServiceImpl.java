@@ -1,11 +1,10 @@
-package com.example.wandukong.service;
+package com.example.wandukong.service.admin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,19 +17,18 @@ import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
-import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
 import com.example.wandukong.repository.miniHome.MiniHomePostRepository;
+import com.example.wandukong.service.MiniHomePostService;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
-@Primary
 @Service
 @Slf4j
-public class MiniHomePostServiceImpl implements MiniHomePostService {
+public class AdminMiniHomePostServiceImpl implements MiniHomePostService {
 
         @Autowired
         MiniHomePostRepository miniHomePostRepository;
