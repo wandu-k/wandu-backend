@@ -38,8 +38,11 @@ public class ForumPost {
     @Column(name = "state")
     private int state;
 
+    @Column(name = "count", columnDefinition = "int default 0")
+    private int count;
+
     @Builder
-    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state) {
+    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state, int count) {
         this.postId = postId;
         this.forumBoard = forumBoard;
         this.userDo = userDo;
@@ -47,6 +50,7 @@ public class ForumPost {
         this.content = content;
         this.writeDate = writeDate;
         this.state = state;
+        this.count = count;
     }
 
     public void changePost(ForumBoard forumBoard, String title, String content, int state) {
@@ -54,6 +58,10 @@ public class ForumPost {
         this.title = title;
         this.content = content;
         this.state = state;
+    }
+
+    public void changeCount(int count) {
+        this.count = count++;
     }
 
 }

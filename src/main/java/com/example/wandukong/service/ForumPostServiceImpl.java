@@ -36,6 +36,8 @@ public class ForumPostServiceImpl implements ForumPostService {
 
     ForumPost forumPost = forumPostRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
+    forumPost.changeCount(forumPost.getCount());
+
       return ForumPostDto.builder()
             .postId(forumPost.getPostId())
             .boardId(forumPost.getForumBoard().getBoardId())
@@ -43,6 +45,7 @@ public class ForumPostServiceImpl implements ForumPostService {
             .title(forumPost.getTitle())
             .content(forumPost.getContent())
             .writeDate(forumPost.getWriteDate())
+              .count(forumPost.getCount())
             .build();
   }
 

@@ -22,8 +22,10 @@ public class ForumPostDto {
 
   private int state;
 
+  private int count;
+
   @Builder
-  public ForumPostDto(Long postId, Long boardId, Long userId, String title, String content, LocalDate writeDate, int state) {
+  public ForumPostDto(Long postId, Long boardId, Long userId, String title, String content, LocalDate writeDate, int state, int count) {
     this.postId = postId;
     this.boardId = boardId;
     this.userId = userId;
@@ -31,5 +33,6 @@ public class ForumPostDto {
     this.content = content;
     this.writeDate = writeDate;
     this.state = state;
+    this.count = count;
   }
 }
