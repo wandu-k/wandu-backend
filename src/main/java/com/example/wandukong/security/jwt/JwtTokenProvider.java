@@ -55,6 +55,7 @@ public class JwtTokenProvider {
 
     public UsernamePasswordAuthenticationToken getAuthentication(String authHeader) {
         if (authHeader == null || authHeader.length() == 0) {
+            log.info("토큰이 없습니다.");
             return null;
         }
         String jwt = authHeader.replace(JwtConstants.TOKEN_PREFIX, "");

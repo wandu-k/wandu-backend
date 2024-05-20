@@ -48,9 +48,9 @@ public class AccountController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
-    public ResponseEntity<?> getUserInfo(@RequestParam Long userID) throws UserNotFoundException {
+    public ResponseEntity<?> getUserInfo(@RequestParam Long userId) throws UserNotFoundException {
 
-        UserDto userDto = accountService.getUserInfo(userID);
+        UserDto userDto = accountService.getUserInfo(userId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
@@ -81,7 +81,7 @@ public class AccountController {
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
+            @RequestPart UserDto userDto)
             throws IOException, UserNotFoundException, UserAlreadyExistsException {
         accountService.updateProfile(profileImage, userDto);
         return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);

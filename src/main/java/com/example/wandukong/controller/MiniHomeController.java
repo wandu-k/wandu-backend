@@ -7,6 +7,8 @@ import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.service.MiniHomeService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +19,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/api/minihome")
+@RequestMapping("/api/user/minihome")
 @RestController
 public class MiniHomeController {
 
     @Autowired
     MiniHomeService miniHomeService;
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     public ResponseEntity<?> getMiniHome(@RequestParam Long hpId) throws HomeNotFoundException {
 
@@ -31,6 +34,7 @@ public class MiniHomeController {
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/board")
     public ResponseEntity<?> getBoardList() {
         List<MiniHomeBoardDto> boardList = new ArrayList<MiniHomeBoardDto>();
