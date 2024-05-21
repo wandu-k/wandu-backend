@@ -10,6 +10,7 @@ import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.UserDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -92,6 +93,19 @@ public class UserDo {
         this.birthday = birthday;
         this.phone = phone;
         this.gender = gender;
+    }
+
+    public UserDto toDto() {
+        UserDto userDto = UserDto.builder()
+                .userId(userId)
+                .nickname(nickname)
+                .profileImage(profileImage)
+                .gender(gender)
+                .birthday(birthday)
+                .signupDay(signupDay)
+                .role(role)
+                .build();
+        return userDto;
     }
 
     // 필드 업데이트 메서드

@@ -21,19 +21,17 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 //JWT 토큰 관련 기능을 제공해주는 클래스
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Autowired
-    JwtProps jwtProps;
-
-    @Autowired
-    CustomUserDetails customUserDetails;
+    private final JwtProps jwtProps;
 
     public String createToken(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();

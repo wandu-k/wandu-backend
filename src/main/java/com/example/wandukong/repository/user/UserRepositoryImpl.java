@@ -39,18 +39,15 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                                 .where(friend.userDo.userId.eq(userId))
                                 .fetchOne();
 
-                followCount = followCount != null ? followCount : 0L;
-
                 Long followerCount = jpaQueryFactory.select(friend.count()).from(friend)
                                 .where(friend.friendDo.userId.eq(userId)).fetchOne();
-
-                followerCount = followerCount != null ? followerCount : 0L;
 
                 UserDto userDto = UserDto.builder()
                                 .userId(userDo.getUserId())
                                 .nickname(userDo.getNickname())
                                 .birthday(userDo.getBirthday())
                                 .signupDay(userDo.getSignupDay())
+                                .role(userDo.getRole())
                                 .followCount(followCount)
                                 .followerCount(followerCount)
                                 .build();

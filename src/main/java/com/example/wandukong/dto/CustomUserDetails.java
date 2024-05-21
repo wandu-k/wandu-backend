@@ -7,16 +7,14 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Data
 @Slf4j
+@Getter
 @RequiredArgsConstructor
-@Component
 public class CustomUserDetails implements UserDetails {
 
     private final AccountDto accountDto;

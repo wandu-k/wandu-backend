@@ -32,8 +32,8 @@ public class UserDto {
         this.signupDay = signupDay;
         this.birthday = birthday;
         this.role = role;
-        this.followCount = followCount;
-        this.followerCount = followerCount;
+        this.followCount = followCount != null ? followCount : 0L;
+        this.followerCount = followerCount != null ? followerCount : 0L;
     }
 
     public void setProfileImage(String profileImage) {
