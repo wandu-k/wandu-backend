@@ -26,7 +26,7 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
         @Override
         public UserDto getUserInfo(Long userId) {
 
-                QUserDo userDo1 = QUserDo.userDo1;
+                QUserDo userDo1 = QUserDo.userDo;
                 QFriend friend = QFriend.friend;
 
                 UserDo userDo = jpaQueryFactory.selectFrom(userDo1)

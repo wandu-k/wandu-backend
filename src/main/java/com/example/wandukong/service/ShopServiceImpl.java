@@ -28,11 +28,11 @@ import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
-import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoPageRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
+import com.example.wandukong.repository.user.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class ShopServiceImpl implements ShopService {
   CategoryRepository categoryRepository;
 
   @Autowired
-  AccountRepository accountRepository;
+  UserRepository accountRepository;
 
   @Autowired
   AmazonS3 amazonS3;
