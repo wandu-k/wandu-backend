@@ -45,11 +45,12 @@ public class Ask {
     @Column(name = "count", columnDefinition = "int default 0")
     private int count;
 
-    @OneToMany(mappedBy = "Ask", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ask", cascade = CascadeType.ALL)
     private List<AdminComment> adminComments = new ArrayList<>();
 
     @Builder
-    public Ask(Long askId, UserDo userDo, String title, String content, LocalDate writeDate, int solveState, int hideState, int count, List<AdminComment> adminComments) {
+    public Ask(Long askId, UserDo userDo, String title, String content, LocalDate writeDate, int solveState,
+            int hideState, int count, List<AdminComment> adminComments) {
         this.askId = askId;
         this.userDo = userDo;
         this.title = title;
