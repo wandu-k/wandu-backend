@@ -19,8 +19,8 @@ import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
+import com.example.wandukong.repository.user.UserRepository;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository accountRepository;
 
     @Autowired
     MiniHomeRepository miniHpRepository;
@@ -145,7 +145,6 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new UserNotFoundException());
         UserDto userDto = UserDto.builder()
                 .userId(userDo.getUserId())
-                .hpId(userDo.getMiniHome().getHpId())
                 .nickname(userDo.getNickname())
                 .role(userDo.getRole())
                 .birthday(userDo.getBirthday())

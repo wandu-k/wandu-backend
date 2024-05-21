@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.service.AccountService;
+import com.example.wandukong.service.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PublicUserController {
 
     @Autowired
-    AccountService accountService;
+    UserService userService;
 
     // 회원정보 조회
     @Operation(summary = "회원 조회", description = "회원 정보를 조회를 합니다.")
@@ -37,7 +37,7 @@ public class PublicUserController {
     public ResponseEntity<?> getUserInfo(@RequestParam Long userId) throws UserNotFoundException {
 
         log.info("유저 정보 조회 컨트롤러");
-        UserDto userDto = accountService.getUserInfo(userId);
+        UserDto userDto = userService.getUserInfo(userId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 

@@ -9,7 +9,6 @@ import lombok.Getter;
 public class UserDto {
 
     private Long userId;
-    private Long hpId;
     private String username;
     private String password;
     private String profileImage;
@@ -20,14 +19,18 @@ public class UserDto {
     private Date signupDay;
     private Date birthday;
     private String role;
+    private Long followCount;
+    private Long followerCount;
+
+    public UserDto() {
+        // TODO Auto-generated constructor stub
+    }
 
     @Builder
-    public UserDto(Long userId, Long hpId, String username, String password, String profileImage, String nickname,
-            String name,
-            String phone,
-            String gender, Date signupDay, Date birthday, String role) {
+    public UserDto(Long userId, String username, String password, String profileImage, String nickname, String name,
+            String phone, String gender, Date signupDay, Date birthday, String role, Long followCount,
+            Long followerCount) {
         this.userId = userId;
-        this.hpId = hpId;
         this.username = username;
         this.password = password;
         this.profileImage = profileImage;
@@ -38,10 +41,8 @@ public class UserDto {
         this.signupDay = signupDay;
         this.birthday = birthday;
         this.role = role;
-    }
-
-    public UserDto() {
-        // TODO Auto-generated constructor stub
+        this.followCount = followCount;
+        this.followerCount = followerCount;
     }
 
     public void setProfileImage(String profileImage) {

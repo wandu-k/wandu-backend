@@ -43,7 +43,6 @@ public class JwtTokenProvider {
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .claim("userId", customUserDetails.getUserDto().getUserId())
-                .claim("hpId", customUserDetails.getUserDto().getHpId())
                 .claim("email", customUserDetails.getUserDto().getUsername())
                 .claim("rol", customUserDetails.getUserDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
@@ -63,9 +62,7 @@ public class JwtTokenProvider {
 
         String email = parsedToken.getPayload().get("email").toString();
         String strUserId = parsedToken.getPayload().get("userId").toString();
-        String strHpId = parsedToken.getPayload().get("hpId").toString();
         Long userId = Long.valueOf(strUserId);
-        Long hpId = Long.valueOf(strHpId);
         String role = parsedToken.getPayload().get("rol").toString();
 
         log.info("토큰 데이터 추출 완료");
@@ -77,7 +74,6 @@ public class JwtTokenProvider {
         UserDto userDto = UserDto.builder()
                 .username(email)
                 .userId(userId)
-                .hpId(hpId)
                 .build();
 
         // GrantedAuthority 객체로 변환

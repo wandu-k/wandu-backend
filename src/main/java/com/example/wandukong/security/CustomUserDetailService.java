@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
-import com.example.wandukong.repository.AccountRepository;
+import com.example.wandukong.repository.user.UserRepository;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomUserDetailService implements UserDetailsService {
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository accountRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,7 +34,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
         UserDto userDto = UserDto.builder()
                 .userId(userDo.getUserId())
-                .hpId(userDo.getMiniHome().getHpId())
                 .username(userDo.getEmail())
                 .password(userDo.getPassword())
                 .role(userDo.getRole())
