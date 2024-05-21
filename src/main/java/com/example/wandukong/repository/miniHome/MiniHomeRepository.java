@@ -8,4 +8,6 @@ import com.example.wandukong.domain.MiniHome.MiniHome;
 @Repository
 public interface MiniHomeRepository extends JpaRepository<MiniHome, Long> {
 
+    MiniHome findByUserDo_UserId(Long userId);
+
 }

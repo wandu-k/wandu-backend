@@ -38,18 +38,21 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
     @Transactional
     @Override
-    public MiniHomeDto getMiniHome(Long hpId) throws HomeNotFoundException {
+    public MiniHomeDto getMiniHome(Long userId) throws HomeNotFoundException {
 
-        MiniHome miniHome = miniHomeRepository.findById(hpId)
-                .orElseThrow(() -> new HomeNotFoundException());
+        MiniHome miniHome = miniHomeRepository.findByUserDo_UserId(userId);
+
+        if (miniHome == null) {
+            throw new HomeNotFoundException();
+        }
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
 
         String userIp = getIpUtil.getIp(request);
         String userAgent = request.getHeader("User-Agent");
-        String visitorkey = "visit" + ":" + hpId + ":" + userIp;
-        String viewKey = "view" + ":" + hpId;
+        String visitorkey = "visit" + ":" + miniHome.getHpId() + ":" + userIp;
+        String viewKey = "view" + ":" + miniHome.getHpId();
 
         if (!redisTemplate.opsForValue().getOperations().hasKey(visitorkey)) {
             redisTemplate.opsForValue().set(visitorkey, userAgent, Duration.ofHours(24));
@@ -57,14 +60,7 @@ public class MiniHomeServiceImpl implements MiniHomeService {
             miniHome.viewCount(miniHome.getAllVisit() + 1);
         }
 
-        MiniHomeDto miniHomeDto = MiniHomeDto.builder()
-                .userId(miniHome.getUserDo().getUserId())
-                .hpId(miniHome.getHpId())
-                .statusM(miniHome.getStatusM())
-                .introduction(miniHome.getIntroduction())
-                .hpToday(Integer.parseInt(redisTemplate.opsForValue().get(viewKey)))
-                .allVisit(miniHome.getAllVisit())
-                .build();
+        MiniHomeDto miniHomeDto = miniHome.toDto(Integer.parseInt(redisTemplate.opsForValue().get(viewKey)));
 
         return miniHomeDto;
     }

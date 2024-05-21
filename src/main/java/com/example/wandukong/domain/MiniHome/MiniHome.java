@@ -3,8 +3,11 @@ package com.example.wandukong.domain.MiniHome;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.wandukong.domain.Friend;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.Playlist;
+import com.example.wandukong.dto.FriendDto;
+import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -74,6 +77,22 @@ public class MiniHome {
 
     public void viewCount(int allVisit) {
         this.allVisit = allVisit;
+    }
+
+    public MiniHomeDto toDto(int hpToday) {
+
+        MiniHomeDto miniHomeDto = MiniHomeDto.builder()
+                .hpId(hpId)
+                .statusM(statusM)
+                .introduction(introduction)
+                .hpToday(hpToday)
+                .allVisit(allVisit)
+                .hpOpen(hpOpen)
+                .hpToday(hpToday)
+                .build();
+
+        return miniHomeDto;
+
     }
 
 }

@@ -16,7 +16,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "유저", description = "유저 관련 공개 API")
 @RequestMapping("/api/public/user")
 @RestController
@@ -34,6 +36,7 @@ public class PublicUserController {
     @GetMapping
     public ResponseEntity<?> getUserInfo(@RequestParam Long userId) throws UserNotFoundException {
 
+        log.info("유저 정보 조회 컨트롤러");
         UserDto userDto = accountService.getUserInfo(userId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
