@@ -18,7 +18,7 @@ public class AdminComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentId", unique = true)
-    private int commentId;
+    private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -36,7 +36,7 @@ public class AdminComment {
     private LocalDate writeDate;
 
     @Builder
-    public AdminComment(int commentId, UserDo userDo, Ask ask, String commentContent, LocalDate writeDate) {
+    public AdminComment(Long commentId, UserDo userDo, Ask ask, String commentContent, LocalDate writeDate) {
         this.commentId = commentId;
         this.userDo = userDo;
         this.ask = ask;
