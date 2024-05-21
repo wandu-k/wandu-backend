@@ -19,16 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CustomUserDetails implements UserDetails {
 
-    private UserDto userDto;
-
-    public CustomUserDetails(UserDto userDto) {
-        this.userDto = userDto;
-    }
+    private final AccountDto accountDto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 사용자 권한 정보 추출
-        String role = userDto.getRole();
+        String role = accountDto.getRole();
 
         log.info("권한 : " + role);
 
@@ -43,12 +39,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userDto.getPassword();
+        return accountDto.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userDto.getUsername();
+        return accountDto.getUsername();
     }
 
     @Override

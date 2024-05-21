@@ -3,10 +3,8 @@ package com.example.wandukong.domain.MiniHome;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.wandukong.domain.Friend;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.Playlist;
-import com.example.wandukong.dto.FriendDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 
 import jakarta.persistence.CascadeType;

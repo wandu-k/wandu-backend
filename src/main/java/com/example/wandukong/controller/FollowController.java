@@ -57,7 +57,7 @@ public class FollowController {
     public ResponseEntity<?> following(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody FriendDto friendDto) throws BadRequestException {
 
-        if (customUserDetails.getUserDto().getUserId() != friendDto.getUserId()) {
+        if (customUserDetails.getAccountDto().getUserId() != friendDto.getUserId()) {
             throw new BadRequestException();
         }
 
@@ -72,7 +72,7 @@ public class FollowController {
     public ResponseEntity<?> unFollowing(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody FriendDto friendDto) throws BadRequestException {
 
-        if (customUserDetails.getUserDto().getUserId() != friendDto.getUserId()) {
+        if (customUserDetails.getAccountDto().getUserId() != friendDto.getUserId()) {
             throw new BadRequestException();
         }
 

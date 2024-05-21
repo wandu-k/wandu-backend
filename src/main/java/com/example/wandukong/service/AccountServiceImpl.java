@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
@@ -54,24 +55,25 @@ public class AccountServiceImpl implements AccountService {
     // 회원가입
     @Transactional
     @Override
-    public void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException, IOException {
-        String encodedPw = passwordEncoder.encode(userDto.getPassword());
+    public void register(MultipartFile profileImage, AccountDto accountDto)
+            throws UserAlreadyExistsException, IOException {
+        String encodedPw = passwordEncoder.encode(accountDto.getPassword());
 
         // Check for duplicate username before saving
-        if (accountRepository.findByEmail(userDto.getUsername()) == null) {
+        if (accountRepository.findByEmail(accountDto.getUsername()) == null) {
+
             UserDo userDo = UserDo.builder()
-                    .email(userDto.getUsername())
+                    .email(accountDto.getUsername())
                     .password(encodedPw)
-                    .nickname(userDto.getNickname())
+                    .nickname(accountDto.getNickname())
                     .build();
 
-            if (profileImage != null) {
-
-                String profileImagePath = profileUpload(profileImage, userDto);
-
-                userDto.setProfileImage(profileImagePath);
-            }
             userDo = accountRepository.save(userDo);
+
+            if (profileImage != null) {
+                String profileImagePath = profileUpload(profileImage, accountDto);
+                userDo.updateProfileImage(profileImagePath);
+            }
 
             log.info("회원가입된 회원 아이디" + userDo.getUserId());
 
@@ -100,34 +102,31 @@ public class AccountServiceImpl implements AccountService {
     // 유저정보 업데이트
     @Transactional
     @Override
-    public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException {
+    public void updateProfile(MultipartFile profileImage, AccountDto accountDto)
+            throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userDto.getUserId())
+        UserDo userDo = accountRepository.findById(accountDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
-
-            String profileImagePath = profileUpload(profileImage, userDto);
-
-            userDto.setProfileImage(profileImagePath);
+            String profileImagePath = profileUpload(profileImage, accountDto);
+            userDo.updateProfileImage(profileImagePath);
         }
-
-        userDo.updateProfile(userDto.getUsername(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
-                userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
-
+        userDo.updateProfile(accountDto.getUsername(), accountDto.getName(), accountDto.getNickname(),
+                accountDto.getBirthday(), accountDto.getPhone(), accountDto.getGender());
     }
 
     // 프로필 이미지 업로드
-    private String profileUpload(MultipartFile profileImage, UserDto userDto) throws IOException {
+    private String profileUpload(MultipartFile profileImage, AccountDto accountDto) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + userDto.getUserId() + "/profile/";
+        String filePath = "users/" + accountDto.getUserId() + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
 
-        String filename = "profile" + "_" + userDto.getUserId() + extension;
+        String filename = "profile" + "_" + accountDto.getUserId() + extension;
 
         String profileImagePath = filePath + filename;
 

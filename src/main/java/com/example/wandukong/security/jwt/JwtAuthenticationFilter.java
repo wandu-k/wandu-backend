@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.dto.AccountDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.io.IOException;
@@ -35,21 +35,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws AuthenticationException {
 
         ObjectMapper mapper = new ObjectMapper();
-        UserDto userDto = new UserDto();
+        AccountDto accountDto = new AccountDto();
 
         try {
-            userDto = mapper.readValue(request.getInputStream(), UserDto.class);
+            accountDto = mapper.readValue(request.getInputStream(), AccountDto.class);
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
 
-        log.info("Email (username) : " + userDto.getUsername());
-        log.info("Password : " + userDto.getPassword());
+        log.info("Email (username) : " + accountDto.getUsername());
+        log.info("Password : " + accountDto.getPassword());
 
         // 사용자 인증정보 객체 생성
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDto.getUsername(),
-                userDto.getPassword());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(accountDto.getUsername(),
+                accountDto.getPassword());
 
         log.info("사용자 인증정보 객체 생성 완료");
 

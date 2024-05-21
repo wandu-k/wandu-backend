@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
@@ -49,7 +50,7 @@ public class AccountController {
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws UserNotFoundException {
 
-        UserDto userDto = accountService.getUserInfo(customUserDetails.getUserDto().getUserId());
+        UserDto userDto = accountService.getUserInfo(customUserDetails.getAccountDto().getUserId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
@@ -62,8 +63,8 @@ public class AccountController {
     @DeleteMapping()
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
-            UserDto userDto = customUserDetails.getUserDto();
-            accountService.deleteAccount(userDto.getUserId());
+            AccountDto accountDto = customUserDetails.getAccountDto();
+            accountService.deleteAccount(accountDto.getUserId());
             return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
         }
 
@@ -80,9 +81,9 @@ public class AccountController {
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart UserDto userDto)
+            @RequestPart AccountDto accountDto)
             throws IOException, UserNotFoundException, UserAlreadyExistsException {
-        accountService.updateProfile(profileImage, userDto);
+        accountService.updateProfile(profileImage, accountDto);
         return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
 
     }
@@ -99,7 +100,7 @@ public class AccountController {
             @RequestParam String currentPassword, @RequestParam String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
         if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserId();
+            Long userID = customUserDetails.getAccountDto().getUserId();
 
             accountService.updatePassword(userID, currentPassword, newPassword);
             return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);

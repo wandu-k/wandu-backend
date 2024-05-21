@@ -1,7 +1,5 @@
 package com.example.wandukong.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,7 +59,7 @@ public class MiniHomePostController {
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody MiniHomePostDto miniHomePostDto)
             throws PostNotFoundException, BadRequestException {
-        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
+        if (customUserDetails.getAccountDto().getUserId() != miniHomePostDto.getUserId()) {
             throw new BadRequestException();
 
         }
@@ -75,7 +73,7 @@ public class MiniHomePostController {
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody MiniHomePostDto miniHomePostDto)
             throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
-        if (customUserDetails.getUserDto().getUserId() != miniHomePostDto.getUserId()) {
+        if (customUserDetails.getAccountDto().getUserId() != miniHomePostDto.getUserId()) {
             throw new BadRequestException();
         }
 

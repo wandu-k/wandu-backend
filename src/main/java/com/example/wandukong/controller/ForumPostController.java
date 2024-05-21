@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import com.example.wandukong.dto.ForumPostDto;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
+import com.example.wandukong.exception.CustomException.BoardNotFoundException;
+import com.example.wandukong.exception.CustomException.PermissionDeniedException;
+import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.service.ForumPostService;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.example.wandukong.exception.CustomException.*;
 
 @Tag(name = "자유 게시글", description = "자유 게시글 API")
 @RestController
@@ -50,10 +52,11 @@ public class ForumPostController {
   @Operation(summary = "자유게시판 등록 및 수정")
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping
-  public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ForumPostDto forumPostDto)
-          throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
+  public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+      @RequestBody ForumPostDto forumPostDto)
+      throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
 
-    if (!Objects.equals(customUserDetails.getUserDto().getUserId(), forumPostDto.getUserId())) {
+    if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), forumPostDto.getUserId())) {
       throw new BadRequestException();
     }
 
@@ -66,10 +69,10 @@ public class ForumPostController {
   @DeleteMapping
   @SecurityRequirement(name = "Bearer Authentication")
   public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postId)
-          throws PostNotFoundException, PermissionDeniedException{
+      throws PostNotFoundException, PermissionDeniedException {
 
     if (customUserDetails != null) {
-      Long userId = customUserDetails.getUserDto().getUserId();
+      Long userId = customUserDetails.getAccountDto().getUserId();
       forumPostService.remove(userId, postId);
       return new ResponseEntity<>("게시글 삭제가 완료되었씁니다.", HttpStatus.OK);
     }

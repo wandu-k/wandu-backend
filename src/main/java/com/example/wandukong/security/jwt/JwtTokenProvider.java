@@ -11,11 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.UserDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -42,9 +40,8 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder().header()
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
-                .claim("userId", customUserDetails.getUserDto().getUserId())
-                .claim("email", customUserDetails.getUserDto().getUsername())
-                .claim("rol", customUserDetails.getUserDto().getRole())
+                .claim("userId", customUserDetails.getAccountDto().getUserId())
+                .claim("rol", customUserDetails.getAccountDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();
 
@@ -60,21 +57,11 @@ public class JwtTokenProvider {
         String jwt = authHeader.replace(JwtConstants.TOKEN_PREFIX, "");
         Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
 
-        String email = parsedToken.getPayload().get("email").toString();
         String strUserId = parsedToken.getPayload().get("userId").toString();
         Long userId = Long.valueOf(strUserId);
         String role = parsedToken.getPayload().get("rol").toString();
 
         log.info("토큰 데이터 추출 완료");
-
-        if (email == null || email.length() == 0) {
-            return null;
-        }
-
-        UserDto userDto = UserDto.builder()
-                .username(email)
-                .userId(userId)
-                .build();
 
         // GrantedAuthority 객체로 변환
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
@@ -83,8 +70,7 @@ public class JwtTokenProvider {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(grantedAuthority);
 
-        UserDetails userDetails = new CustomUserDetails(userDto);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+        return new UsernamePasswordAuthenticationToken(userId, null, authorities);
     }
 
     // 토큰 유효성 검사

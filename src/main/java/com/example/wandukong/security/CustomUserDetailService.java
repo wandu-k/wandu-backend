@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.repository.user.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +32,14 @@ public class CustomUserDetailService implements UserDetailsService {
         log.info("사용자가 있음");
         log.info(userDo.toString());
 
-        UserDto userDto = UserDto.builder()
+        AccountDto accountDto = AccountDto.builder()
                 .userId(userDo.getUserId())
                 .username(userDo.getEmail())
                 .password(userDo.getPassword())
                 .role(userDo.getRole())
                 .build();
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(userDto);
+        CustomUserDetails customUserDetails = new CustomUserDetails(accountDto);
 
         log.info(customUserDetails.toString());
 

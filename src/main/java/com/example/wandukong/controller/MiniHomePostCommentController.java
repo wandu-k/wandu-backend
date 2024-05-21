@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
-import com.example.wandukong.security.CustomUserDetailService;
 import com.example.wandukong.service.MiniHomePostCommentService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class MiniHomePostCommentController {
     public ResponseEntity<?> getComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Long postId) throws HomeNotFoundException {
 
-        Long userId = customUserDetails.getUserDto().getUserId();
+        Long userId = customUserDetails.getAccountDto().getUserId();
 
         MiniHomeDto miniHomeDto = minihomePostCommentService.getComment(postId, userId);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);

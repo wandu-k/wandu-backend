@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
@@ -41,9 +41,9 @@ public class AuthController {
     public ResponseEntity<?> register(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) UserDto userDto)
+            @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) AccountDto accountDto)
             throws UserNotFoundException, UserAlreadyExistsException, java.io.IOException {
-        accountService.register(profileImage, userDto);
+        accountService.register(profileImage, accountDto);
         return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
     }
 
