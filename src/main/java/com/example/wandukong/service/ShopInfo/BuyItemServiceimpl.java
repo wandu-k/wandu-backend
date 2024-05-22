@@ -23,6 +23,7 @@ import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
+import com.example.wandukong.repository.ShopInfo.BuyItemPageRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
@@ -45,6 +46,9 @@ public class BuyItemServiceimpl implements BuyItemService {
         private BuyItemRepository buyItemRepository;
 
         @Autowired
+        private BuyItemPageRepository buyItemPageRepository;
+
+        @Autowired
         private AmazonS3 amazonS3;
 
         @Transactional
@@ -56,7 +60,7 @@ public class BuyItemServiceimpl implements BuyItemService {
                                 .orElseThrow(() -> new UserNotFoundException());
 
                 // jpa를 사용하여 페이지 별로 사용자가 구매 내역 정보를 가져옴
-                Page<BuyItem> buyItemPage = buyItemRepository.findByUserDoUserId(user, pageRequestDto);
+                Page<BuyItem> buyItemPage = buyItemPageRepository.findByUserDoUserId(user, pageRequestDto);
 
                 // 가져온 구매 내역 정보를 BuyItemDto로 변환
                 List<BuyItemAllDto> buyitemList = buyItemPage.getContent().stream().map(buyitem -> {

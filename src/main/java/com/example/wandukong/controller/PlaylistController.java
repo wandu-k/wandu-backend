@@ -16,8 +16,11 @@ import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
+import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
+import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
+import com.example.wandukong.service.ShopInfo.PlaylistService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -33,11 +36,12 @@ public class PlaylistController {
   @SecurityRequirement(name = "Baerer Authentication")
   @GetMapping("/list")
   public ResponseEntity<?> getplaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestParam SliceRequestDto sliceRequestDto, @PathVariable Long userId, @RequestBody PlaylistDto playlistDto,
+      @RequestParam SliceRequestDto sliceRequestDto, @PathVariable Long userId,
+      @RequestBody PlaylistAllDto playlistallDto,
       @RequestBody UserDto userDto) throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      PageResponseDto<PlaylistDto> responseDto = playlistService.getAllplaylist(sliceRequestDto, userDto);
+      SliceResponseDto<PlaylistAllDto> responseDto = playlistService.getAllplaylist(sliceRequestDto, userDto);
 
       return new ResponseEntity<>(responseDto, HttpStatus.OK);
 

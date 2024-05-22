@@ -8,18 +8,21 @@ import lombok.Getter;
 @Getter
 public class PlaylistAllDto {
   private UserDto userDto;
-  private BuyItemDto buyItemDto;
+  private BgmListDto bgmListDto;
+  private BuyItemAllDto buyItemAllDto;
   private PlaylistDto playlistDto;
   private ShopInfoDto shopInfoDto;
 
   @Builder
   public PlaylistAllDto(UserDto userDto,
-      BuyItemDto buyItemDto,
-      PlaylistDto playlistDto,
-      ShopInfoDto shopInfoDto) {
+      BuyItemAllDto buyItemAllDto,
+      ShopInfoDto shopInfoDto,
+      BgmListDto bgmListDto,
+      PlaylistDto playlistDto) {
     this.userDto = userDto;
-    this.buyItemDto = buyItemDto;
-    this.playlistDto = playlistDto;
+    this.buyItemAllDto = buyItemAllDto;
+    this.bgmListDto = bgmListDto;
     this.shopInfoDto = shopInfoDto;
+    this.playlistDto = playlistDto;
   }
 }

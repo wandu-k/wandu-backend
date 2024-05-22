@@ -37,6 +37,9 @@ public class Shop {
     @Column(name = "itemName")
     private String itemName;
 
+    @Column(name = "artist")
+    private String artist;
+
     @Column(name = "price")
     private Long price;
 

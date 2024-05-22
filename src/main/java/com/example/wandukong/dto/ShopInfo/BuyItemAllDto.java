@@ -13,6 +13,7 @@ public class BuyItemAllDto {
   public BuyItemAllDto(BuyItemDto buyItemDto, ItemFileDto itemFileDto, ShopInfoDto shopInfoDto) {
     this.buyItemDto = buyItemDto;
     this.itemFileDto = itemFileDto;
+    this.shopInfoDto = shopInfoDto;
   }
 
   public BuyItemAllDto() {

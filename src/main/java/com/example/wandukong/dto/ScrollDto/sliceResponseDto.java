@@ -6,14 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class sliceResponseDto<E> {
+public class SliceResponseDto<E> {
 
   private List<E> dtoList;
   private boolean hasMoreData;
+  private SliceRequestDto sliceRequestDto;
 
-  @Builder
-  public sliceResponseDto(List<E> dtoList, boolean hasMoreData) {
+  @Builder(builderMethodName = "withAll")
+  public SliceResponseDto(List<E> dtoList, boolean hasMoreData, SliceRequestDto sliceRequestDto) {
     this.dtoList = dtoList;
     this.hasMoreData = hasMoreData;
+    this.sliceRequestDto=sliceRequestDto;
   }
 }

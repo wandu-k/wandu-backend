@@ -47,7 +47,7 @@ public class ItemInventoryController {
           PageResponseDto<BuyItemAllDto> responseDto = buyitemservice.getMybuylist(pageRequestDto, loginUser);
           return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } else {
-          return new ResponseEntity<>("구매한 아이템이 없습니다.", HttpStatus.FORBIDDEN);
+          return new ResponseEntity<>("구매한 아이템이 없습니다.", HttpStatus.OK);
         }
       } else {
         return new ResponseEntity<>("해당 아이템의 정보에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
