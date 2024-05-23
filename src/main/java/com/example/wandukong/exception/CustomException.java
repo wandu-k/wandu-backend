@@ -69,4 +69,11 @@ public class CustomException extends Exception {
 
     }
 
+    public static class BgmListNotFoundException extends Exception {
+        public BgmListNotFoundException() {
+
+        }
+
+    }
+
 }

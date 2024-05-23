@@ -7,19 +7,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
-import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
 import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
-import com.example.wandukong.dto.ShopInfo.PlaylistDto;
+import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
+import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.service.ShopInfo.PlaylistService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -36,36 +37,43 @@ public class PlaylistController {
   @SecurityRequirement(name = "Baerer Authentication")
   @GetMapping("/list")
   public ResponseEntity<?> getplaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestParam SliceRequestDto sliceRequestDto, @PathVariable Long userId,
+      @RequestParam SliceRequestDto sliceRequestDto,
       @RequestBody PlaylistAllDto playlistallDto,
-      @RequestBody UserDto userDto) throws UserNotFoundException {
+      @RequestBody UserDto userDto, @RequestBody MiniHomeDto miniHomeDto) throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      SliceResponseDto<PlaylistAllDto> responseDto = playlistService.getAllplaylist(sliceRequestDto, userDto);
+      Long loginUserId = customUserDetails.getUserDto().getUserId();
+      Long minihomeUserId = miniHomeDto.getUserId();
+      // 접속한 미니홈이 내 미니홈 일 경우
+      if (loginUserId == minihomeUserId) {
+        SliceResponseDto<PlaylistAllDto> responseDto = playlistService.getAllplaylist(sliceRequestDto, loginUserId);
 
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+      }
+      SliceResponseDto<PlaylistAllDto> responseDto = playlistService.getAllplaylist(sliceRequestDto, minihomeUserId);
+      // 접속한 미니홈이 내 미니홈이 아닐 경우
       return new ResponseEntity<>(responseDto, HttpStatus.OK);
-
     } else {
       return new ResponseEntity<>("로그인후 이용해주세요", HttpStatus.UNAUTHORIZED);
     }
 
   }
 
-  // 각 사용자의 플리를 업데이트
+  // 각 사용자의 플리를 추가/업데이트
   @SecurityRequirement(name = "Baerer Authentication")
-  @GetMapping("/updatelist")
+  @PutMapping("/updatelist")
   public ResponseEntity<?> getUpdateMyPlaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestParam PageRequestDto pageRequestDto, @PathVariable Long userId, @RequestBody PlaylistDto playlistDto,
-      @RequestBody UserDto userDto) throws UserNotFoundException {
+      @RequestParam PageRequestDto pageRequestDto, @RequestBody PlaylistAllDto playlistAllDto)
+      throws BadRequestException, BgmListNotFoundException {
 
-    if (customUserDetails.getUserDto().getUserId() != playlistDto.getUserId()) {
+    if (customUserDetails.getUserDto().getUserId() != playlistAllDto.getPlaylistDto().getUserId()) {
 
       throw new BadRequestException();
     }
 
-    PageResponseDto<PlaylistDto> responseDto = playlistService.updateMyPlaylist(pageRequestDto, userDto);
+    ApiResponse responseDto = playlistService.updateMyPlaylist(playlistAllDto);
 
-    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    return new ResponseEntity<>(responseDto.getMessage(), responseDto.getStatus());
 
   }
 

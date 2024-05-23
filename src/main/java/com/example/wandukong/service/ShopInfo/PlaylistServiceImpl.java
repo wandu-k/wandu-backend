@@ -1,47 +1,85 @@
 package com.example.wandukong.service.ShopInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BgmList;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
+import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Playlist;
+import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
 import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
+import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
+import com.example.wandukong.dto.ShopInfo.ShopDto;
+import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
+import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.repository.AccountRepository;
+import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.repository.ShopInfo.PlaylistAllpageRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PlaylistServiceImpl implements PlaylistService {
 
   @Autowired
   PlaylistAllpageRepository playlistAllpageRepository;
 
+  @Autowired
+  AccountRepository accountRepository;
+
+  @Autowired
+  CustomUserDetails customUserDetails;
+
+  @Autowired
+  BuyItemRepository buyItemRepository;
+
+  @Autowired
+  UserDto userdto;
+
   @Transactional
   @Override
-  public SliceResponseDto<PlaylistAllDto> getAllplaylist(SliceRequestDto sliceRequestDto, UserDto userDto) {
-    Pageable Pageable = sliceRequestDto.of();
+  public SliceResponseDto<PlaylistAllDto> getAllplaylist(SliceRequestDto sliceRequestDto, Long userId) {
 
-    List<BgmList> bgmListPage;
+    UserDo userDo = accountRepository.findById(userId)
+        .orElseThrow(() -> new UsernameNotFoundException(null));
+
+    UserDto userDto = UserDto.builder()
+        .userId(userDo.getUserId())
+        .build();
+
+    Pageable pageable = sliceRequestDto.of();
+
+    Page<BgmList> bgmListPage;
 
     if (sliceRequestDto.getLastId() == null) {
-      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto);
+      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto, userId);
     } else {
-      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto);
+      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto,
+          sliceRequestDto.getLastId(),
+          userId);
     }
 
-    List<PlaylistAllDto> playlistAllDtos = bgmListPage.getContent().stream().map(bgmList -> {
-      String itemNickname = bgmList.getBuyItem().getShop().getArtist();
+    List<PlaylistAllDto> dtoList = bgmListPage.getContent().stream().map(bgmList -> {
       String playNickname = bgmList.getPlaylist().getUserDo().getNickname();
 
       BgmListDto bgmListDto = BgmListDto.builder()
@@ -54,7 +92,7 @@ public class PlaylistServiceImpl implements PlaylistService {
       PlaylistDto playlistDto = PlaylistDto.builder()
           .playlistId(playlist.getPlaylistId())
           .plName(playlist.getPlName())
-          .userId(playlist.getUserDo().getUserId)
+          .userId(playlist.getUserDo().getUserId())
           .build();
 
       BuyItem buyItem = bgmList.getBuyItem();
@@ -65,18 +103,87 @@ public class PlaylistServiceImpl implements PlaylistService {
           .userId(buyItem.getUserDo().getUserId())
           .build();
 
+      Shop shop = buyItem.getShop();
+      ShopDto shopDto = ShopDto.builder()
+          .itemId(shop.getItemId())
+          .itemName(shop.getItemName())
+          .categoryId(shop.getCategory().getCategoryId())
+          .artist(shop.getArtist())
+          .build();
+
+      ItemFile itemFile = shop.getItemFile();
+      ItemFileDto itemFileDto = ItemFileDto.builder()
+          .itemId(shop.getItemId())
+          .fileName(itemFile.getFileName())
+          .build();
+
+      ShopInfoDto shopInfoDto = ShopInfoDto.builder()
+          .shopDto(shopDto)
+          .itemFileDto(itemFileDto)
+          .build();
+
       return PlaylistAllDto.builder()
+          .userDto(userDto)
+          .bgmListDto(bgmListDto)
+          .buyItemDto(buyItemDto)
+          .playlistDto(playlistDto)
+          .shopInfoDto(shopInfoDto)
           .build();
     }).collect(Collectors.toList());
 
-    boolean hasNext = playlistAllDtos.size() == sliceRequestDto.getLimit();
+    boolean hasNext = dtoList.size() == sliceRequestDto.getLimit();
 
     SliceResponseDto<PlaylistAllDto> responseDto = SliceResponseDto.<PlaylistAllDto>withAll()
-        .dtoList(playlistAllDtos)
+        .dtoList(dtoList)
         .hasMoreData(hasNext)
+        .sliceRequestDto(sliceRequestDto)
         .build();
 
     return responseDto;
+  }
+
+  @Transactional
+  @Override
+  public ApiResponse updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
+
+    Long bgmListId = playlistAllDto.getBgmListDto().getBgmListId();
+    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
+    Long itemBuyId = playlistAllDto.getBuyItemDto().getItemBuyId();
+
+    Optional<BgmList> optionalBgmList = bgmListRepository.findById(bgmListId);
+
+    Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
+
+    Optional<BuyItem> optionalBuyItem = buyItemRepository.findById(itemBuyId);
+
+    if (optionalPlaylist.isPresent()) {
+      log.info("플리가 이미 있습니다. 플리 수정으로 넘어갑니다.");
+
+      optionalBgmList.get().updatePost(bgmListId, playlistAllDto.getPlaylistDto().getPlName(),
+          playlistAllDto.getPlaylistDto().getPlDate(), itemBuyId);
+
+      ApiResponse apiResponse = ApiResponse.builder()
+          .message("플레이리스트 수정이 완료되었습니다.")
+          .status(HttpStatus.OK)
+          .build();
+
+      return apiResponse;
+    } else {
+      log.info("플리가 없습니다. 플리 등록을 시작합니다.");
+
+      Playlist newplaylist = Playlist.builder()
+          .userDo(UserDo.builder().userId(playlistAllDto.getUserDto().getUserId()).build())
+          .plName(playlistAllDto.getPlaylistDto().getPlName())
+          .build();
+      playlistRepository.save(newplaylist);
+
+      ApiResponse apiResponse = ApiResponse.builder()
+          .message("플레이리스트 등록이 완료되었습니다.")
+          .status(HttpStatus.OK)
+          .build();
+
+      return apiResponse;
+    }
   }
 
 }
