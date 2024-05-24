@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
@@ -33,9 +33,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/user/shop")
 public class ShopController {
@@ -66,7 +64,7 @@ public class ShopController {
       @RequestBody ShopInfoDto shopInfoDto, @RequestBody PageRequestDto pageRequestDto) throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      UserDto loginUser = customUserDetails.getUserDto();
+      AccountDto loginUser = customUserDetails.getAccountDto();
 
       if (loginUser.getUserId().equals(shopInfoDto.getShopDto().getUserId()) && shopInfoDto != null) {
 
@@ -95,7 +93,7 @@ public class ShopController {
       @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto)
       throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
-    if (customUserDetails.getUserDto().getUserId() != null) {
+    if (customUserDetails.getAccountDto().getUserId() != null) {
       shopservice.putPost(itemfile, shopInfoDto, customUserDetails);
 
       return new ResponseEntity<>("아이템 등록이 완료되었습니다.", HttpStatus.CREATED);
@@ -119,7 +117,7 @@ public class ShopController {
       @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto,
       @PathVariable Long itemId) throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
-    if (customUserDetails.getUserDto().getUserId() != null) {
+    if (customUserDetails.getAccountDto().getUserId() != null) {
 
       shopservice.updateItemFile(itemfile, shopInfoDto, customUserDetails);
 

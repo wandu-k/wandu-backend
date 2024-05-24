@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
@@ -41,7 +41,7 @@ public class ItemInventoryController {
       throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      UserDto loginUser = customUserDetails.getUserDto();
+      AccountDto loginUser = customUserDetails.getAccountDto();
       if (loginUser.getUserId().equals(buyitemDto.getUserId())) {
         if (buyitemDto != null) {
           PageResponseDto<BuyItemAllDto> responseDto = buyitemservice.getMybuylist(pageRequestDto, loginUser);
@@ -63,7 +63,7 @@ public class ItemInventoryController {
   public ResponseEntity<?> purchaseItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
       @RequestBody ShopInfoDto shopInfoDto) throws UserNotFoundException {
     if (customUserDetails != null) {
-      buyitemservice.purchaseItem(shopInfoDto, customUserDetails.getUserDto());
+      buyitemservice.purchaseItem(shopInfoDto, customUserDetails.getAccountDto());
 
       return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
     } else {

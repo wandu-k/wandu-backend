@@ -1,64 +1,82 @@
 package com.example.wandukong.controller;
 
-import java.util.Map;
+import java.util.Objects;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.model.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.wandukong.dto.ForumPostDto;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
+import com.example.wandukong.exception.CustomException.BoardNotFoundException;
+import com.example.wandukong.exception.CustomException.PermissionDeniedException;
+import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.service.ForumPostService;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "자유 게시글", description = "자유 게시글 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/forumpost")
+@RequestMapping("/api/user/forum/post")
 public class ForumPostController {
 
   private final ForumPostService forumPostService;
 
-  @GetMapping("/{postID}")
-  public ForumPostDto get(@PathVariable Long postID) {
+  @Operation(summary = "자유게시판 번호로 조회")
+  @GetMapping
+  public ResponseEntity<?> get(@RequestParam Long postId) throws PostNotFoundException {
 
-    return forumPostService.get(postID);
+    ForumPostDto forumPostDto = forumPostService.get(postId);
+
+    return new ResponseEntity<>(forumPostDto, HttpStatus.OK);
   }
 
-  @GetMapping("/list")
-  public PageResponseDto<ForumPostDto> list(PageRequestDto pageRequestDto) {
+  @Operation(summary = "자유게시판 리스트 조회")
+  @PostMapping
+  public ResponseEntity<?> list(@RequestBody PageRequestDto pageRequestDto) {
 
-    return forumPostService.getList(pageRequestDto);
+    PageResponseDto<ForumPostDto> postDto = forumPostService.getList(pageRequestDto);
+
+    return new ResponseEntity<>(postDto, HttpStatus.OK);
   }
 
-  @PostMapping("/")
-  public Map<String, Long> register(@RequestBody ForumPostDto forumPostDto) {
+  @Operation(summary = "자유게시판 등록 및 수정")
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping
+  public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+      @RequestBody ForumPostDto forumPostDto)
+      throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
 
-    Long postID = forumPostService.register(forumPostDto);
+    if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), forumPostDto.getUserId())) {
+      throw new BadRequestException();
+    }
 
-    return Map.of("postID", postID);
+    ApiResponse apiResponse = forumPostService.modify(forumPostDto);
+
+    return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
   }
 
-  @PutMapping("/{postID}")
-  public Map<String, String> modify(@PathVariable Long postId, @RequestBody ForumPostDto forumPostDto) {
+  @Operation(summary = "자유 게시판 번호로 게시글 삭제")
+  @DeleteMapping
+  @SecurityRequirement(name = "Bearer Authentication")
+  public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postId)
+      throws PostNotFoundException, PermissionDeniedException {
 
-    forumPostDto.setPostId(postId);
+    if (customUserDetails != null) {
+      Long userId = customUserDetails.getAccountDto().getUserId();
+      forumPostService.remove(userId, postId);
+      return new ResponseEntity<>("게시글 삭제가 완료되었씁니다.", HttpStatus.OK);
+    }
 
-    forumPostService.modify(forumPostDto);
-
-    return Map.of("RESULT", "SUCCESS");
-  }
-
-  @DeleteMapping("/{postID}")
-  public Map<String, String> remove(@PathVariable Long postID) {
-    forumPostService.remove(postID);
-
-    return Map.of("RESULT", "SUCCESS");
+    throw new PermissionDeniedException();
   }
 }

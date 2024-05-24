@@ -31,8 +31,10 @@ import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
 import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.repository.AccountRepository;
+import com.example.wandukong.repository.ShopInfo.BgmListRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.repository.ShopInfo.PlaylistAllpageRepository;
+import com.example.wandukong.repository.ShopInfo.PlaylistRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Autowired
   BuyItemRepository buyItemRepository;
+
+  @Autowired
+  BgmListRepository bgmListRepository;
+
+  @Autowired
+  PlaylistRepository playlistRepository;
 
   @Autowired
   UserDto userdto;
@@ -177,12 +185,49 @@ public class PlaylistServiceImpl implements PlaylistService {
           .build();
       playlistRepository.save(newplaylist);
 
+      deleteBgmList(playlistAllDto);
+
+      createBgmList(playlistAllDto);
+
       ApiResponse apiResponse = ApiResponse.builder()
           .message("플레이리스트 등록이 완료되었습니다.")
           .status(HttpStatus.OK)
           .build();
 
       return apiResponse;
+    }
+  }
+
+  // bgmList 삭제메소드
+  public void deleteBgmList(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
+    Long bgmListId = playlistAllDto.getBgmListDto().getBgmListId();
+    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
+
+    BgmList bgmList = bgmListRepository.findById(bgmListId).orElseThrow(() -> new BgmListNotFoundException());
+
+    if (bgmList.getPlaylist().getPlaylistId().equals(playlistId)) {
+      bgmListRepository.deleteById(bgmListId);
+    }
+  }
+
+  // bgmList생성 메소드
+  public void createBgmList(PlaylistAllDto playlistAllDto) {
+    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
+    Long itemBuyId = playlistAllDto.getBuyItemDto().getItemBuyId();
+
+    // Playlist와 BuyItem 조회
+    Playlist playlist = playlistRepository.findById(playlistId)
+        .orElseThrow(() -> new UsernameNotFoundException("Playlist not found"));
+    BuyItem buyItem = buyItemRepository.findById(itemBuyId)
+        .orElseThrow(() -> new UsernameNotFoundException("BuyItem not found"));
+
+    // BuyItem의 Shop의 CategoryId가 1일 경우에만 BgmList 생성 및 저장
+    if (buyItem.getShop().getCategory().getCategoryId() == 1) {
+      BgmList newBgmList = BgmList.builder()
+          .playlist(playlist)
+          .buyItem(buyItem)
+          .build();
+      bgmListRepository.save(newBgmList);
     }
   }
 

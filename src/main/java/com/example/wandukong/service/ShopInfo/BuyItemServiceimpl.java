@@ -13,9 +13,9 @@ import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
@@ -53,7 +53,7 @@ public class BuyItemServiceimpl implements BuyItemService {
 
         @Transactional
         @Override
-        public PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, UserDto userDto)
+        public PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, AccountDto userDto)
                         throws UserNotFoundException {
                 // 사용자 정보 조회
                 UserDo user = userRepository.findById(userDto.getUserId())
@@ -112,7 +112,7 @@ public class BuyItemServiceimpl implements BuyItemService {
 
         @Transactional
         @Override
-        public void purchaseItem(ShopInfoDto shopInfoDto, UserDto userDto) throws UserNotFoundException {
+        public void purchaseItem(ShopInfoDto shopInfoDto, AccountDto userDto) throws UserNotFoundException {
                 // 현재 사용자 정보 조회
                 UserDo user = userRepository.findById(userDto.getUserId())
                                 .orElseThrow(() -> new UserNotFoundException());

@@ -4,9 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +15,13 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
-import com.example.wandukong.security.jwt.JwtToken;
+import com.example.wandukong.repository.user.UserRepository;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
@@ -37,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository accountRepository;
 
     @Autowired
     MiniHomeRepository miniHpRepository;
@@ -57,24 +55,25 @@ public class AccountServiceImpl implements AccountService {
     // 회원가입
     @Transactional
     @Override
-    public void register(MultipartFile profileImage, UserDto userDto) throws UserAlreadyExistsException, IOException {
-        String encodedPw = passwordEncoder.encode(userDto.getPassword());
+    public void register(MultipartFile profileImage, AccountDto accountDto)
+            throws UserAlreadyExistsException, IOException {
+        String encodedPw = passwordEncoder.encode(accountDto.getPassword());
 
         // Check for duplicate username before saving
-        if (accountRepository.findByEmail(userDto.getEmail()) == null) {
+        if (accountRepository.findByEmail(accountDto.getUsername()) == null) {
+
             UserDo userDo = UserDo.builder()
-                    .email(userDto.getEmail())
+                    .email(accountDto.getUsername())
                     .password(encodedPw)
-                    .nickname(userDto.getNickname())
+                    .nickname(accountDto.getNickname())
                     .build();
 
-            if (profileImage != null) {
-
-                String profileImagePath = profileUpload(profileImage, userDto);
-
-                userDto.setProfileImage(profileImagePath);
-            }
             userDo = accountRepository.save(userDo);
+
+            if (profileImage != null) {
+                String profileImagePath = profileUpload(profileImage, accountDto);
+                userDo.updateProfileImage(profileImagePath);
+            }
 
             log.info("회원가입된 회원 아이디" + userDo.getUserId());
 
@@ -87,8 +86,6 @@ public class AccountServiceImpl implements AccountService {
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 
             miniHome = miniHpRepository.save(miniHome);
-            // 미니홈 저장후 그 미니홈 번호를 다시 유저 정보에 등록
-            userDo.sethpId(miniHome.getHpId());
 
         } else {
             throw new UserAlreadyExistsException();
@@ -105,34 +102,31 @@ public class AccountServiceImpl implements AccountService {
     // 유저정보 업데이트
     @Transactional
     @Override
-    public void updateProfile(MultipartFile profileImage, UserDto userDto) throws IOException, UserNotFoundException {
+    public void updateProfile(MultipartFile profileImage, AccountDto accountDto)
+            throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userDto.getUserId())
+        UserDo userDo = accountRepository.findById(accountDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
-
-            String profileImagePath = profileUpload(profileImage, userDto);
-
-            userDto.setProfileImage(profileImagePath);
+            String profileImagePath = profileUpload(profileImage, accountDto);
+            userDo.updateProfileImage(profileImagePath);
         }
-
-        userDo.updateProfile(userDto.getEmail(), userDto.getName(), userDto.getNickname(), userDto.getProfileImage(),
-                userDto.getBirthday(), userDto.getPhone(), userDto.getGender());
-
+        userDo.updateProfile(accountDto.getUsername(), accountDto.getName(), accountDto.getNickname(),
+                accountDto.getBirthday(), accountDto.getPhone(), accountDto.getGender());
     }
 
     // 프로필 이미지 업로드
-    private String profileUpload(MultipartFile profileImage, UserDto userDto) throws IOException {
+    private String profileUpload(MultipartFile profileImage, AccountDto accountDto) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + userDto.getUserId() + "/profile/";
+        String filePath = "users/" + accountDto.getUserId() + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
 
-        String filename = "profile" + "_" + userDto.getUserId() + extension;
+        String filename = "profile" + "_" + accountDto.getUserId() + extension;
 
         String profileImagePath = filePath + filename;
 
@@ -144,32 +138,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public UserDto getMyInfo(String username) {
-
-        UserDo userDo = accountRepository.findByEmail(username);
-
-        String objectKey = userDo.getProfileImage();
-
-        // KMS 암호화 파일 주소 만들때 쓰는 코드
-
-        // Date expiration = new Date(System.currentTimeMillis() + 3600000);
-        // GeneratePresignedUrlRequest generatePresignedUrlRequest = new
-        // GeneratePresignedUrlRequest(bucketName, objectKey)
-        // .withMethod(HttpMethod.GET)
-        // .withExpiration(expiration);
-
-        // URL signedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-
-        UserDto userDto = UserDto.builder()
-                .userId(userDo.getUserId())
-                .email(userDo.getEmail())
-                .profileImage(amazonS3.getUrl(bucketName, objectKey).toString())
-                .build();
-
-        return userDto;
-    }
-
-    @Override
     public UserDto getUserInfo(Long userId) throws UserNotFoundException {
 
         UserDo userDo = accountRepository.findById(userId)
@@ -177,21 +145,11 @@ public class AccountServiceImpl implements AccountService {
         UserDto userDto = UserDto.builder()
                 .userId(userDo.getUserId())
                 .nickname(userDo.getNickname())
+                .role(userDo.getRole())
+                .birthday(userDo.getBirthday())
                 .build();
 
         return userDto;
-    }
-
-    @Override
-    public JwtToken login(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
-                password);
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        JwtToken token = jwtTokenProvider.createToken(authentication);
-
-        return token;
     }
 
     @Transactional
@@ -206,28 +164,4 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(newPassword);
         userDo.changePassword(encodedPw);
     }
-
-    // 필요없는 부분
-
-    // @Override
-    // public void login(UserDto userDto, HttpServletRequest request) {
-    // log.info(userDto.getEmail());
-    // log.info(userDto.getPassword());
-
-    // // 인증 토큰 생성
-    // UsernamePasswordAuthenticationToken token = new
-    // UsernamePasswordAuthenticationToken(userDto.getEmail(),
-    // userDto.getPassword());
-
-    // // 토큰에 요청정보 등록
-    // token.setDetails(new WebAuthenticationDetails(request));
-
-    // // 토큰을 이용하여 인증 요청 로그인
-    // Authentication authentication = authenticationManager.authenticate(token);
-    // log.info("인증 정보 : " + authentication.isAuthenticated());
-
-    // User authUser = (User) authentication.getPrincipal();
-    // log.info("인증된 사용자 : " + authUser.getUsername());
-
-    // }
 }

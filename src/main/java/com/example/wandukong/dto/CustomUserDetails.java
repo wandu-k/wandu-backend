@@ -7,29 +7,27 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Data
+@Slf4j
+@Getter
 @RequiredArgsConstructor
-@Component
 public class CustomUserDetails implements UserDetails {
 
-    private UserDto userDto;
-
-    public CustomUserDetails(UserDto userDto) {
-        this.userDto = userDto;
-    }
+    private final AccountDto accountDto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 사용자 권한 정보 추출
-        int role = userDto.getRole();
+        String role = accountDto.getRole();
+
+        log.info("권한 : " + role);
 
         // GrantedAuthority 객체로 변환
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(Integer.toString(role));
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
 
         // 권한 목록 반환
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -39,12 +37,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userDto.getPassword();
+        return accountDto.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userDto.getEmail();
+        return accountDto.getUsername();
     }
 
     @Override

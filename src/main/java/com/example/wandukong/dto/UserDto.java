@@ -9,45 +9,40 @@ import lombok.Getter;
 public class UserDto {
 
     private Long userId;
-    private Long hpId;
-    private String email;
-    private String password;
     private String profileImage;
     private String nickname;
-    private String name;
-    private String phone;
     private String gender;
     private Date signupDay;
     private Date birthday;
-    private int role;
+    private String role;
     private Long point;
+    private Long followCount;
+    private Long followerCount;
+
+    public UserDto() {
+        // TODO Auto-generated constructor stub
+    }
 
     @Builder
     public UserDto(Long userId, Long hpId, String email, String password, String profileImage, String nickname,
             String name,
             String phone,
-            String gender, Date signupDay, Date birthday, int role, Long point) {
+            String gender, Date signupDay, Date birthday, String role, Long followCount, Long followerCount,
+            Long Point) {
         this.userId = userId;
-        this.hpId = hpId;
-        this.email = email;
-        this.password = password;
         this.profileImage = profileImage;
         this.nickname = nickname;
-        this.name = name;
-        this.phone = phone;
         this.gender = gender;
         this.signupDay = signupDay;
         this.birthday = birthday;
         this.role = role;
         this.point = point;
+        this.followCount = followCount != null ? followCount : 0L;
+        this.followerCount = followerCount != null ? followerCount : 0L;
     }
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public void setPoint(Long updatedPoint) {
-        this.point = updatedPoint;
     }
 
 }

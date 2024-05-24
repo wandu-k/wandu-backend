@@ -78,4 +78,12 @@ public class GlobalExceptionHandler {
         log.info(message);
         return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> badRequestException(BadRequestException e) {
+
+        String message = "잘못된 요청입니다.";
+        log.info(message);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 }

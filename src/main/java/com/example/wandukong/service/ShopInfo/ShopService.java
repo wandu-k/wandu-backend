@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
@@ -23,5 +23,5 @@ public interface ShopService {
                         throws itemUploadNotFoundException, IOException;
 
         PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto,
-                        UserDto userDto) throws UserNotFoundException;
+                        AccountDto accountDto) throws UserNotFoundException;
 }

@@ -35,7 +35,7 @@ public class PageResponseDto<E> {
     // 진짜 마지막
     int last = (int) (Math.ceil(totalCount / (double) pageRequestDto.getSize()));
 
-    end = end > last ? last : end;
+    end = Math.min(end, last);
 
     this.prev = start > 1;
 

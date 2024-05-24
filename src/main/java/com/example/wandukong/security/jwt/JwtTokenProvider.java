@@ -11,11 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.UserDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,61 +21,45 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 //JWT 토큰 관련 기능을 제공해주는 클래스
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Autowired
-    JwtProps jwtProps;
+    private final JwtProps jwtProps;
 
-    @Autowired
-    CustomUserDetails customUserDetails;
-
-    public JwtToken createToken(Authentication authentication) {
+    public String createToken(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String accessToken = Jwts.builder().header()
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
-                .claim("userId", customUserDetails.getUserDto().getUserId())
-                .claim("hpId", customUserDetails.getUserDto().getHpId())
-                .claim("email", customUserDetails.getUserDto().getEmail())
-                .claim("rol", customUserDetails.getUserDto().getRole())
+                .claim("userId", customUserDetails.getAccountDto().getUserId())
+                .claim("rol", customUserDetails.getAccountDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();
 
-        return JwtToken.builder().accessToken(accessToken).build();
+        return accessToken;
 
     }
 
     public UsernamePasswordAuthenticationToken getAuthentication(String authHeader) {
         if (authHeader == null || authHeader.length() == 0) {
+            log.info("토큰이 없습니다.");
             return null;
         }
         String jwt = authHeader.replace(JwtConstants.TOKEN_PREFIX, "");
         Jws<Claims> parsedToken = Jwts.parser().verifyWith(getShaKey()).build().parseSignedClaims(jwt);
 
-        String email = parsedToken.getPayload().get("email").toString();
         String strUserId = parsedToken.getPayload().get("userId").toString();
-        String strHpId = parsedToken.getPayload().get("hpId").toString();
         Long userId = Long.valueOf(strUserId);
-        Long hpId = Long.valueOf(strHpId);
         String role = parsedToken.getPayload().get("rol").toString();
 
         log.info("토큰 데이터 추출 완료");
-
-        if (email == null || email.length() == 0) {
-            return null;
-        }
-
-        UserDto userDto = UserDto.builder()
-                .email(email)
-                .userId(userId)
-                .hpId(hpId)
-                .build();
 
         // GrantedAuthority 객체로 변환
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
@@ -86,8 +68,7 @@ public class JwtTokenProvider {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(grantedAuthority);
 
-        UserDetails userDetails = new CustomUserDetails(userDto);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+        return new UsernamePasswordAuthenticationToken(userId, null, authorities);
     }
 
     // 토큰 유효성 검사

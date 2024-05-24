@@ -42,7 +42,7 @@ public class PlaylistController {
       @RequestBody UserDto userDto, @RequestBody MiniHomeDto miniHomeDto) throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      Long loginUserId = customUserDetails.getUserDto().getUserId();
+      Long loginUserId = customUserDetails.getAccountDto().getUserId();
       Long minihomeUserId = miniHomeDto.getUserId();
       // 접속한 미니홈이 내 미니홈 일 경우
       if (loginUserId == minihomeUserId) {
@@ -66,7 +66,7 @@ public class PlaylistController {
       @RequestParam PageRequestDto pageRequestDto, @RequestBody PlaylistAllDto playlistAllDto)
       throws BadRequestException, BgmListNotFoundException {
 
-    if (customUserDetails.getUserDto().getUserId() != playlistAllDto.getPlaylistDto().getUserId()) {
+    if (customUserDetails.getAccountDto().getUserId() != playlistAllDto.getPlaylistDto().getUserId()) {
 
       throw new BadRequestException();
     }

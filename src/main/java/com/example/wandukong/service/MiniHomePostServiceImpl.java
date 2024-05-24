@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
-import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponse;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
@@ -26,6 +26,7 @@ import com.example.wandukong.repository.miniHome.MiniHomePostRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+@Primary
 @Service
 @Slf4j
 public class MiniHomePostServiceImpl implements MiniHomePostService {
@@ -58,14 +59,14 @@ public class MiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Override
-        public void deletePost(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException {
-                MiniHomePost minihomePost = miniHomePostRepository.findById(postId)
+        public void deletePost(MiniHomePostDto miniHomePostDto)
+                        throws PostNotFoundException {
+                MiniHomePost minihomePost = miniHomePostRepository.findById(miniHomePostDto.getPostId())
                                 .orElseThrow(() -> new PostNotFoundException());
 
-                if (minihomePost.getUserDo().getUserId() != userId) {
-                        throw new PermissionDeniedException();
+                if (minihomePost.getUserDo().getUserId() == miniHomePostDto.getUserId()) {
+                        miniHomePostRepository.deleteById(minihomePost.getPostId());
                 }
-                miniHomePostRepository.deleteById(postId);
         }
 
         @Transactional

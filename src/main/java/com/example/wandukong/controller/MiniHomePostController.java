@@ -1,6 +1,5 @@
 package com.example.wandukong.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +16,7 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
@@ -26,20 +26,21 @@ import com.example.wandukong.service.MiniHomePostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "미니홈 게시글", description = "미니홈 게시글 API")
-@RequestMapping("/api/minihome/post")
+@RequestMapping("/api/user/minihome/post")
+@RequiredArgsConstructor
 @RestController
 public class MiniHomePostController {
 
-    @Autowired
     MiniHomePostService miniHomePostService;
 
     @Operation(summary = "미니홈 게시글 번호로 내용 조회", description = "특정 게시글 내용 조회")
     @GetMapping
-    public ResponseEntity<?> getPost(@RequestParam Long postID) throws PostNotFoundException {
+    public ResponseEntity<?> getPost(@RequestParam Long postId) throws PostNotFoundException {
 
-        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postID);
+        MiniHomePostDto minihomePostDto = miniHomePostService.getPost(postId);
 
         return new ResponseEntity<>(minihomePostDto, HttpStatus.OK);
     }
@@ -55,35 +56,29 @@ public class MiniHomePostController {
     @Operation(summary = "미니홈 게시글 번호로 게시글 삭제", description = "인증된 이용자의 자기 자신의 미니홈 게시글을 삭제")
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long postID)
-            throws PostNotFoundException, PermissionDeniedException {
-        if (customUserDetails != null) {
-            Long userID = customUserDetails.getUserDto().getUserId();
-            miniHomePostService.deletePost(userID, postID);
-            return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody MiniHomePostDto miniHomePostDto)
+            throws PostNotFoundException, BadRequestException {
+        if (customUserDetails.getAccountDto().getUserId() != miniHomePostDto.getUserId()) {
+            throw new BadRequestException();
+
         }
-        throw new PermissionDeniedException();
+        miniHomePostService.deletePost(miniHomePostDto);
+        return new ResponseEntity<>("게시글 삭제가 완료되었습니다.", HttpStatus.OK);
     }
 
     @Operation(summary = "미니홈 게시글 등록 / 수정", description = "인증된 사용자의 자기자신의 특정 게시글 등록 또는 수정")
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody MiniHomePostDto miniHomePostDto) throws PermissionDeniedException, BoardNotFoundException {
-        if (customUserDetails != null) {
-
-            miniHomePostDto = MiniHomePostDto.builder()
-                    .postId(miniHomePostDto.getUserId())
-                    .userId(customUserDetails.getUserDto().getUserId())
-                    .hpId(customUserDetails.getUserDto().getHpId())
-                    .boardId(miniHomePostDto.getBoardId())
-                    .title(miniHomePostDto.getTitle())
-                    .content(miniHomePostDto.getContent())
-                    .build();
-            ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
-
-            return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+            @RequestBody MiniHomePostDto miniHomePostDto)
+            throws PermissionDeniedException, BoardNotFoundException, BadRequestException {
+        if (customUserDetails.getAccountDto().getUserId() != miniHomePostDto.getUserId()) {
+            throw new BadRequestException();
         }
-        throw new PermissionDeniedException();
+
+        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
+
+        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 }

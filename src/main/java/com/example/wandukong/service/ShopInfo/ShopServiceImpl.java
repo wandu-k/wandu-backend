@@ -19,20 +19,20 @@ import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.Category;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
-import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoPageRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
+import com.example.wandukong.repository.user.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class ShopServiceImpl implements ShopService {
   CategoryRepository categoryRepository;
 
   @Autowired
-  AccountRepository accountRepository;
+  UserRepository accountRepository;
 
   @Autowired
   AmazonS3 amazonS3;
@@ -79,7 +79,7 @@ public class ShopServiceImpl implements ShopService {
       Shop shop = Shop.builder()
           .itemName(shopInfoDto.getShopDto().getItemName())
           .price(shopInfoDto.getShopDto().getPrice())
-          .userDo(UserDo.builder().userId(customUserDetails.getUserDto().getUserId()).build())
+          .userDo(UserDo.builder().userId(customUserDetails.getAccountDto().getUserId()).build())
           .category(Category.builder().categoryId(shopInfoDto.getCategoryDto().getCategoryId()).build())
           .build();
 
@@ -145,7 +145,7 @@ public class ShopServiceImpl implements ShopService {
     objectMetadata.setContentType(itemfile.getContentType());
 
     // 파일 경로 지정()
-    String filepath = "shop/" + customUserDetails.getUserDto().getNickname() + "/"
+    String filepath = "shop/" + customUserDetails.getAccountDto().getNickname() + "/"
         + shopInfoDto.getCategoryDto().getCategoryName() + "/";
 
     // uuid설정
@@ -219,9 +219,9 @@ public class ShopServiceImpl implements ShopService {
   @Transactional
   @Override
   public PageResponseDto<ShopInfoDto> getMyitemUploadList(PageRequestDto pageRequestDto,
-      UserDto userDto) throws UserNotFoundException {
+      AccountDto accountDto) throws UserNotFoundException {
 
-    UserDo userID = accountRepository.findById(userDto.getUserId()).orElseThrow(() -> new UserNotFoundException());
+    UserDo userID = accountRepository.findById(accountDto.getUserId()).orElseThrow(() -> new UserNotFoundException());
 
     // JPA를 사용하여 페이지 단위로 상점 정보를 가져옴
     Page<Shop> shopPage = shopInfoPageRepository.findAllByCategoryAndItemFileIsNotNull(pageRequestDto, userID);

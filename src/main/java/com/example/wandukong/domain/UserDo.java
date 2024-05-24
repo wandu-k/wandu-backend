@@ -6,20 +6,20 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.UserDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,9 +36,6 @@ public class UserDo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId", unique = true)
     private Long userId;
-
-    @Column(name = "hpId")
-    private Long hpId;
 
     @Column(name = "email")
     private String email;
@@ -71,23 +68,20 @@ public class UserDo {
     @Column(name = "gender")
     private String gender;
 
-    @ColumnDefault("0")
+    @ColumnDefault("'ROLE_USER'")
     @Column(name = "role")
-    private int role;
+    private String role = "ROLE_USER";
 
-    @OneToOne(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MiniHome miniHome;
-
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MiniHomePost> minihomePost;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Playlist> playlist;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Shop> shop;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BuyItem> buyItem;
 
     @Builder
@@ -105,24 +99,35 @@ public class UserDo {
         this.point = point;
     }
 
+    public UserDto toDto() {
+        UserDto userDto = UserDto.builder()
+                .userId(userId)
+                .nickname(nickname)
+                .profileImage(profileImage)
+                .gender(gender)
+                .birthday(birthday)
+                .signupDay(signupDay)
+                .role(role)
+                .build();
+        return userDto;
+    }
+
     // 필드 업데이트 메서드
-    public void updateProfile(String email, String name, String nickname, String profileImage, Date birthday,
+    public void updateProfile(String email, String name, String nickname, Date birthday,
             String phone, String gender) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
-        this.profileImage = profileImage;
         this.birthday = birthday;
         this.phone = phone;
         this.gender = gender;
     }
 
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public void changePassword(String password) {
         this.password = password;
     }
-
-    public void sethpId(Long hpId) {
-        this.hpId = hpId;
-    }
-
 }
