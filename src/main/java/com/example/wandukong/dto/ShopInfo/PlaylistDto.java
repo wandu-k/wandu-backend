@@ -28,4 +28,7 @@ public class PlaylistDto {
     this.plDate = plDate;
   }
 
+  public PlaylistDto() {
+  }
+
 }
