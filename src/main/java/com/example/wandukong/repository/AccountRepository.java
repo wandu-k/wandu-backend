@@ -8,10 +8,4 @@ import com.example.wandukong.domain.UserDo;
 @Repository
 public interface AccountRepository extends JpaRepository<UserDo, Long> {
 
-    UserDo findByEmail(String email);
-
-    UserDo findById(String userId);
-
-    UserDo update(UserDo user);
-
 }

@@ -53,10 +53,10 @@ public class BuyItemServiceimpl implements BuyItemService {
 
         @Transactional
         @Override
-        public PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, AccountDto userDto)
+        public PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, Long userId)
                         throws UserNotFoundException {
                 // 사용자 정보 조회
-                UserDo user = userRepository.findById(userDto.getUserId())
+                UserDo user = userRepository.findById(userId)
                                 .orElseThrow(() -> new UserNotFoundException());
 
                 // jpa를 사용하여 페이지 별로 사용자가 구매 내역 정보를 가져옴
@@ -131,8 +131,7 @@ public class BuyItemServiceimpl implements BuyItemService {
                 // 사용자의 포인트 차감 및 업데이트
                 Long totalPrice = shop.getPrice();
                 Long updatedPoint = user.getPoint() - totalPrice;
-                userDto.setPoint(updatedPoint);
-                userRepository.update(user);
+                user.updateUserPoint(updatedPoint);
 
                 buyItemRepository.save(buyItem);
         }

@@ -17,6 +17,7 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
@@ -71,7 +72,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     UserDo userDo = accountRepository.findById(userId)
         .orElseThrow(() -> new UsernameNotFoundException(null));
 
-    UserDto userDto = UserDto.builder()
+    AccountDto userDto = AccountDto.builder()
         .userId(userDo.getUserId())
         .build();
 

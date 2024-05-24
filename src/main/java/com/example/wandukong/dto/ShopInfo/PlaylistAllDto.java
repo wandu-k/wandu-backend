@@ -1,20 +1,20 @@
 package com.example.wandukong.dto.ShopInfo;
 
-import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.dto.AccountDto;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class PlaylistAllDto {
-  private UserDto userDto;
+  private AccountDto userDto;
   private BgmListDto bgmListDto;
   private BuyItemDto buyItemDto;
   private PlaylistDto playlistDto;
   private ShopInfoDto shopInfoDto;
 
   @Builder
-  public PlaylistAllDto(UserDto userDto,
+  public PlaylistAllDto(AccountDto userDto,
       BuyItemDto buyItemDto,
       ShopInfoDto shopInfoDto,
       BgmListDto bgmListDto,

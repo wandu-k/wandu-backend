@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
@@ -41,8 +40,8 @@ public class ItemInventoryController {
       throws UserNotFoundException {
 
     if (customUserDetails != null) {
-      AccountDto loginUser = customUserDetails.getAccountDto();
-      if (loginUser.getUserId().equals(buyitemDto.getUserId())) {
+      Long loginUser = customUserDetails.getAccountDto().getUserId();
+      if (loginUser.equals(buyitemDto.getUserId())) {
         if (buyitemDto != null) {
           PageResponseDto<BuyItemAllDto> responseDto = buyitemservice.getMybuylist(pageRequestDto, loginUser);
           return new ResponseEntity<>(responseDto, HttpStatus.OK);

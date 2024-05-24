@@ -60,7 +60,6 @@ public class Shop {
     // 정보 수정
     public void updateItem(String itemName) {
         this.itemName = itemName;
-        throw new UnsupportedOperationException("Unimplemented method 'updateItem'");
     }
 
 }

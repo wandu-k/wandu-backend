@@ -130,4 +130,8 @@ public class UserDo {
     public void changePassword(String password) {
         this.password = password;
     }
+
+    public void updateUserPoint(Long updatedPoint) {
+        this.point = updatedPoint;
+    }
 }

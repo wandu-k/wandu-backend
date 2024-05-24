@@ -9,7 +9,7 @@ import com.example.wandukong.exception.CustomException.UserNotFoundException;
 
 public interface BuyItemService {
 
-  PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, AccountDto user)
+  PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, Long userId)
       throws UserNotFoundException;
 
   void purchaseItem(ShopInfoDto shopInfoDto, AccountDto userDto) throws UserNotFoundException;
