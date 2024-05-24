@@ -18,8 +18,6 @@ import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.AccountDto;
-import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
 import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.dto.ShopInfo.BgmListDto;
@@ -51,9 +49,6 @@ public class PlaylistServiceImpl implements PlaylistService {
   AccountRepository accountRepository;
 
   @Autowired
-  CustomUserDetails customUserDetails;
-
-  @Autowired
   BuyItemRepository buyItemRepository;
 
   @Autowired
@@ -61,9 +56,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Autowired
   PlaylistRepository playlistRepository;
-
-  @Autowired
-  UserDto userdto;
 
   @Transactional
   @Override
