@@ -1,7 +1,8 @@
-package com.example.wandukong.repository.search;
+package com.example.wandukong.repository.forum.search;
 
 import java.util.List;
 
+import com.example.wandukong.domain.forum.QForumPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -9,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import com.example.wandukong.domain.ForumPost;
-import com.example.wandukong.domain.QForumPost;
-import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.domain.forum.ForumPost;
+
+import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 
 public class ForumPostSearchImpl extends QuerydslRepositorySupport implements ForumPostSearch {

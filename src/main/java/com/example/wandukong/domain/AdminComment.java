@@ -1,5 +1,6 @@
 package com.example.wandukong.domain;
 
+import com.example.wandukong.domain.ask.Ask;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

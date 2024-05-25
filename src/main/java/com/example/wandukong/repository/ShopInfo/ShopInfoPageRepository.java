@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.Shop;
-import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.page.PageRequestDto;
 
 public interface ShopInfoPageRepository {
 

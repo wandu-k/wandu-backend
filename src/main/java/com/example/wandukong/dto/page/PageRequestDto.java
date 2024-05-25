@@ -1,4 +1,4 @@
-package com.example.wandukong.dto;
+package com.example.wandukong.dto.page;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
