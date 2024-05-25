@@ -1,7 +1,6 @@
 package com.example.wandukong.dto.ShopInfo;
 
-import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.dto.AccountDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,20 +9,17 @@ import lombok.Getter;
 public class ShopInfoDto {
   /* 상점 판매정보 */
   private ShopDto shopDto;
-  private UserDto userDto;
   private ItemFileDto itemFileDto;
   private CategoryDto categoryDto;
-  private Long userId;
   private String nickName;
 
   @Builder
-  public ShopInfoDto(ShopDto shopDto, UserDto userDto, UserDo userDo, ItemFileDto itemFileDto, CategoryDto categoryDto,
-      Long userId, String nickName) {
+  public ShopInfoDto(ShopDto shopDto, AccountDto userDto, ItemFileDto itemFileDto, String categoryName,
+      CategoryDto categoryDto,
+      String nickName) {
     this.shopDto = shopDto;
-    this.userDto = userDto;
     this.itemFileDto = itemFileDto;
     this.categoryDto = categoryDto;
-    this.userId = userId;
     this.nickName = userDto != null ? userDto.getNickname() : null;
   }
 
