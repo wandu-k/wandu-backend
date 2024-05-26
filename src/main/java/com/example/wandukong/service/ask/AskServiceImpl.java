@@ -67,7 +67,6 @@ public class AskServiceImpl implements AskService {
                     .hideState(askDto.getHideState())
                     .count(askDto.getCount())
                     .build();
-            ask.changeHide(1);
 
             askRepository.save(ask);
         }
@@ -97,17 +96,20 @@ public class AskServiceImpl implements AskService {
 
         List<AskDto> dtoList = new ArrayList<>();
         for (Ask ask : asks) {
-            AskDto askDto = AskDto.builder()
-                    .askId(ask.getAskId())
-                    .userId(ask.getUserDo().getUserId())
-                    .title(ask.getTitle())
-                    .content(ask.getContent())
-                    .writeDate(ask.getWriteDate())
-                    .solveState(ask.getSolveState())
-                    .hideState(ask.getHideState())
-                    .count(ask.getCount())
-                    .build();
-            dtoList.add(askDto);
+            // hideState가 0일 때만 리스트에 보이게 하기
+            if (ask.getHideState() == 0) {
+                AskDto askDto = AskDto.builder()
+                        .askId(ask.getAskId())
+                        .userId(ask.getUserDo().getUserId())
+                        .title(ask.getTitle())
+                        .content(ask.getContent())
+                        .writeDate(ask.getWriteDate())
+                        .solveState(ask.getSolveState())
+                        .hideState(ask.getHideState())
+                        .count(ask.getCount())
+                        .build();
+                dtoList.add(askDto);
+            }
         }
 
         return PageResponseDto.<AskDto>withAll()
