@@ -8,6 +8,7 @@ import com.example.wandukong.domain.QFriend;
 import com.example.wandukong.domain.QUserDo;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.UserDto;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -29,18 +30,17 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                 QUserDo userDo1 = QUserDo.userDo;
                 QFriend friend = QFriend.friend;
 
-                UserDo userDo = jpaQueryFactory.selectFrom(userDo1)
+                Tuple result = jpaQueryFactory
+                                .select(userDo1, friend.count().as("followCount"), friend.count().as("followerCount"))
+                                .from(userDo1)
+                                .leftJoin(friend).on(friend.userDo.userId.eq(userId))
+                                .leftJoin(friend).on(friend.friendDo.userId.eq(userId))
                                 .where(userDo1.userId.eq(userId))
                                 .fetchOne();
 
-                Long followCount = jpaQueryFactory
-                                .select(friend.count())
-                                .from(friend)
-                                .where(friend.userDo.userId.eq(userId))
-                                .fetchOne();
-
-                Long followerCount = jpaQueryFactory.select(friend.count()).from(friend)
-                                .where(friend.friendDo.userId.eq(userId)).fetchOne();
+                UserDo userDo = result.get(userDo1);
+                Long followCount = result.get(1, Long.class);
+                Long followerCount = result.get(2, Long.class);
 
                 UserDto userDto = UserDto.builder()
                                 .userId(userDo.getUserId())

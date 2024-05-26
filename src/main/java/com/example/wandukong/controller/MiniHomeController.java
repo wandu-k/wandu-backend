@@ -28,9 +28,9 @@ public class MiniHomeController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
-    public ResponseEntity<?> getMiniHome(@RequestParam Long hpId) throws HomeNotFoundException {
+    public ResponseEntity<?> getMiniHome(@RequestParam Long userId) throws HomeNotFoundException {
 
-        MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(hpId);
+        MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(userId);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
 
