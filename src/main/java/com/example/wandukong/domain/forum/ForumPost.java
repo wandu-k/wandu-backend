@@ -1,6 +1,8 @@
 package com.example.wandukong.domain.forum;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.wandukong.domain.UserDo;
 import jakarta.persistence.*;
@@ -32,7 +34,7 @@ public class ForumPost {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "writeDate")
+    @Column(name = "postWriteDate")
     @CreationTimestamp
     private LocalDate writeDate;
 
@@ -42,8 +44,11 @@ public class ForumPost {
     @Column(name = "count", columnDefinition = "int default 0")
     private int count;
 
+    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
+    private List<ForumPostReview> forumPostReviews = new ArrayList<>();
+
     @Builder
-    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state, int count) {
+    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state, int count, List<ForumPostReview> forumPostReviews) {
         this.postId = postId;
         this.forumBoard = forumBoard;
         this.userDo = userDo;
@@ -52,6 +57,7 @@ public class ForumPost {
         this.writeDate = writeDate;
         this.state = state;
         this.count = count;
+        this.forumPostReviews = forumPostReviews;
     }
 
     public void changePost(ForumBoard forumBoard, String title, String content, int state) {
