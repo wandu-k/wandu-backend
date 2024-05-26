@@ -33,7 +33,7 @@ public class AdminComment {
     private String commentContent;
 
     @CreationTimestamp
-    @Column(name = "writeDate")
+    @Column(name = "commentWriteDate")
     private LocalDate writeDate;
 
     @Builder

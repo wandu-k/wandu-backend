@@ -33,7 +33,7 @@ public class Ask {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "writeDate")
+    @Column(name = "askWriteDate")
     @CreationTimestamp
     private LocalDate writeDate;
 
