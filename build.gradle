@@ -43,6 +43,9 @@ implementation group: 'org.springframework.boot', name: 'spring-boot-starter-dat
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+// https://mvnrepository.com/artifact/commons-io/commons-io
+implementation 'commons-io:commons-io:2.5'
+
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor
 	implementation 'org.springframework.boot:spring-boot-configuration-processor:3.2.5'

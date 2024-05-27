@@ -19,7 +19,6 @@ public class ShopInfoPageRepositoryImpl extends QuerydslRepositorySupport implem
 
   public ShopInfoPageRepositoryImpl() {
     super(Shop.class);
-    // TODO Auto-generated constructor stub
   }
 
   @Override

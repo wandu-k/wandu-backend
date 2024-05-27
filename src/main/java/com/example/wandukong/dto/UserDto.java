@@ -23,8 +23,10 @@ public class UserDto {
     }
 
     @Builder
-    public UserDto(Long userId, String profileImage, String nickname, String gender, Date signupDay, Date birthday,
-            String role, Long followCount, Long followerCount) {
+    public UserDto(Long userId, Long hpId, String email, String password, String profileImage, String nickname,
+            String name,
+            String phone,
+            String gender, Date signupDay, Date birthday, String role, Long followCount, Long followerCount) {
         this.userId = userId;
         this.profileImage = profileImage;
         this.nickname = nickname;

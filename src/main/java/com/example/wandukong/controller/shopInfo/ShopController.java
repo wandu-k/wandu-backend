@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.shopInfo;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
 import com.example.wandukong.exception.CustomException.itemlistNotFoundException;
-import com.example.wandukong.service.ShopService;
+import com.example.wandukong.service.ShopInfo.ShopService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
-@RequestMapping("/api/shop")
+@RequestMapping("/api/user/shop")
 public class ShopController {
 
   @Autowired

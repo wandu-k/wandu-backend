@@ -1,4 +1,4 @@
-package com.example.wandukong.service;
+package com.example.wandukong.service.ShopInfo;
 
 import java.io.IOException;
 

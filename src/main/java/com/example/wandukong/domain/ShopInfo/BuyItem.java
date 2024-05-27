@@ -1,5 +1,6 @@
 package com.example.wandukong.domain.ShopInfo;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.wandukong.domain.UserDo;
@@ -31,6 +32,9 @@ public class BuyItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemBuyId", unique = true)
     private Long itemBuyId;
+
+    @Column(name = "buyDate")
+    private Date buyDate;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
