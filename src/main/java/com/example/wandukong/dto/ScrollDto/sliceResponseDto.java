@@ -18,4 +18,5 @@ public class SliceResponseDto<T> {
     this.hasMoreData = hasMoreData;
     this.sliceRequestDto = sliceRequestDto;
   }
+  
 }
