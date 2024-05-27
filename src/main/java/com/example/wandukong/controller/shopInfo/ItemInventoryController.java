@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.PageRequestDto;
-import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.page.PageRequestDto;
+import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;

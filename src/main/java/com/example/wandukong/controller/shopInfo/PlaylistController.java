@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;

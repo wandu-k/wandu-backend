@@ -14,8 +14,8 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.AccountDto;
-import com.example.wandukong.dto.PageRequestDto;
-import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.page.PageRequestDto;
+import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
@@ -25,7 +25,6 @@ import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemPageRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
-import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
 
 import jakarta.transaction.Transactional;
@@ -40,16 +39,10 @@ public class BuyItemServiceimpl implements BuyItemService {
         private ShopInfoRepository shopRepository;
 
         @Autowired
-        private CategoryRepository categoryRepository;
-
-        @Autowired
         private BuyItemRepository buyItemRepository;
 
         @Autowired
         private BuyItemPageRepository buyItemPageRepository;
-
-        @Autowired
-        private AmazonS3 amazonS3;
 
         @Transactional
         @Override

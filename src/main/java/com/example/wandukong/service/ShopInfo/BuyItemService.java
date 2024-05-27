@@ -1,8 +1,8 @@
 package com.example.wandukong.service.ShopInfo;
 
 import com.example.wandukong.dto.AccountDto;
-import com.example.wandukong.dto.PageRequestDto;
-import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.page.PageRequestDto;
+import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
