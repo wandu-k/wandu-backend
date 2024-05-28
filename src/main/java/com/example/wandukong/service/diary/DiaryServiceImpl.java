@@ -9,13 +9,11 @@ import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.diary.Diary;
 import com.example.wandukong.dto.SearchDiaryDto;
 import com.example.wandukong.dto.MiniHome.DiaryDto;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.diary.DiaryRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -23,7 +21,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
 
     @Override
-    public ApiResponse putPost(DiaryDto miniHomeDiaryDto) {
+    public ApiResponseDto putPost(DiaryDto miniHomeDiaryDto) {
 
         Diary miniHomeDiary = Diary.builder()
                 .postId(miniHomeDiaryDto.getPostId())
@@ -35,12 +33,12 @@ public class DiaryServiceImpl implements DiaryService {
         diaryRepository.save(miniHomeDiary);
 
         if (miniHomeDiaryDto.getPostId() != null) {
-            return ApiResponse.builder()
+            return ApiResponseDto.builder()
                     .message("게시글 수정이 완료되었습니다.")
                     .status(HttpStatus.OK)
                     .build();
         } else {
-            return ApiResponse.builder()
+            return ApiResponseDto.builder()
                     .message("게시글 등록이 완료되었습니다.")
                     .status(HttpStatus.CREATED)
                     .build();

@@ -41,7 +41,7 @@ public class AuthController {
     public ResponseEntity<?> register(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart(value = "userDto") @Parameter(schema = @Schema(type = "string", format = "binary")) AccountDto accountDto)
+            @RequestPart(value = "accountDto") @Parameter(schema = @Schema(type = "string", format = "binary")) AccountDto accountDto)
             throws UserNotFoundException, UserAlreadyExistsException, java.io.IOException {
         accountService.register(profileImage, accountDto);
         return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);

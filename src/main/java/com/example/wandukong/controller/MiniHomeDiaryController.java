@@ -7,19 +7,16 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.SearchDiaryDto;
 import com.example.wandukong.dto.MiniHome.DiaryDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.diary.DiaryService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,7 +61,7 @@ public class MiniHomeDiaryController {
             throw new BadRequestException();
         }
 
-        ApiResponse apiResponse = miniHomeDiaryService.putPost(miniHomeDiaryDto);
+        ApiResponseDto apiResponse = miniHomeDiaryService.putPost(miniHomeDiaryDto);
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
 

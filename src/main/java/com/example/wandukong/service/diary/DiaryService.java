@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.example.wandukong.dto.SearchDiaryDto;
 import com.example.wandukong.dto.MiniHome.DiaryDto;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 
 public interface DiaryService {
 
-    ApiResponse putPost(DiaryDto miniHomeDiaryDto);
+    ApiResponseDto putPost(DiaryDto miniHomeDiaryDto);
 
     List<DiaryDto> getList(SearchDiaryDto searchDiaryDto);
 
