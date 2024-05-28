@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
-import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 
 @Repository
@@ -19,7 +19,6 @@ public class ShopInfoPageRepositoryImpl extends QuerydslRepositorySupport implem
 
   public ShopInfoPageRepositoryImpl() {
     super(Shop.class);
-    // TODO Auto-generated constructor stub
   }
 
   @Override

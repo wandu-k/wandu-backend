@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.PageRequestDto;
-import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.page.PageRequestDto;
+import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;

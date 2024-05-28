@@ -37,6 +37,12 @@ public class Shop {
     @Column(name = "itemName")
     private String itemName;
 
+    @Column(name = "artist")
+    private String artist;
+
+    @Column(name = "price")
+    private Long price;
+
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
@@ -54,7 +60,6 @@ public class Shop {
     // 정보 수정
     public void updateItem(String itemName) {
         this.itemName = itemName;
-        throw new UnsupportedOperationException("Unimplemented method 'updateItem'");
     }
 
 }

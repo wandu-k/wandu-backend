@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.domain.MiniHome.QMiniHomePost;
-import com.example.wandukong.dto.PageRequestDto;
+import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 
 public class MiniHomePostSearchRepoImpl extends QuerydslRepositorySupport implements MiniHomePostSearchRepo {

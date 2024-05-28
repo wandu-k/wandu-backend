@@ -58,6 +58,9 @@ public class UserDo {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "point")
+    private Long point;
+
     @CreationTimestamp
     @Column(name = "signupDay")
     private Date signupDay;
@@ -83,7 +86,7 @@ public class UserDo {
 
     @Builder
     public UserDo(Long userId, String email, String password, String name, String nickname, String profileImage,
-            Date birthday, String phone, String gender) {
+            Date birthday, String phone, String gender, Long point) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -93,6 +96,7 @@ public class UserDo {
         this.birthday = birthday;
         this.phone = phone;
         this.gender = gender;
+        this.point = point;
     }
 
     public UserDto toDto() {
@@ -125,5 +129,9 @@ public class UserDo {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void updateUserPoint(Long updatedPoint) {
+        this.point = updatedPoint;
     }
 }

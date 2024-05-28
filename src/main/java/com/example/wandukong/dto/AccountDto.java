@@ -21,11 +21,12 @@ public class AccountDto {
     private String role;
     private Long followCount;
     private Long followerCount;
+    private Long point;
 
     @Builder
     public AccountDto(Long userId, String username, String password, String profileImage, String nickname, String name,
             String phone, String gender, Date signupDay, Date birthday, String role, Long followCount,
-            Long followerCount) {
+            Long followerCount, Long point) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -39,9 +40,14 @@ public class AccountDto {
         this.role = role;
         this.followCount = followCount;
         this.followerCount = followerCount;
+        this.point = point;
     }
 
     public AccountDto() {
+    }
+
+    public void setPoint(Long updatedPoint) {
+        this.point = updatedPoint;
     }
 
 }

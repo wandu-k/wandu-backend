@@ -1,10 +1,10 @@
 package com.example.wandukong.dto.ShopInfo;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Component;
 
-import com.example.wandukong.domain.MiniHome.MiniHome;
-import com.example.wandukong.domain.ShopInfo.Playlist;
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,18 +15,20 @@ public class PlaylistDto {
 
   private Long playlistId;
   private String plName;
-  private Long musicBuyId;
   private Long hpId;
+  private Long userId;
+  private LocalDate plDate;
 
-  /* 모든 사용자의 플레이리스트 */
-  public Playlist toEntity() {
+  @Builder
+  public PlaylistDto(Long userId, Long playlistId, Long hpId, String plName, LocalDate plDate) {
+    this.playlistId = playlistId;
+    this.plName = plName;
+    this.hpId = hpId;
+    this.userId = userId;
+    this.plDate = plDate;
+  }
 
-    Playlist playlist = Playlist.builder()
-        .playlistId(playlistId)
-        .miniHome(MiniHome.builder().hpId(hpId).build())
-        .plName(plName)
-        .build();
-    return playlist;
+  public PlaylistDto() {
   }
 
 }
