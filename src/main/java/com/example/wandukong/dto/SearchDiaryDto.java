@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public class SearchDiaryDto {
     private LocalDate date;
+    private Long userId;
 }

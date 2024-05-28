@@ -26,6 +26,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         if (searchDiaryDto.getDate() != null) {
             builder.and(diary.writeDay.eq(searchDiaryDto.getDate()));
         }
+        builder.and(diary.userDo.userId.eq(searchDiaryDto.getUserId()));
 
         return jpaQueryFactory
                 .select(Projections.constructor(DiaryDto.class,
