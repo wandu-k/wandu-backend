@@ -6,21 +6,19 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MiniHomeDiaryDto {
+public class DiaryDto {
 
     private Long postId;
     private Long userId;
-    private Long hpId;
     private String title;
     private String content;
     private LocalDate writeDay;
 
     @Builder
-    public MiniHomeDiaryDto(Long postId, Long userId, Long hpId, String title, String content,
+    public DiaryDto(Long postId, Long userId, String title, String content,
             LocalDate writeDay) {
         this.postId = postId;
         this.userId = userId;
-        this.hpId = hpId;
         this.title = title;
         this.content = content;
         this.writeDay = writeDay;

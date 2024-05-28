@@ -40,6 +40,7 @@ public class JwtTokenProvider {
                 .keyId(JwtConstants.TOKEN_TYPE).and()
                 .expiration(new Date(System.currentTimeMillis() + 864000000))
                 .claim("userId", customUserDetails.getAccountDto().getUserId())
+                .claim("nickname", customUserDetails.getAccountDto().getNickname())
                 .claim("rol", customUserDetails.getAccountDto().getRole())
                 .signWith(getShaKey(), Jwts.SIG.HS512)
                 .compact();

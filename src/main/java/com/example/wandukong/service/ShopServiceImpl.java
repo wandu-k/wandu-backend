@@ -65,73 +65,47 @@ public class ShopServiceImpl implements ShopService {
   // 아이템 등록
   @Transactional
   @Override
-  public void putPost(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+  public void putPost(MultipartFile itemfile, ShopDto shopDto)
       throws itemUploadNotFoundException, IOException {
 
-    if (customUserDetails != null) {
+    if (shopDto.getItemId() != null) {
 
-      // 아이템 카테고리 설정: ex)BGM, avatar 등등
-      Category category = Category.builder()
-          .categoryName(shopInfoDto.getCategoryDto().getCategoryName())
-          .build();
-
+    } else {
       // 등록할 아이템 정보 설정
       Shop shop = Shop.builder()
-          .itemName(shopInfoDto.getShopDto().getItemName())
-          .userDo(UserDo.builder().userId(customUserDetails.getAccountDto().getUserId()).build())
-          .category(Category.builder().categoryId(shopInfoDto.getCategoryDto().getCategoryId()).build())
+          .itemName(shopDto.getItemName())
+          .userDo(UserDo.builder().userId(shopDto.getUserId()).build())
+          .category(Category.builder().categoryId(shopDto.getCategoryId()).build())
           .build();
 
-      shopInfoRepository.save(shop);
-      categoryRepository.save(category);
+      shop = shopInfoRepository.save(shop);
 
-      if (shopInfoDto.getItemFileDto().getFileName().isEmpty()) {
-
+      if (itemfile == null) {
         Long itemId = shop.getItemId();
-
         String uuid = UUID.randomUUID().toString();
         // ItemFile 엔티티 생성 및 저장
         ItemFile itemFile = ItemFile.builder()
             .itemId(itemId)
             .uuid(uuid)
-            .fileName(shopInfoDto.getShopDto().getItemName())
+            .fileName(shop.getItemName())
             .build();
 
         itemFileRepository.save(itemFile);
-
-        itemfileUpload(itemfile, shopInfoDto, customUserDetails);
-
+        itemfileUpload(itemfile, itemFile, shop);
       }
-      log.info("각 아이템 정보들" + shopInfoDto);
-
-    } else {
-      throw new itemUploadNotFoundException();
     }
-
+    log.info("각 아이템 정보들" + shopDto);
   }
 
   // 아이템 정보 업데이트
   @Transactional
   @Override
-  public void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+  public void updateItemFile(MultipartFile itemfile, ShopInfoDto shopInfoDto)
       throws itemUploadNotFoundException, IOException {
-
-    if (customUserDetails != null) {
-      /*
-       * Shop shop =
-       * shopInfoRepository.findByItemId(shopInfoDto.getShopDto().getItemId());
-       * 
-       * itemfileUpload(itemfile, shopInfoDto, customUserDetails);
-       * 
-       * shop.updateItem(shopInfoDto.getShopDto().getItemName())
-       */
-    } else {
-      throw new itemUploadNotFoundException();
-    }
 
   }
 
-  public String itemfileUpload(MultipartFile itemfile, ShopInfoDto shopInfoDto, CustomUserDetails customUserDetails)
+  public String itemfileUpload(MultipartFile itemfile, ItemFile itemFile, Shop shop)
       throws IOException {
     // 아이템 파일 업로드
 
@@ -139,16 +113,16 @@ public class ShopServiceImpl implements ShopService {
     objectMetadata.setContentType(itemfile.getContentType());
 
     // 파일 경로 지정()
-    String filepath = "shop/" + customUserDetails.getAccountDto().getNickname() + "/"
-        + shopInfoDto.getCategoryDto().getCategoryName() + "/";
+    String filepath = "shop/" + shop.getUserDo().getUserId() + "/"
+        + shop.getCategory().getCategoryId() + "/";
 
     // uuid설정
-    String uuid = shopInfoDto.getItemFileDto().getUuid();
+    String uuid = itemFile.getUuid();
 
     // 확장자 구분
     String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
 
-    String filename = uuid + shopInfoDto.getItemFileDto().getFileName() + extension;
+    String filename = uuid + itemFile.getFileName() + extension;
 
     String itemfilepath = filepath + filename;
 

@@ -20,6 +20,7 @@ import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.PageRequestDto;
 import com.example.wandukong.dto.PageResponseDto;
+import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.exception.CustomException.itemUploadNotFoundException;
@@ -89,12 +90,12 @@ public class ShopController {
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping(value = "/itemupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> itemupload(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestPart(required = false, value = "itemfile") MultipartFile itemfile,
-      @RequestPart(value = "shopInfoDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopInfoDto shopInfoDto)
+      @RequestPart(required = true, value = "itemfile") MultipartFile itemfile,
+      @RequestPart(value = "shopDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopDto shopDto)
       throws itemUploadNotFoundException, UserNotFoundException, IOException {
 
     if (customUserDetails.getAccountDto().getUserId() != null) {
-      shopservice.putPost(itemfile, shopInfoDto, customUserDetails);
+      shopservice.putPost(itemfile, shopDto);
 
       return new ResponseEntity<>("아이템 등록이 완료되었습니다.", HttpStatus.CREATED);
 

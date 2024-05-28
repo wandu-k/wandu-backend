@@ -1,10 +1,11 @@
-package com.example.wandukong.domain.MiniHome;
+package com.example.wandukong.domain.diary;
 
 import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.MiniHome.MiniHome;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "MiniHomeDiary")
-public class MiniHomeDiary {
+public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "postId", unique = true)
@@ -48,7 +49,7 @@ public class MiniHomeDiary {
     private LocalDate writeDay;
 
     @Builder
-    public MiniHomeDiary(Long postId, UserDo userDo, MiniHome miniHome,
+    public Diary(Long postId, UserDo userDo, MiniHome miniHome,
             String title,
             String content,
             LocalDate writeDay) {

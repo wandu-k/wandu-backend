@@ -34,6 +34,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         AccountDto accountDto = AccountDto.builder()
                 .userId(userDo.getUserId())
+                .nickname(userDo.getNickname())
                 .username(userDo.getEmail())
                 .password(userDo.getPassword())
                 .role(userDo.getRole())

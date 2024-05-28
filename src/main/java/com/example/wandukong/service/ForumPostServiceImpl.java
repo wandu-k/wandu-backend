@@ -38,21 +38,22 @@ public class ForumPostServiceImpl implements ForumPostService {
 
     forumPost.changeCount(forumPost.getCount());
 
-      return ForumPostDto.builder()
-            .postId(forumPost.getPostId())
-            .boardId(forumPost.getForumBoard().getBoardId())
-            .userId(forumPost.getUserDo().getUserId())
-            .title(forumPost.getTitle())
-            .content(forumPost.getContent())
-            .writeDate(forumPost.getWriteDate())
-              .count(forumPost.getCount())
-            .build();
+    return ForumPostDto.builder()
+        .postId(forumPost.getPostId())
+        .boardId(forumPost.getForumBoard().getBoardId())
+        .userId(forumPost.getUserDo().getUserId())
+        .title(forumPost.getTitle())
+        .content(forumPost.getContent())
+        .writeDate(forumPost.getWriteDate())
+        .count(forumPost.getCount())
+        .build();
   }
 
   @Transactional
   @Override
   public ApiResponse modify(ForumPostDto forumPostDto) throws BoardNotFoundException {
-    ForumBoard forumBoard = forumBoardRepository.findById(forumPostDto.getBoardId()).orElseThrow(BoardNotFoundException::new);
+    ForumBoard forumBoard = forumBoardRepository.findById(forumPostDto.getBoardId())
+        .orElseThrow(BoardNotFoundException::new);
 
     Optional<ForumPost> result = forumPostRepository.findById(forumPostDto.getPostId());
 
@@ -60,32 +61,33 @@ public class ForumPostServiceImpl implements ForumPostService {
       result.get().changePost(forumBoard, forumPostDto.getTitle(), forumPostDto.getContent(), forumPostDto.getState());
 
       return ApiResponse.builder()
-              .message("게시글 수정이 완료되었습니다.")
-              .status(HttpStatus.OK)
-              .build();
+          .message("게시글 수정이 완료되었습니다.")
+          .status(HttpStatus.OK)
+          .build();
     } else {
       ForumPost forumPost = ForumPost.builder()
-              .forumBoard(forumBoard)
-              .userDo(UserDo.builder().userId(forumPostDto.getUserId()).build())
-              .title(forumPostDto.getTitle())
-              .content(forumPostDto.getContent())
-              .writeDate(forumPostDto.getWriteDate())
-              .state(forumPostDto.getState())
-              .build();
+          .forumBoard(forumBoard)
+          .userDo(UserDo.builder().userId(forumPostDto.getUserId()).build())
+          .title(forumPostDto.getTitle())
+          .content(forumPostDto.getContent())
+          .writeDate(forumPostDto.getWriteDate())
+          .state(forumPostDto.getState())
+          .build();
       forumPostRepository.save(forumPost);
 
       return ApiResponse.builder()
-              .message("게시글 등록이 완료되었습니다.")
-              .status(HttpStatus.CREATED)
-              .build();
+          .message("게시글 등록이 완료되었습니다.")
+          .status(HttpStatus.CREATED)
+          .build();
     }
   }
 
   @Override
-  public void remove(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException{
+  public void remove(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException {
     ForumPost forumPost = forumPostRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
-    // 사용자의 id를 가져와서 파라미터로 넘어온 userId와 비교함(이 코드를 쓰는 이유는 nullPointerExcption을 피하면서 비교를 할 수 있음)
+    // 사용자의 id를 가져와서 파라미터로 넘어온 userId와 비교함(이 코드를 쓰는 이유는 nullPointerExcption을 피하면서
+    // 비교를 할 수 있음)
     if (!Objects.equals(forumPost.getUserDo().getUserId(), userId)) {
       throw new PermissionDeniedException();
     }
@@ -104,18 +106,18 @@ public class ForumPostServiceImpl implements ForumPostService {
     for (ForumPost post : posts) {
       ForumPostDto forumPostDto = new ForumPostDto();
       forumPostDto = ForumPostDto.builder()
-              .postId(post.getPostId())
-              .boardId(post.getForumBoard().getBoardId())
-              .userId(post.getUserDo().getUserId())
-              .title(post.getTitle())
-              .content(post.getContent())
-              .writeDate(post.getWriteDate())
-              .state(post.getState())
-              .build();
+          .postId(post.getPostId())
+          .boardId(post.getForumBoard().getBoardId())
+          .userId(post.getUserDo().getUserId())
+          .title(post.getTitle())
+          .content(post.getContent())
+          .writeDate(post.getWriteDate())
+          .state(post.getState())
+          .build();
       dtoList.add(forumPostDto);
     }
 
-      return PageResponseDto.<ForumPostDto>withAll()
+    return PageResponseDto.<ForumPostDto>withAll()
         .dtoList(dtoList)
         .pageRequestDto(pageRequestDto)
         .total(result.getTotalElements())

@@ -47,7 +47,7 @@ public class AuthController {
         return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
 
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
