@@ -13,7 +13,6 @@ public class ShopDto {
     private Long userId;
     private Long itemId;
     private String itemName;
-    private String artist;
     private Long categoryId;
     private int price;
 

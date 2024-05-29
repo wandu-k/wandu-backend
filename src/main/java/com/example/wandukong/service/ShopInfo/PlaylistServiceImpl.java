@@ -1,7 +1,6 @@
 package com.example.wandukong.service.ShopInfo;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
 import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.AccountRepository;
@@ -144,42 +143,42 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Transactional
   @Override
-  public ApiResponseDto updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
+  public ApiResponseDto putMyPlaylist(PlaylistDto playlistDto, BuyItemDto buyItemDto)
+      throws BgmListNotFoundException, BadRequestException {
 
-    Long bgmListId = playlistAllDto.getBgmListDto().getBgmListId();
-    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
-    Long itemBuyId = playlistAllDto.getBuyItemDto().getItemBuyId();
+    Long playlistId = playlistDto.getPlaylistId();
 
-    Optional<BgmList> optionalBgmList = bgmListRepository.findById(bgmListId);
+    // 해당 플리가 존재할 경우 해당 번호의 플리 조회
+    if (playlistId != null) {
 
-    Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
+      Playlist playlist = playlistRepository.findById(playlistId).orElse(null);
 
-    Optional<BuyItem> optionalBuyItem = buyItemRepository.findById(itemBuyId);
+      BgmList bgmList = bgmListRepository.findById(playlist.getPlaylistId()).orElse(null);
 
-    if (optionalPlaylist.isPresent()) {
-      log.info("플리가 이미 있습니다. 플리 수정으로 넘어갑니다.");
+      BuyItem buyItem = buyItemRepository.findById(bgmList.getBgmListId()).orElse(null);
 
-      optionalBgmList.get().updatePost(bgmListId, playlistAllDto.getPlaylistDto().getPlName(),
-          playlistAllDto.getPlaylistDto().getPlDate(), itemBuyId);
+      // bgmList 삭제
+      bgmListRepository.deleteById(bgmList.getBgmListId());
 
-      ApiResponseDto apiResponse = ApiResponseDto.builder()
-          .message("플레이리스트 수정이 완료되었습니다.")
+      playlist.updatePlaylist(playlistDto.getPlName());
+      // bgmList 재생성
+      createBgmList(playlistDto, buyItemDto);
+
+      ApiResponseDto apiResponseDto = ApiResponseDto.builder()
+          .message("수정완료")
           .status(HttpStatus.OK)
           .build();
-
-      return apiResponse;
+      return apiResponseDto;
     } else {
       log.info("플리가 없습니다. 플리 등록을 시작합니다.");
 
       Playlist newplaylist = Playlist.builder()
-          .userDo(UserDo.builder().userId(playlistAllDto.getUserDto().getUserId()).build())
-          .plName(playlistAllDto.getPlaylistDto().getPlName())
+          .userDo(UserDo.builder().userId(playlistDto.getUserId()).build())
+          .plName(playlistDto.getPlName())
           .build();
       playlistRepository.save(newplaylist);
 
-      deleteBgmList(playlistAllDto);
-
-      createBgmList(playlistAllDto);
+      createBgmList(playlistDto, buyItemDto);
 
       ApiResponseDto apiResponse = ApiResponseDto.builder()
           .message("플레이리스트 등록이 완료되었습니다.")
@@ -190,22 +189,10 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
   }
 
-  // bgmList 삭제메소드
-  public void deleteBgmList(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
-    Long bgmListId = playlistAllDto.getBgmListDto().getBgmListId();
-    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
-
-    BgmList bgmList = bgmListRepository.findById(bgmListId).orElseThrow(() -> new BgmListNotFoundException());
-
-    if (bgmList.getPlaylist().getPlaylistId().equals(playlistId)) {
-      bgmListRepository.deleteById(bgmListId);
-    }
-  }
-
   // bgmList생성 메소드
-  public void createBgmList(PlaylistAllDto playlistAllDto) {
-    Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
-    Long itemBuyId = playlistAllDto.getBuyItemDto().getItemBuyId();
+  public void createBgmList(PlaylistDto playlistDto, BuyItemDto buyItemDto) {
+    Long playlistId = playlistDto.getPlaylistId();
+    Long itemBuyId = buyItemDto.getItemBuyId();
 
     // Playlist와 BuyItem 조회
     Playlist playlist = playlistRepository.findById(playlistId)

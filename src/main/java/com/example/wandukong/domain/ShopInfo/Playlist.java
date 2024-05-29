@@ -66,4 +66,8 @@ public class Playlist {
         this.miniHome = miniHome;
     }
 
+    public void updatePlaylist(String plName) {
+        this.plName = plName;
+    }
+
 }
