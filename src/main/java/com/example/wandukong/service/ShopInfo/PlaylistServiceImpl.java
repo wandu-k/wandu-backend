@@ -28,7 +28,7 @@ import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.BgmListRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
@@ -109,7 +109,6 @@ public class PlaylistServiceImpl implements PlaylistService {
           .itemId(shop.getItemId())
           .itemName(shop.getItemName())
           .categoryId(shop.getCategory().getCategoryId())
-          .artist(shop.getArtist())
           .build();
 
       ItemFile itemFile = shop.getItemFile();
@@ -118,17 +117,17 @@ public class PlaylistServiceImpl implements PlaylistService {
           .fileName(itemFile.getFileName())
           .build();
 
-      ShopInfoDto shopInfoDto = ShopInfoDto.builder()
-          .shopDto(shopDto)
-          .itemFileDto(itemFileDto)
-          .build();
+      // ShopInfoDto shopInfoDto = ShopInfoDto.builder()
+      // .shopDto(shopDto)
+      // .itemFileDto(itemFileDto)
+      // .build();
 
       return PlaylistAllDto.builder()
           .userDto(userDto)
           .bgmListDto(bgmListDto)
           .buyItemDto(buyItemDto)
           .playlistDto(playlistDto)
-          .shopInfoDto(shopInfoDto)
+
           .build();
     }).collect(Collectors.toList());
 
@@ -145,7 +144,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Transactional
   @Override
-  public ApiResponse updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
+  public ApiResponseDto updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException {
 
     Long bgmListId = playlistAllDto.getBgmListDto().getBgmListId();
     Long playlistId = playlistAllDto.getPlaylistDto().getPlaylistId();
@@ -163,7 +162,7 @@ public class PlaylistServiceImpl implements PlaylistService {
       optionalBgmList.get().updatePost(bgmListId, playlistAllDto.getPlaylistDto().getPlName(),
           playlistAllDto.getPlaylistDto().getPlDate(), itemBuyId);
 
-      ApiResponse apiResponse = ApiResponse.builder()
+      ApiResponseDto apiResponse = ApiResponseDto.builder()
           .message("플레이리스트 수정이 완료되었습니다.")
           .status(HttpStatus.OK)
           .build();
@@ -182,7 +181,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
       createBgmList(playlistAllDto);
 
-      ApiResponse apiResponse = ApiResponse.builder()
+      ApiResponseDto apiResponse = ApiResponseDto.builder()
           .message("플레이리스트 등록이 완료되었습니다.")
           .status(HttpStatus.OK)
           .build();

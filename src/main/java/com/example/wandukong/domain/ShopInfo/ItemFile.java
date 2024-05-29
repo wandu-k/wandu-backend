@@ -11,11 +11,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @Table(name = "ItemFile")
 public class ItemFile {
@@ -29,22 +27,16 @@ public class ItemFile {
     @JoinColumn(name = "itemId")
     private Shop shop;
 
-    @Column(name = "uuid")
-    private String uuid;
-
     @Column(name = "fileName")
     private String fileName;
 
     @Builder
-    public ItemFile(String fileName, String uuid, Long itemId) {
+    public ItemFile(String fileName, Long itemId) {
         this.itemId = itemId;
         this.fileName = fileName;
-        this.uuid = uuid;
     }
 
-    public void changeFileName(Long itemId, String fileName) {
-        this.itemId = itemId;
+    public void changeFileName(String fileName) {
         this.fileName = fileName;
-        throw new UnsupportedOperationException(fileName);
     }
 }

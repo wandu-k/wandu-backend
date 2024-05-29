@@ -16,13 +16,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -37,11 +34,8 @@ public class Shop {
     @Column(name = "itemName")
     private String itemName;
 
-    @Column(name = "artist")
-    private String artist;
-
     @Column(name = "price")
-    private Long price;
+    private int price;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -58,8 +52,21 @@ public class Shop {
     private ItemFile itemFile;
 
     // 정보 수정
-    public void updateItem(String itemName) {
+    public void updateItem(String itemName, int price) {
         this.itemName = itemName;
+        this.price = price;
+    }
+
+    @Builder
+    public Shop(Long itemId, String itemName, int price, UserDo userDo, Category category,
+            List<BuyItem> buyItem, ItemFile itemFile) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.price = price;
+        this.userDo = userDo;
+        this.category = category;
+        this.buyItem = buyItem;
+        this.itemFile = itemFile;
     }
 
 }

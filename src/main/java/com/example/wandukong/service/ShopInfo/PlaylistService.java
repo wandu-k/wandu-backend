@@ -4,12 +4,12 @@ import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
 import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 
 public interface PlaylistService {
 
   SliceResponseDto<PlaylistAllDto> getAllplaylist(SliceRequestDto sliceRequestDto, Long userId);
 
-  ApiResponse updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException;
+  ApiResponseDto updateMyPlaylist(PlaylistAllDto playlistAllDto) throws BgmListNotFoundException;
 
 }

@@ -81,9 +81,9 @@ public class BuyItemServiceimpl implements BuyItemService {
                                         .build();
 
                         ShopInfoDto shopInfoDto = ShopInfoDto.builder()
-                                        .shopDto(shopDto)
-                                        .nickName(nickName)
-                                        .itemFileDto(itemFileDto)
+                                        // .shopDto(shopDto)
+                                        // .nickName(nickName)
+                                        // .itemFileDto(itemFileDto)
                                         .build();
 
                         // BuyItemAllDto를 생성하여 반환-구매내역과 그에 해당하는 상점 정보를 가져오기위함
@@ -106,27 +106,27 @@ public class BuyItemServiceimpl implements BuyItemService {
         @Transactional
         @Override
         public void purchaseItem(ShopInfoDto shopInfoDto, AccountDto userDto) throws UserNotFoundException {
-                // 현재 사용자 정보 조회
-                UserDo user = userRepository.findById(userDto.getUserId())
-                                .orElseThrow(() -> new UserNotFoundException());
+                // // 현재 사용자 정보 조회
+                // UserDo user = userRepository.findById(userDto.getUserId())
+                // .orElseThrow(() -> new UserNotFoundException());
 
-                // 구매할 아이템 정보 조회
-                Shop shop = shopRepository.findById(shopInfoDto.getShopDto().getItemId())
-                                .orElseThrow(() -> new IllegalArgumentException());
+                // // 구매할 아이템 정보 조회
+                // Shop shop = shopRepository.findById(shopInfoDto.getShopDto().getItemId())
+                // .orElseThrow(() -> new IllegalArgumentException());
 
-                // BuyItem 엔티티 생성 및 저장
-                BuyItem buyItem = BuyItem.builder()
-                                .buyDate(new Date())
-                                .userDo(user)
-                                .shop(shop)
-                                .build();
+                // // BuyItem 엔티티 생성 및 저장
+                // BuyItem buyItem = BuyItem.builder()
+                // .buyDate(new Date())
+                // .userDo(user)
+                // .shop(shop)
+                // .build();
 
-                // 사용자의 포인트 차감 및 업데이트
-                Long totalPrice = shop.getPrice();
-                Long updatedPoint = user.getPoint() - totalPrice;
-                user.updateUserPoint(updatedPoint);
+                // // 사용자의 포인트 차감 및 업데이트
+                // int totalPrice = shop.getPrice();
+                // Long updatedPoint = user.getPoint() - totalPrice;
+                // user.updateUserPoint(updatedPoint);
 
-                buyItemRepository.save(buyItem);
+                // buyItemRepository.save(buyItem);
         }
 
 }

@@ -20,7 +20,7 @@ import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.ShopInfo.PlaylistService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -71,7 +71,7 @@ public class PlaylistController {
       throw new BadRequestException();
     }
 
-    ApiResponse responseDto = playlistService.updateMyPlaylist(playlistAllDto);
+    ApiResponseDto responseDto = playlistService.updateMyPlaylist(playlistAllDto);
 
     return new ResponseEntity<>(responseDto.getMessage(), responseDto.getStatus());
 
