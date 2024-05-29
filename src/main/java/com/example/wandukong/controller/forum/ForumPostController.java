@@ -3,7 +3,7 @@ package com.example.wandukong.controller.forum;
 import java.util.Objects;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,7 +60,7 @@ public class ForumPostController {
       throw new BadRequestException();
     }
 
-    ApiResponse apiResponse = forumPostService.modify(forumPostDto);
+    ApiResponseDto apiResponse = forumPostService.modify(forumPostDto);
 
     return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
   }

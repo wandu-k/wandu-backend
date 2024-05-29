@@ -7,7 +7,7 @@ import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ask.AskDto;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.ask.AskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,13 +47,13 @@ public class AskServiceImpl implements AskService {
 
     @Transactional
     @Override
-    public ApiResponse modify(AskDto askDto) {
+    public ApiResponseDto modify(AskDto askDto) {
         Optional<Ask> result = askRepository.findById(askDto.getAskId());
 
         if (result.isPresent()) {
             result.get().changeAsk(askDto.getTitle(), askDto.getContent());
 
-            return ApiResponse.builder()
+            return ApiResponseDto.builder()
                     .message("게시글 수정이 완료되었습니다.")
                     .status(HttpStatus.OK)
                     .build();
@@ -71,7 +71,7 @@ public class AskServiceImpl implements AskService {
             askRepository.save(ask);
         }
 
-        return ApiResponse.builder()
+        return ApiResponseDto.builder()
                 .message("게시글 등록이 완료되었습니다.")
                 .status(HttpStatus.CREATED)
                 .build();

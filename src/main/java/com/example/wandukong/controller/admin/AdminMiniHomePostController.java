@@ -16,7 +16,7 @@ import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
-import com.example.wandukong.service.MiniHomePostService;
+import com.example.wandukong.service.trash.MiniHomePostService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

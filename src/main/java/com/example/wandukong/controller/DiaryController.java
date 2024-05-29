@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user/diary")
-public class MiniHomeDiaryController {
+public class DiaryController {
 
     private final DiaryService miniHomeDiaryService;
 

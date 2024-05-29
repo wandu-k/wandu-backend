@@ -18,10 +18,10 @@ import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.MiniHome.MiniHomePostDto;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
 import com.example.wandukong.repository.miniHome.MiniHomePostRepository;
-import com.example.wandukong.service.MiniHomePostService;
+import com.example.wandukong.service.trash.MiniHomePostService;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +35,6 @@ public class AdminMiniHomePostServiceImpl implements MiniHomePostService {
 
         @Autowired
         MiniHomeBoardRepository miniHomeBoardRepository;
-
-        @Autowired
-        ApiResponse apiResponse;
 
         @Override
         public MiniHomePostDto getPost(Long postId) throws PostNotFoundException {
@@ -69,7 +66,7 @@ public class AdminMiniHomePostServiceImpl implements MiniHomePostService {
         }
 
         @Transactional
-        public ApiResponse putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException {
+        public ApiResponseDto putPost(MiniHomePostDto miniHomePostDto) throws BoardNotFoundException {
 
                 MiniHomeBoard miniHomeBoard = miniHomeBoardRepository.findById(miniHomePostDto.getBoardId())
                                 .orElseThrow(() -> new BoardNotFoundException());
@@ -83,7 +80,7 @@ public class AdminMiniHomePostServiceImpl implements MiniHomePostService {
                                         .updatePost(miniHomeBoard, miniHomePostDto.getTitle(),
                                                         miniHomePostDto.getContent());
 
-                        return ApiResponse.builder()
+                        return ApiResponseDto.builder()
                                         .message("게시글 수정이 완료되었습니다.")
                                         .status(HttpStatus.OK)
                                         .build();
@@ -99,7 +96,7 @@ public class AdminMiniHomePostServiceImpl implements MiniHomePostService {
 
                         miniHomePostRepository.save(newPost);
 
-                        return ApiResponse.builder()
+                        return ApiResponseDto.builder()
                                         .message("게시글 등록이 완료되었습니다.")
                                         .status(HttpStatus.CREATED)
                                         .build();

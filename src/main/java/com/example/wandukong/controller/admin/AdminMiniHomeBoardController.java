@@ -3,7 +3,7 @@ package com.example.wandukong.controller.admin;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.MiniHomeBoardService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,7 +25,7 @@ public class AdminMiniHomeBoardController {
     @PutMapping
     public ResponseEntity<?> putMiniHomeBoard(@RequestBody MiniHomeBoardDto MiniHomeBoardDto) {
 
-        ApiResponse apiResponse = miniHomeBoardservice.putBoard(MiniHomeBoardDto);
+        ApiResponseDto apiResponse = miniHomeBoardservice.putBoard(MiniHomeBoardDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }

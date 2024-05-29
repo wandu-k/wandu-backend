@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import com.example.wandukong.domain.forum.ForumBoard;
 import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.forum.ForumBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -52,7 +52,7 @@ public class ForumPostServiceImpl implements ForumPostService {
 
   @Transactional
   @Override
-  public ApiResponse modify(ForumPostDto forumPostDto) throws BoardNotFoundException {
+  public ApiResponseDto modify(ForumPostDto forumPostDto) throws BoardNotFoundException {
     ForumBoard forumBoard = forumBoardRepository.findById(forumPostDto.getBoardId())
         .orElseThrow(BoardNotFoundException::new);
 
@@ -61,7 +61,7 @@ public class ForumPostServiceImpl implements ForumPostService {
     if (result.isPresent()) {
       result.get().changePost(forumBoard, forumPostDto.getTitle(), forumPostDto.getContent(), forumPostDto.getState());
 
-      return ApiResponse.builder()
+      return ApiResponseDto.builder()
           .message("게시글 수정이 완료되었습니다.")
           .status(HttpStatus.OK)
           .build();
@@ -77,7 +77,7 @@ public class ForumPostServiceImpl implements ForumPostService {
           .build();
       forumPostRepository.save(forumPost);
 
-      return ApiResponse.builder()
+      return ApiResponseDto.builder()
           .message("게시글 등록이 완료되었습니다.")
           .status(HttpStatus.CREATED)
           .build();

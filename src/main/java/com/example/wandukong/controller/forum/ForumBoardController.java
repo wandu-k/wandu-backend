@@ -1,7 +1,7 @@
 package com.example.wandukong.controller.forum;
 
 import com.example.wandukong.dto.forum.ForumBoardDto;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.forum.ForumBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class ForumBoardController {
     @PutMapping
     public ResponseEntity<?> modifyBoard(@RequestBody ForumBoardDto forumBoardDto) {
 
-        ApiResponse apiResponse = forumBoardService.modifyBoard(forumBoardDto);
+        ApiResponseDto apiResponse = forumBoardService.modifyBoard(forumBoardDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
