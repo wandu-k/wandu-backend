@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +21,13 @@ public class MiniHomeBoardServiceImpl implements MiniHomeBoardService {
     MiniHomeBoardRepository miniHomeBoardRepository;
 
     @Override
-    public ApiResponse putBoard(MiniHomeBoardDto miniHomeBoardDto) {
+    public ApiResponseDto putBoard(MiniHomeBoardDto miniHomeBoardDto) {
 
         Optional<MiniHomeBoard> miniHomeBoard = miniHomeBoardRepository.findById(miniHomeBoardDto.getBoardId());
         if (miniHomeBoard.isPresent()) {
             log.info("이미 존재하는 게시판 입니다");
 
-            return ApiResponse.builder()
+            return ApiResponseDto.builder()
                     .message("게시판 수정이 완료되었습니다.")
                     .status(HttpStatus.OK)
                     .build();
@@ -37,7 +37,7 @@ public class MiniHomeBoardServiceImpl implements MiniHomeBoardService {
             MiniHomeBoard newMiniHomeBoard = miniHomeBoardDto.toEntity();
             miniHomeBoardRepository.save(newMiniHomeBoard);
 
-            return ApiResponse.builder()
+            return ApiResponseDto.builder()
                     .message("게시판 등록이 완료되었습니다.")
                     .status(HttpStatus.CREATED)
                     .build();

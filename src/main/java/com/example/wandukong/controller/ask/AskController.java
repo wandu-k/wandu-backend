@@ -50,7 +50,7 @@ public class AskController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                    @RequestBody AskDto askDto) throws BadRequestException {
+            @RequestBody AskDto askDto) throws BadRequestException {
 
         if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), askDto.getUserId())) {
             throw new BadRequestException();

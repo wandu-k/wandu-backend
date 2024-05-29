@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ForumBoardServiceImpl implements ForumBoardService{
+public class ForumBoardServiceImpl implements ForumBoardService {
 
     private final ForumBoardRepository forumBoardRepository;
 

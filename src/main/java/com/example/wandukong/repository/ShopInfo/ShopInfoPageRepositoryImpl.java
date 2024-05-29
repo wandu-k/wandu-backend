@@ -1,65 +1,58 @@
 package com.example.wandukong.repository.ShopInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.stereotype.Repository;
 
-import com.example.wandukong.domain.UserDo;
+import com.example.wandukong.domain.QUserDo;
 import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.SearchItemDto;
+import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.dto.page.PageRequestDto;
-import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
-@Repository
-public class ShopInfoPageRepositoryImpl extends QuerydslRepositorySupport implements ShopInfoPageRepository {
+import lombok.RequiredArgsConstructor;
 
-  public ShopInfoPageRepositoryImpl() {
-    super(Shop.class);
-  }
+@RequiredArgsConstructor
+public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
 
-  @Override
-  public Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto, UserDo userId) {
-    QShop shop = QShop.shop;
-    JPQLQuery<Shop> query = from(shop);
-
-    query.where(shop.userDo.eq(userId))
-        .leftJoin(shop.category).fetchJoin()
-        .leftJoin(shop.itemFile).fetchJoin();
-
-    List<Shop> shops = query.offset(pageRequestDto.getOffset())
-        .limit(pageRequestDto.getSize())
-        .fetch();
-
-    long total = query.fetchCount();
-
-    return new PageImpl<>(shops, pageRequestDto.of(), total);
-  }
+  private final JPAQueryFactory jpaQueryFactory;
 
   @Override
-  public Page<Shop> findAllByCategoryAndItemFileIsNotNull(PageRequestDto pageRequestDto) {
+  public Page<ShopInfoDto> SearchAndfindAll(PageRequestDto pageRequestDto, SearchItemDto searchDiaryDto) {
     QShop shop = QShop.shop;
-    JPQLQuery<Shop> query = from(shop);
+    QUserDo userDo = QUserDo.userDo;
 
-    // Querydsl을 사용하여 필요한 정보를 한 번에 가져옴
-    List<Shop> shops = query.select(shop)
-        .leftJoin(shop.userDo).fetchJoin()
-        .leftJoin(shop.category).fetchJoin()
-        .leftJoin(shop.itemFile).fetchJoin()
+    BooleanBuilder builder = new BooleanBuilder();
+
+    if (searchDiaryDto.getUserId() != null) {
+      builder.and(shop.userDo.userId.eq(searchDiaryDto.getUserId()));
+    }
+
+    List<Shop> shops = jpaQueryFactory.selectFrom(shop)
+        .leftJoin(shop.userDo, userDo).fetchJoin()
+        .where(builder)
         .offset(pageRequestDto.getOffset())
         .limit(pageRequestDto.getSize())
         .fetch();
+    // Convert Shop entities to ShopInfoDto
+    List<ShopInfoDto> shopInfoDtos = shops.stream()
+        .map(s -> ShopInfoDto.builder()
+            .userId(s.getUserDo().getUserId())
+            .itemId(s.getItemId())
+            .nickname(s.getUserDo().getNickname())
+            .itemName(s.getItemName())
+            .build())
+        .collect(Collectors.toList());
 
-    // 전체 엔티티 개수를 가져옴
-    long total = query.select(shop)
-        .from(shop)
-        .fetchCount();
+    long total = jpaQueryFactory.selectFrom(shop).where(builder).fetch().size();
 
-    return new PageImpl<>(shops, Pageable.unpaged(), total);
+    return new PageImpl<>(shopInfoDtos, Pageable.unpaged(), total);
 
   }
-
 }

@@ -20,8 +20,8 @@ import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.BoardNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
-import com.example.wandukong.model.ApiResponse;
-import com.example.wandukong.service.MiniHomePostService;
+import com.example.wandukong.model.ApiResponseDto;
+import com.example.wandukong.service.trash.MiniHomePostService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -77,7 +77,7 @@ public class MiniHomePostController {
             throw new BadRequestException();
         }
 
-        ApiResponse apiResponse = miniHomePostService.putPost(miniHomePostDto);
+        ApiResponseDto apiResponse = miniHomePostService.putPost(miniHomePostDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }

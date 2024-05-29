@@ -1,30 +1,27 @@
 package com.example.wandukong.dto.ShopInfo;
 
-import com.example.wandukong.dto.AccountDto;
-
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class ShopInfoDto {
   /* 상점 판매정보 */
-  private ShopDto shopDto;
-  private ItemFileDto itemFileDto;
-  private CategoryDto categoryDto;
-  private String nickName;
+
+  private Long userId;
+  private Long itemId;
+  private String nickname;
+  private String itemName;
+  private int price;
+  private String file;
 
   @Builder
-  public ShopInfoDto(ShopDto shopDto, AccountDto userDto, ItemFileDto itemFileDto, String categoryName,
-      CategoryDto categoryDto,
-      String nickName) {
-    this.shopDto = shopDto;
-    this.itemFileDto = itemFileDto;
-    this.categoryDto = categoryDto;
-    this.nickName = userDto != null ? userDto.getNickname() : null;
-  }
-
-  public ShopInfoDto() {
-    // TODO Auto-generated constructor stub
+  public ShopInfoDto(Long userId, Long itemId, String nickname, String itemName, int price, String file) {
+    this.userId = userId;
+    this.itemId = itemId;
+    this.nickname = nickname;
+    this.itemName = itemName;
+    this.price = price;
+    this.file = file;
   }
 
 }
