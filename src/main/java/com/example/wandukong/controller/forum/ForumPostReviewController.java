@@ -4,7 +4,9 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.forum.ForumPostReviewDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
-import com.example.wandukong.exception.CustomException;
+import com.example.wandukong.exception.CustomException.BadRequestException;
+import com.example.wandukong.exception.CustomException.PermissionDeniedException;
+import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.forum.ForumPostReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +41,9 @@ public class ForumPostReviewController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping
     public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                    @RequestBody ForumPostReviewDto forumPostReviewDto) throws CustomException.PostNotFoundException, CustomException.BadRequestException {
+                                    @RequestBody ForumPostReviewDto forumPostReviewDto) throws PostNotFoundException, BadRequestException {
         if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), forumPostReviewDto.getUserId())) {
-            throw new CustomException.BadRequestException();
+            throw new BadRequestException();
         }
 
         ApiResponseDto apiResponse = forumPostReviewService.modify(forumPostReviewDto);
@@ -52,7 +54,7 @@ public class ForumPostReviewController {
     @Operation(summary = "자유 게시판 댓글 삭제")
     @DeleteMapping
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long commentId) throws CustomException.PostNotFoundException, CustomException.PermissionDeniedException {
+    public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long commentId) throws PostNotFoundException, PermissionDeniedException {
 
         if (customUserDetails != null) {
             Long userId = customUserDetails.getAccountDto().getUserId();
@@ -60,6 +62,6 @@ public class ForumPostReviewController {
             return new ResponseEntity<>("댓글 삭제가 완료되었습니다.", HttpStatus.OK);
         }
 
-        throw new CustomException.PermissionDeniedException();
+        throw new PermissionDeniedException();
     }
 }
