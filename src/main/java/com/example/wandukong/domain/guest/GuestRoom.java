@@ -39,17 +39,13 @@ public class GuestRoom {
     @CreationTimestamp
     private LocalDate writeDate;
 
-    @OneToMany(mappedBy = "guestRoom", cascade = CascadeType.ALL)
-    private List<GuestComment> guestComments = new ArrayList<>();
-
     @Builder
-    public GuestRoom(Long roomId, UserDo userDo, MiniHome miniHome, String mainContent, LocalDate writeDate, List<GuestComment> guestComments) {
+    public GuestRoom(Long roomId, UserDo userDo, MiniHome miniHome, String mainContent, LocalDate writeDate) {
         this.roomId = roomId;
         this.userDo = userDo;
         this.miniHome = miniHome;
         this.mainContent = mainContent;
         this.writeDate = writeDate;
-        this.guestComments = guestComments;
     }
 
     public void changeContent(String mainContent) {
