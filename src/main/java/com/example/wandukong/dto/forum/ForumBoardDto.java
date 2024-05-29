@@ -1,11 +1,12 @@
 package com.example.wandukong.dto.forum;
 
 import com.example.wandukong.domain.forum.ForumBoard;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class ForumBoardDto {
     private Long boardId;
     private String boardName;
