@@ -7,7 +7,7 @@ import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
-import com.example.wandukong.model.ApiResponse;
+import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.ask.AskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -56,7 +56,7 @@ public class AskController {
             throw new BadRequestException();
         }
 
-        ApiResponse apiResponse = askService.modify(askDto);
+        ApiResponseDto apiResponse = askService.modify(askDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
