@@ -17,8 +17,6 @@ public class GuestRoomDto {
 
     private Long userId;
 
-    private Long hpId;
-
     private String mainContent;
 
     private LocalDate writeDate;

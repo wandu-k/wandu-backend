@@ -1,6 +1,7 @@
 package com.example.wandukong.repository.ask.search;
 
 import com.example.wandukong.domain.ask.AdminComment;
+import com.example.wandukong.domain.ask.QAdminComment;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.*;
