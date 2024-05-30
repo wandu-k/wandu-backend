@@ -28,10 +28,6 @@ public class GuestRoom {
     @JoinColumn(name = "userId")
     private UserDo userDo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hpId")
-    private MiniHome miniHome;
-
     @Column(name = "mainContent")
     private String mainContent;
 
@@ -40,10 +36,9 @@ public class GuestRoom {
     private LocalDate writeDate;
 
     @Builder
-    public GuestRoom(Long roomId, UserDo userDo, MiniHome miniHome, String mainContent, LocalDate writeDate) {
+    public GuestRoom(Long roomId, UserDo userDo, String mainContent, LocalDate writeDate) {
         this.roomId = roomId;
         this.userDo = userDo;
-        this.miniHome = miniHome;
         this.mainContent = mainContent;
         this.writeDate = writeDate;
     }
