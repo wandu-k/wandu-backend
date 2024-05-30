@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,8 +41,10 @@ public class DailyCheckController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getMethodName(@RequestParam int month) {
-        return new ResponseEntity<>(null);
+    public ResponseEntity<?> getdailyCheckList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
+
+        List<DailyDto> dailyDto = dailyCheckService.getdailyCheckList(date);
+        return new ResponseEntity<>(dailyDto, HttpStatus.OK);
     }
 
 }

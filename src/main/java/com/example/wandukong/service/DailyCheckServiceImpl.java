@@ -1,4 +1,8 @@
-package com.example.wandukong.service.user;
+package com.example.wandukong.service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -6,7 +10,6 @@ import com.example.wandukong.domain.Daily;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.DailyDto;
 import com.example.wandukong.repository.DailyCheckRepository;
-import com.example.wandukong.service.DailyCheckService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +25,19 @@ public class DailyCheckServiceImpl implements DailyCheckService {
         Daily daily = new Daily(null, UserDo.builder().userId(dailyDto.getUserId()).build(), dailyDto.getDate());
 
         dailyCheckRepository.save(daily);
+    }
+
+    @Override
+    public List<DailyDto> getdailyCheckList(LocalDate date) {
+        List<Daily> dailes = dailyCheckRepository.findByDate(date);
+
+        List<DailyDto> dailyDtos = new ArrayList<>();
+
+        for (Daily daily : dailes) {
+            DailyDto dailyDto = new DailyDto(daily.getUserId(), daily.getDate());
+            dailyDtos.add(dailyDto);
+        }
+        return dailyDtos;
     }
 
 }
