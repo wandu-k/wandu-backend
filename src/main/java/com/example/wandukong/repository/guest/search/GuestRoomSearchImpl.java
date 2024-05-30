@@ -1,6 +1,7 @@
 package com.example.wandukong.repository.guest.search;
 
 import com.example.wandukong.domain.guest.GuestRoom;
+import com.example.wandukong.domain.guest.QGuestRoom;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.*;
