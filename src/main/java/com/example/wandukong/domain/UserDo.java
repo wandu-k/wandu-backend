@@ -3,6 +3,11 @@ package com.example.wandukong.domain;
 import java.util.Date;
 import java.util.List;
 
+import com.example.wandukong.domain.ask.AdminComment;
+import com.example.wandukong.domain.ask.Ask;
+import com.example.wandukong.domain.forum.ForumPost;
+import com.example.wandukong.domain.forum.ForumPostReview;
+import com.example.wandukong.domain.guest.GuestRoom;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -83,6 +88,21 @@ public class UserDo {
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BuyItem> buyItem;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ForumPost> forumPosts;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ForumPostReview> forumPostReviews;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Ask> asks;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<AdminComment> adminComments;
+
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<GuestRoom> guestRooms;
 
     @Builder
     public UserDo(Long userId, String email, String password, String name, String nickname, String profileImage,
