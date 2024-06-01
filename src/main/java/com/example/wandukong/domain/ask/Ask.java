@@ -38,10 +38,10 @@ public class Ask {
     private LocalDate writeDate;
 
     @Column(name = "solveState")
-    private int solveState;
+    private int solveState = 0;
 
     @Column(name = "hideState")
-    private int hideState;
+    private int hideState = 0;
 
     @Column(name = "count", columnDefinition = "int default 0")
     private int count;
@@ -67,16 +67,10 @@ public class Ask {
         this.askFiles = askFiles;
     }
 
-    public void changeAsk(String title, String content) {
+    public void changeAsk(String title, String content, int solveState, int hideState) {
         this.title = title;
         this.content = content;
-    }
-
-    public void changeState(int solveState) {
         this.solveState = solveState;
-    }
-
-    public void changeHide(int hideState) {
         this.hideState = hideState;
     }
 

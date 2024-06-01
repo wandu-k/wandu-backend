@@ -39,7 +39,7 @@ public class ForumPost {
     private LocalDate writeDate;
 
     @Column(name = "state")
-    private int state;
+    private int state = 1;
 
     @Column(name = "count", columnDefinition = "int default 0")
     private int count;

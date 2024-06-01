@@ -42,7 +42,7 @@ public class AskController {
     }
 
     @Operation(summary = "공시사항 게시판 리스트 조회")
-    @SecurityRequirement(name = "Baerer Authentication")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping
     public ResponseEntity<?> list(@RequestBody PageRequestDto pageRequestDto) {
 

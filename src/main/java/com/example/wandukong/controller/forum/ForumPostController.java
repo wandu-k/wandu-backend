@@ -45,7 +45,7 @@ public class ForumPostController {
   }
 
   @Operation(summary = "자유게시판 리스트 조회")
-  @SecurityRequirement(name = "Baerer Authentication")
+  @SecurityRequirement(name = "Bearer Authentication")
   @PostMapping
   public ResponseEntity<?> list(@RequestBody PageRequestDto pageRequestDto) {
 

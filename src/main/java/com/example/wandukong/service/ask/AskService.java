@@ -19,4 +19,6 @@ public interface AskService {
     void remove(Long userId, Long askId) throws PostNotFoundException, PermissionDeniedException;
 
     PageResponseDto<AskDto> getList(PageRequestDto pageRequestDto);
+
+    PageResponseDto<AskDto> AdminGetList(PageRequestDto pageRequestDto);
 }

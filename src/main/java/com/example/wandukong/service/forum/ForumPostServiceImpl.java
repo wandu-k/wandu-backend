@@ -155,17 +155,19 @@ public class ForumPostServiceImpl implements ForumPostService {
 
     List<ForumPostDto> dtoList = new ArrayList<>();
     for (ForumPost post : posts) {
-      ForumPostDto forumPostDto = ForumPostDto.builder()
-          .postId(post.getPostId())
-          .boardId(post.getForumBoard().getBoardId())
-          .userId(post.getUserDo().getUserId())
-          .title(post.getTitle())
-          .content(post.getContent())
-          .writeDate(post.getWriteDate())
-          .state(post.getState())
-          .count(post.getCount())
-          .build();
-      dtoList.add(forumPostDto);
+      if (post.getState() == 1) {
+        ForumPostDto forumPostDto = ForumPostDto.builder()
+                .postId(post.getPostId())
+                .boardId(post.getForumBoard().getBoardId())
+                .userId(post.getUserDo().getUserId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .writeDate(post.getWriteDate())
+                .state(post.getState())
+                .count(post.getCount())
+                .build();
+        dtoList.add(forumPostDto);
+      }
     }
 
     return PageResponseDto.<ForumPostDto>withAll()
@@ -173,6 +175,34 @@ public class ForumPostServiceImpl implements ForumPostService {
         .pageRequestDto(pageRequestDto)
         .total(result.getTotalElements())
         .build();
+  }
+
+  @Override
+  public PageResponseDto<ForumPostDto> adminGetList(PageRequestDto pageRequestDto) {
+    Page<ForumPost> result = forumPostRepository.search(pageRequestDto);
+
+    List<ForumPost> posts = result.getContent();
+
+    List<ForumPostDto> dtoList = new ArrayList<>();
+    for (ForumPost post : posts) {
+      ForumPostDto forumPostDto = ForumPostDto.builder()
+              .postId(post.getPostId())
+              .boardId(post.getForumBoard().getBoardId())
+              .userId(post.getUserDo().getUserId())
+              .title(post.getTitle())
+              .content(post.getContent())
+              .writeDate(post.getWriteDate())
+              .state(post.getState())
+              .count(post.getCount())
+              .build();
+      dtoList.add(forumPostDto);
+    }
+
+    return PageResponseDto.<ForumPostDto>withAll()
+            .dtoList(dtoList)
+            .pageRequestDto(pageRequestDto)
+            .total(result.getTotalElements())
+            .build();
   }
 
 }

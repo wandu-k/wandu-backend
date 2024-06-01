@@ -21,4 +21,5 @@ public interface ForumPostService {
 
   PageResponseDto<ForumPostDto> getList(PageRequestDto pageRequestDto);
 
+  PageResponseDto<ForumPostDto> adminGetList(PageRequestDto pageRequestDto);
 }

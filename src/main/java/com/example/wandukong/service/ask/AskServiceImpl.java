@@ -66,7 +66,7 @@ public class AskServiceImpl implements AskService {
         AskFile askPostFile = askFileRepository.findById(askDto.getAskId()).orElse(null);
 
         if (result.isPresent()) {
-            result.get().changeAsk(askDto.getTitle(), askDto.getContent());
+            result.get().changeAsk(askDto.getTitle(), askDto.getContent(), askDto.getSolveState(), askDto.getHideState());
 
             if (askFile != null) {
                 String postFilePath = postFileUpload(askFile, askDto);
@@ -160,6 +160,34 @@ public class AskServiceImpl implements AskService {
                         .build();
                 dtoList.add(askDto);
             }
+        }
+
+        return PageResponseDto.<AskDto>withAll()
+                .dtoList(dtoList)
+                .pageRequestDto(pageRequestDto)
+                .total(result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDto<AskDto> AdminGetList(PageRequestDto pageRequestDto) {
+        Page<Ask> result = askRepository.search(pageRequestDto);
+
+        List<Ask> asks = result.getContent();
+
+        List<AskDto> dtoList = new ArrayList<>();
+        for (Ask ask : asks) {
+            AskDto askDto = AskDto.builder()
+                    .askId(ask.getAskId())
+                    .userId(ask.getUserDo().getUserId())
+                    .title(ask.getTitle())
+                    .content(ask.getContent())
+                    .writeDate(ask.getWriteDate())
+                    .solveState(ask.getSolveState())
+                    .hideState(ask.getHideState())
+                    .count(ask.getCount())
+                    .build();
+            dtoList.add(askDto);
         }
 
         return PageResponseDto.<AskDto>withAll()
