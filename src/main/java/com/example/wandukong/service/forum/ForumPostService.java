@@ -5,6 +5,9 @@ import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 
 import com.example.wandukong.model.ApiResponseDto;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.example.wandukong.exception.CustomException.*;
 
@@ -12,7 +15,7 @@ public interface ForumPostService {
 
   ForumPostDto get(Long postId) throws PostNotFoundException;
 
-  ApiResponseDto modify(ForumPostDto forumPostDto) throws BoardNotFoundException;
+  ApiResponseDto modify(MultipartFile postFile, ForumPostDto forumPostDto) throws BoardNotFoundException, IOException;
 
   void remove(Long userId, Long postId) throws PostNotFoundException, PermissionDeniedException;
 
