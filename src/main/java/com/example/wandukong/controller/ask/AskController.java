@@ -14,10 +14,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Tag(name = "공지사항 게시글", description = "공지사항 게시글 API")
@@ -29,6 +32,7 @@ public class AskController {
     private final AskService askService;
 
     @Operation(summary = "공지사항 게시판 번호로 조회")
+    @SecurityRequirement(name = "Baerer Authentication")
     @GetMapping
     public ResponseEntity<?> get(@RequestParam Long askId) throws PostNotFoundException {
 
@@ -38,6 +42,7 @@ public class AskController {
     }
 
     @Operation(summary = "공시사항 게시판 리스트 조회")
+    @SecurityRequirement(name = "Baerer Authentication")
     @PostMapping
     public ResponseEntity<?> list(@RequestBody PageRequestDto pageRequestDto) {
 
@@ -48,15 +53,16 @@ public class AskController {
 
     @Operation(summary = "공지사항 게시판 등록 및 수정")
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody AskDto askDto) throws BadRequestException {
+            @RequestPart(required = false, value = "askFile") MultipartFile askFile,
+            @RequestPart AskDto askDto) throws BadRequestException, IOException {
 
         if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), askDto.getUserId())) {
             throw new BadRequestException();
         }
 
-        ApiResponseDto apiResponse = askService.modify(askDto);
+        ApiResponseDto apiResponse = askService.modify(askFile, askDto);
 
         return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
     }
