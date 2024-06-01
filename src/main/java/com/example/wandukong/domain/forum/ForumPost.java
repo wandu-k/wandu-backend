@@ -47,8 +47,12 @@ public class ForumPost {
     @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
     private List<ForumPostReview> forumPostReviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL)
+    private List<ForumPostFile> forumPostFiles = new ArrayList<>();
+
     @Builder
-    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state, int count, List<ForumPostReview> forumPostReviews) {
+    public ForumPost(Long postId, ForumBoard forumBoard, UserDo userDo, String title, String content, LocalDate writeDate, int state, int count,
+                     List<ForumPostReview> forumPostReviews, List<ForumPostFile> forumPostFiles) {
         this.postId = postId;
         this.forumBoard = forumBoard;
         this.userDo = userDo;
@@ -58,6 +62,7 @@ public class ForumPost {
         this.state = state;
         this.count = count;
         this.forumPostReviews = forumPostReviews;
+        this.forumPostFiles = forumPostFiles;
     }
 
     public void changePost(ForumBoard forumBoard, String title, String content, int state) {
