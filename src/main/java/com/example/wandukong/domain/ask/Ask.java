@@ -49,9 +49,12 @@ public class Ask {
     @OneToMany(mappedBy = "ask", cascade = CascadeType.ALL)
     private List<AdminComment> adminComments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "ask", cascade = CascadeType.ALL)
+    private List<AskFile> askFiles = new ArrayList<>();
+
     @Builder
     public Ask(Long askId, UserDo userDo, String title, String content, LocalDate writeDate, int solveState,
-            int hideState, int count, List<AdminComment> adminComments) {
+            int hideState, int count, List<AdminComment> adminComments, List<AskFile> askFiles) {
         this.askId = askId;
         this.userDo = userDo;
         this.title = title;
@@ -61,6 +64,7 @@ public class Ask {
         this.hideState = hideState;
         this.count = count;
         this.adminComments = adminComments;
+        this.askFiles = askFiles;
     }
 
     public void changeAsk(String title, String content) {
