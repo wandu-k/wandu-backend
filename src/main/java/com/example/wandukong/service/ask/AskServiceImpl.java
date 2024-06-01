@@ -1,20 +1,29 @@
 package com.example.wandukong.service.ask;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ask.Ask;
+import com.example.wandukong.domain.ask.AskFile;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ask.AskDto;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.model.ApiResponseDto;
+import com.example.wandukong.repository.ask.AskFileRepository;
 import com.example.wandukong.repository.ask.AskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +34,11 @@ import java.util.Optional;
 public class AskServiceImpl implements AskService {
 
     private final AskRepository askRepository;
+    private final AskFileRepository askFileRepository;
+    private final AmazonS3 amazonS3;
+
+    @Value(value = "${cloud.aws.s3.bucket}")
+    private String bucketName;
 
     @Override
     public AskDto get(Long askId) throws PostNotFoundException {
@@ -47,11 +61,17 @@ public class AskServiceImpl implements AskService {
 
     @Transactional
     @Override
-    public ApiResponseDto modify(AskDto askDto) {
+    public ApiResponseDto modify(MultipartFile askFile, AskDto askDto) throws IOException {
         Optional<Ask> result = askRepository.findById(askDto.getAskId());
+        AskFile askPostFile = askFileRepository.findById(askDto.getAskId()).orElse(null);
 
         if (result.isPresent()) {
             result.get().changeAsk(askDto.getTitle(), askDto.getContent());
+
+            if (askFile != null) {
+                String postFilePath = postFileUpload(askFile, askDto);
+                askPostFile.changeFileName(postFilePath);
+            }
 
             return ApiResponseDto.builder()
                     .message("게시글 수정이 완료되었습니다.")
@@ -68,7 +88,16 @@ public class AskServiceImpl implements AskService {
                     .count(askDto.getCount())
                     .build();
 
-            askRepository.save(ask);
+            ask = askRepository.save(ask);
+
+            if (askFile != null) {
+                String postFilePath = postFileUpload(askFile, askDto);
+                askPostFile = AskFile.builder()
+                        .askId(ask.getAskId())
+                        .fileName(postFilePath)
+                        .build();
+                askFileRepository.save(askPostFile);
+            }
         }
 
         return ApiResponseDto.builder()
@@ -77,9 +106,30 @@ public class AskServiceImpl implements AskService {
                 .build();
     }
 
+    private String postFileUpload(MultipartFile askFile, AskDto askDto) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(askFile.getContentType());
+
+        String filePath = "ask/" + askDto.getUserId() + "/file/";
+
+        String extension = askFile.getOriginalFilename().substring(askFile.getOriginalFilename().lastIndexOf("."));
+
+        String fileName = "askFile" + "_" + askDto.getUserId() + extension;
+
+        String postFilePath = filePath + fileName;
+
+        amazonS3
+                .putObject(new PutObjectRequest(bucketName, postFilePath, askFile.getInputStream(), objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        return postFilePath;
+    }
+
     @Override
     public void remove(Long userId, Long askId) throws PostNotFoundException, PermissionDeniedException {
         Ask ask = askRepository.findById(askId).orElseThrow(PostNotFoundException::new);
+        askFileRepository.deleteById(askId);
+        amazonS3.deleteObject(bucketName, "ask/" + userId + "/");
 
         if (!Objects.equals(ask.getUserDo().getUserId(), userId)) {
             throw new PermissionDeniedException();
