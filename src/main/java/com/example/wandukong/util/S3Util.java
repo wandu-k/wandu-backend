@@ -41,4 +41,8 @@ public class S3Util {
                 .deleteObject(new DeleteObjectRequest(bucketName, filePath));
     }
 
+    public String getUrl(String objectKey) {
+        return amazonS3.getUrl(bucketName, objectKey).toString();
+    }
+
 }

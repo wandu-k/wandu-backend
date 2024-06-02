@@ -12,6 +12,7 @@ import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
+  private final S3Util s3Util;
 
   @Override
   public Page<ShopInfoDto> SearchAndfindAll(SearchItemDto searchItemDto) {
@@ -62,7 +64,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .itemId(s.getItemId())
             .nickname(s.getUserDo().getNickname())
             .itemName(s.getItemName())
-            .file(null)
+            .file(s3Util.getUrl(s.getItemFile().getFileName()))
             .build())
         .collect(Collectors.toList());
 
