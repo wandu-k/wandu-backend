@@ -107,7 +107,7 @@ public class PlaylistServiceImpl implements PlaylistService {
       ShopDto shopDto = ShopDto.builder()
           .itemId(shop.getItemId())
           .itemName(shop.getItemName())
-          .categoryId(shop.getCategory().getCategoryId())
+          .subcategoryId(shop.getShopSubcategory().getSubcategoryId())
           .build();
 
       ItemFile itemFile = shop.getItemFile();
@@ -201,7 +201,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         .orElseThrow(() -> new UsernameNotFoundException("BuyItem not found"));
 
     // BuyItem의 Shop의 CategoryId가 1일 경우에만 BgmList 생성 및 저장
-    if (buyItem.getShop().getCategory().getCategoryId() == 1) {
+    if (buyItem.getShop().getShopSubcategory().getSubcategoryId() == 1) {
       BgmList newBgmList = BgmList.builder()
           .playlist(playlist)
           .buyItem(buyItem)

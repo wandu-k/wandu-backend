@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 
         String message = "해당하는 페이지가 없습니다.";
-        log.info(message);
+        log.error(message, e);
         return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
     }
 

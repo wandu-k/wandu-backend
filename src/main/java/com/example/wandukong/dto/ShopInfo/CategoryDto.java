@@ -16,7 +16,6 @@ public class CategoryDto {
 
   /* 상점 분류-음악, 아바타 부위분류 */
   public Category toEntity() {
-
     Category category = Category.builder()
         .categoryId(categoryId)
         .categoryName(categoryName)

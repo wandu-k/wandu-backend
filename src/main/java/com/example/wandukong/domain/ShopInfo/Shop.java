@@ -7,6 +7,7 @@ import com.example.wandukong.domain.UserDo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,18 +38,18 @@ public class Shop {
     @Column(name = "price")
     private int price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
-    @ManyToOne
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
-    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subcategoryId", referencedColumnName = "subcategoryId")
+    private ShopSubCategory shopSubcategory;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BuyItem> buyItem;
 
-    @OneToOne(mappedBy = "shop")
+    @OneToOne(mappedBy = "shop", fetch = FetchType.LAZY)
     private ItemFile itemFile;
 
     // 정보 수정
@@ -58,13 +59,13 @@ public class Shop {
     }
 
     @Builder
-    public Shop(Long itemId, String itemName, int price, UserDo userDo, Category category,
+    public Shop(Long itemId, String itemName, int price, UserDo userDo, ShopSubCategory shopSubcategory,
             List<BuyItem> buyItem, ItemFile itemFile) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.price = price;
         this.userDo = userDo;
-        this.category = category;
+        this.shopSubcategory = shopSubcategory;
         this.buyItem = buyItem;
         this.itemFile = itemFile;
     }

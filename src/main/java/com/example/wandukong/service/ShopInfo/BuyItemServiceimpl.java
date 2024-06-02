@@ -70,7 +70,7 @@ public class BuyItemServiceimpl implements BuyItemService {
                         ShopDto shopDto = ShopDto.builder()
                                         .itemId(buyitem.getShop().getItemId())
                                         .itemName(buyitem.getShop().getItemName())
-                                        .categoryId(buyitem.getShop().getCategory().getCategoryId())
+                                        .subcategoryId(buyitem.getShop().getShopSubcategory().getSubcategoryId())
                                         .build();
 
                         ItemFile itemFile = buyitem.getShop().getItemFile();

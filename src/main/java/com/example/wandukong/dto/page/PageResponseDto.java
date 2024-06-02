@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class PageResponseDto<E> {
 
+  private E category;
+
   private List<E> dtoList;
 
   private List<Integer> pageNumList;
@@ -21,8 +23,9 @@ public class PageResponseDto<E> {
   private int totalCount, prevPage, nextPage, totalPage, current;
 
   @Builder(builderMethodName = "withAll")
-  public PageResponseDto(List<E> dtoList, PageRequestDto pageRequestDto, long total) {
+  public PageResponseDto(E category, List<E> dtoList, PageRequestDto pageRequestDto, long total) {
 
+    this.category = category;
     this.dtoList = dtoList;
     this.pageRequestDto = pageRequestDto;
     this.totalCount = (int) total;

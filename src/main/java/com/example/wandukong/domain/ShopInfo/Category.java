@@ -29,9 +29,9 @@ public class Category {
     private String categoryName;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Shop> shop;
+    private List<BuyItem> buyItem;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BuyItem> buyItem;
+    private List<ShopSubCategory> shopSubCategory;
 
 }

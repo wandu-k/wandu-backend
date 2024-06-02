@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.Daily;
-import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.DailyDto;
 import com.example.wandukong.repository.DailyCheckRepository;
 
@@ -22,7 +21,7 @@ public class DailyCheckServiceImpl implements DailyCheckService {
     @Override
     public void dailyCheck(DailyDto dailyDto) {
 
-        Daily daily = new Daily(null, UserDo.builder().userId(dailyDto.getUserId()).build(), dailyDto.getDate());
+        Daily daily = new Daily(dailyDto.getUserId(), null, dailyDto.getDate());
 
         dailyCheckRepository.save(daily);
     }

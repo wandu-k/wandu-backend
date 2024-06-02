@@ -19,14 +19,19 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
 
     @Override
     public List<CategoryDto> getListCategory() {
-        List<Category> category = shopCategoryRepository.findAll();
-        List<CategoryDto> categoryDto = new ArrayList<>();
+        List<Category> list = shopCategoryRepository.findAll();
 
-        for (Category cat : category) {
-            CategoryDto catd = new CategoryDto(cat.getCategoryId(), cat.getCategoryName());
-            categoryDto.add(catd);
+        List<CategoryDto> categoryDtolist = new ArrayList<>();
+
+        for (Category category : list) {
+
+            CategoryDto categoryDto = new CategoryDto(category.getCategoryId(), category.getCategoryName());
+
+            categoryDtolist.add(categoryDto);
+
         }
-        return categoryDto;
+
+        return categoryDtolist;
     }
 
 }

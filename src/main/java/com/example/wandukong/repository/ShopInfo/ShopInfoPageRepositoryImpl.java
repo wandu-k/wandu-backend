@@ -12,33 +12,48 @@ import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
-import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
   @Override
-  public Page<ShopInfoDto> SearchAndfindAll(PageRequestDto pageRequestDto, SearchItemDto searchDiaryDto) {
+  public Page<ShopInfoDto> SearchAndfindAll(SearchItemDto searchItemDto) {
+
+    log.info("상점 리파지토리 진입");
+
     QShop shop = QShop.shop;
     QUserDo userDo = QUserDo.userDo;
 
     BooleanBuilder builder = new BooleanBuilder();
 
-    if (searchDiaryDto.getUserId() != null) {
-      builder.and(shop.userDo.userId.eq(searchDiaryDto.getUserId()));
+    if (searchItemDto.getUserId() != null) {
+      builder.and(shop.userDo.userId.eq(searchItemDto.getUserId()));
+      log.info("유저 아이디로 조회");
+    }
+
+    if (searchItemDto.getCategoryId() != null) {
+      builder.and(shop.shopSubcategory.category.categoryId.eq(searchItemDto.getCategoryId()));
+      log.info("카테고리 번호로 조회");
+    }
+
+    if (searchItemDto.getCategoryName() != null) {
+      builder.and(shop.shopSubcategory.category.categoryName.eq(searchItemDto.getCategoryName()));
+      log.info("카테고리 이름으로 조회");
     }
 
     List<Shop> shops = jpaQueryFactory.selectFrom(shop)
         .leftJoin(shop.userDo, userDo).fetchJoin()
         .where(builder)
-        .offset(pageRequestDto.getOffset())
-        .limit(pageRequestDto.getSize())
+        .offset(searchItemDto.getOffset())
+        .limit(searchItemDto.getSize())
         .fetch();
     // Convert Shop entities to ShopInfoDto
     List<ShopInfoDto> shopInfoDtos = shops.stream()
@@ -47,10 +62,13 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .itemId(s.getItemId())
             .nickname(s.getUserDo().getNickname())
             .itemName(s.getItemName())
+            .file(null)
             .build())
         .collect(Collectors.toList());
 
     long total = jpaQueryFactory.selectFrom(shop).where(builder).fetch().size();
+
+    log.info("조회 완료");
 
     return new PageImpl<>(shopInfoDtos, Pageable.unpaged(), total);
 

@@ -11,11 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
@@ -29,6 +24,7 @@ import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
 import com.example.wandukong.repository.user.UserRepository;
+import com.example.wandukong.util.S3Util;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -50,22 +46,21 @@ public class ShopServiceImpl implements ShopService {
   @Autowired
   UserRepository accountRepository;
 
-  @Autowired
-  AmazonS3 amazonS3;
+  private final S3Util s3Util;
 
   @Value(value = "${cloud.aws.s3.bucket}")
   private String bucketName;
 
   @Override
-  public PageResponseDto<ShopInfoDto> getShopItemList(PageRequestDto pageRequestDto, SearchItemDto searchDiaryDto) {
+  public PageResponseDto<ShopInfoDto> getShopItemList(SearchItemDto searchItemDto) {
     // JPA를 사용하여 페이지 단위로 상점 정보를 가져옴
-    Page<ShopInfoDto> shopPage = shopInfoRepository.SearchAndfindAll(pageRequestDto, searchDiaryDto);
+    Page<ShopInfoDto> shopPage = shopInfoRepository.SearchAndfindAll(searchItemDto);
 
     List<ShopInfoDto> list = shopPage.getContent();
 
     return PageResponseDto.<ShopInfoDto>withAll()
         .dtoList(list)
-        .pageRequestDto(pageRequestDto)
+        .pageRequestDto(PageRequestDto.builder().page(searchItemDto.getPage()).size(searchItemDto.getSize()).build())
         .total(shopPage.getTotalElements())
         .build();
   }
@@ -87,14 +82,17 @@ public class ShopServiceImpl implements ShopService {
       ItemFile itemFile = itemFileRepository.findById(shop.getItemId()).orElse(null);
 
       // 기존 아이템 이미지 삭제
-      itemfileDelete(shop.getItemFile().getFileName());
+      s3Util.itemfileDelete(shop.getItemFile().getFileName());
 
-      // 새로운 이미지 업로드
-      String filepath = itemfileUpload(itemfile, shop);
+      // 오프벡트 키 생성
+      String objectKey = filePathGenerate(shop);
+
+      // 파일 업로드
+      s3Util.itemfileUpload(itemfile, objectKey);
 
       // 상점 아이템 및 파일 정보 수정
       shop.updateItem(shopDto.getItemName(), shopDto.getPrice());
-      itemFile.changeFileName(filepath);
+      itemFile.changeFileName(objectKey);
 
       ApiResponseDto apiResponseDto = ApiResponseDto.builder()
           .message("수정 완료")
@@ -108,15 +106,15 @@ public class ShopServiceImpl implements ShopService {
     // 등록할 아이템 정보 설정
     Shop shop = shopDto.toEntity();
 
-    shop = shopInfoRepository.save(shop);
+    shopInfoRepository.save(shop);
 
-    Long itemId = shop.getItemId();
+    String objectKey = filePathGenerate(shop);
 
-    String filepath = itemfileUpload(itemfile, shop);
+    s3Util.itemfileUpload(itemfile, objectKey);
     // ItemFile 엔티티 생성 및 저장
     ItemFile itemFile = ItemFile.builder()
-        .itemId(itemId)
-        .fileName(filepath)
+        .itemId(shop.getItemId())
+        .fileName(objectKey)
         .build();
 
     itemFileRepository.save(itemFile);
@@ -129,38 +127,19 @@ public class ShopServiceImpl implements ShopService {
     return apiResponseDto;
   }
 
-  private String itemfileUpload(MultipartFile itemfile, Shop shop)
-      throws IOException {
-    // 아이템 파일 업로드
-
-    ObjectMetadata objectMetadata = new ObjectMetadata();
-    objectMetadata.setContentType(itemfile.getContentType());
-
+  private String filePathGenerate(Shop shop) {
     // 파일 경로 지정()
-    String filepath = "shop/" + shop.getUserDo().getUserId() + "/"
-        + shop.getCategory().getCategoryId() + "/";
+    String filepath = "shop/" + shop.getShopSubcategory().getSubcategoryId() + "/"
+        + shop.getUserDo().getUserId() + "/";
 
     // uuid설정
     String uuid = UUID.randomUUID().toString();
 
-    // 확장자 구분
-    String extension = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf('.'));
+    String filename = uuid + "-" + shop.getItemName();
 
-    String filename = uuid + shop.getItemName() + extension;
+    String objectKey = filepath + filename;
 
-    String itemfilepath = filepath + filename;
-
-    amazonS3
-        .putObject(new PutObjectRequest(bucketName, itemfilepath,
-            itemfile.getInputStream(), objectMetadata)
-            .withCannedAcl(CannedAccessControlList.PublicRead));
-    // amazonS3.getUrl(filename, itemfilepath).toString()
-
-    return itemfilepath;
+    return objectKey;
   }
 
-  private void itemfileDelete(String filePath) {
-    amazonS3
-        .deleteObject(new DeleteObjectRequest(bucketName, filePath));
-  }
 }

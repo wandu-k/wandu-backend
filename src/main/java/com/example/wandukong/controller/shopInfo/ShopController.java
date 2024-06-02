@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.SearchItemDto;
-import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
@@ -28,11 +28,12 @@ import com.example.wandukong.service.ShopInfo.ShopService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user/shop")
 public class ShopController {
@@ -40,14 +41,17 @@ public class ShopController {
   @Autowired
   ShopService shopService;
 
+  @Operation(summary = "아이템 리스트")
   @PostMapping
-  @SecurityRequirement(name = "Baerer Authentication")
-  public ResponseEntity<?> getShopItemList(@RequestBody PageRequestDto pageRequestDto,
-      @RequestBody SearchItemDto searchDiaryDto) {
+  @SecurityRequirement(name = "Bearer Authentication")
+  public ResponseEntity<?> getShopItemList(
+      @RequestBody SearchItemDto searchItemDto) {
+
+    log.info(searchItemDto.toString());
 
     // pageRequestDto 페이지 정보
     // 검색 조회 정보
-    PageResponseDto<ShopInfoDto> shopitemList = shopService.getShopItemList(pageRequestDto, searchDiaryDto);
+    PageResponseDto<ShopInfoDto> shopitemList = shopService.getShopItemList(searchItemDto);
 
     return new ResponseEntity<>(shopitemList, HttpStatus.OK);
   }
