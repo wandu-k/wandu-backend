@@ -65,6 +65,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .nickname(s.getUserDo().getNickname())
             .itemName(s.getItemName())
             .file(s3Util.getUrl(s.getItemFile().getFileName()))
+            .subcategoryName(s.getShopSubcategory().getSubcategoryName())
             .build())
         .collect(Collectors.toList());
 
