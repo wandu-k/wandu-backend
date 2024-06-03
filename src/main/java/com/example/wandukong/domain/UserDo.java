@@ -15,6 +15,7 @@ import com.example.wandukong.domain.MiniHome.MiniHomePost;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.UserDto;
 
 import jakarta.persistence.CascadeType;
@@ -119,8 +120,8 @@ public class UserDo {
         this.point = point;
     }
 
-    public UserDto toDto() {
-        UserDto userDto = UserDto.builder()
+    public AccountDto toDto() {
+        AccountDto accountDtoDto = AccountDto.builder()
                 .userId(userId)
                 .nickname(nickname)
                 .profileImage(profileImage)
@@ -128,8 +129,9 @@ public class UserDo {
                 .birthday(birthday)
                 .signupDay(signupDay)
                 .role(role)
+                .point(point)
                 .build();
-        return userDto;
+        return accountDtoDto;
     }
 
     // 필드 업데이트 메서드

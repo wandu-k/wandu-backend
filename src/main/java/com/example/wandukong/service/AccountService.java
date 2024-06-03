@@ -18,7 +18,7 @@ public interface AccountService {
 
     void updateProfile(MultipartFile profileImage, AccountDto accountDto) throws UserNotFoundException, IOException;
 
-    UserDto getUserInfo(Long userId) throws UserNotFoundException;
+    AccountDto getUserInfo(Long userId) throws UserNotFoundException;
 
     void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException;

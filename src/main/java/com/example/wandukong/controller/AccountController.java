@@ -50,8 +50,8 @@ public class AccountController {
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws UserNotFoundException {
 
-        UserDto userDto = accountService.getUserInfo(customUserDetails.getAccountDto().getUserId());
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        AccountDto accountDto = accountService.getUserInfo(customUserDetails.getAccountDto().getUserId());
+        return new ResponseEntity<>(accountDto, HttpStatus.OK);
     }
 
     @Operation(summary = "회원탈퇴", description = "인증된 사용자의 회원 탈퇴를 합니다.")

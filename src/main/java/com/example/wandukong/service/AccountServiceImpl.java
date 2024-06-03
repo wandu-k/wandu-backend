@@ -138,18 +138,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public UserDto getUserInfo(Long userId) throws UserNotFoundException {
+    public AccountDto getUserInfo(Long userId) throws UserNotFoundException {
 
         UserDo userDo = accountRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
-        UserDto userDto = UserDto.builder()
-                .userId(userDo.getUserId())
-                .nickname(userDo.getNickname())
-                .role(userDo.getRole())
-                .birthday(userDo.getBirthday())
-                .build();
+        AccountDto accountDto = userDo.toDto();
 
-        return userDto;
+        return accountDto;
     }
 
     @Transactional
