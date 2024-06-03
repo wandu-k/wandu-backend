@@ -8,4 +8,6 @@ import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 public interface ShopInfoPageRepository {
 
   Page<ShopInfoDto> SearchAndfindAll(SearchItemDto searchDiaryDto);
+
+  ShopInfoDto findByIdWithDto(Long itemId);
 }

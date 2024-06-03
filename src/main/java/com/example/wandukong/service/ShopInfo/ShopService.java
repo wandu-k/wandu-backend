@@ -17,4 +17,6 @@ public interface ShopService {
         ApiResponseDto putItem(MultipartFile itemfile, ShopDto shopDto) throws IOException, BadRequestException;
 
         PageResponseDto<ShopInfoDto> getShopItemList(SearchItemDto searchItemDto);
+
+        ShopInfoDto getItem(Long itemId);
 }

@@ -26,4 +26,9 @@ public class ShopInfoDto {
     this.price = price;
     this.file = file;
   }
+
+  public void setFile(String file) {
+    this.file = file;
+  }
+
 }

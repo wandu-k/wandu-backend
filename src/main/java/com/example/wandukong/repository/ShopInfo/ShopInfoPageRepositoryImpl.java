@@ -9,11 +9,14 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.wandukong.domain.QUserDo;
 import com.example.wandukong.domain.ShopInfo.QShop;
+import com.example.wandukong.domain.ShopInfo.QShopSubCategory;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
+import com.example.wandukong.dto.MiniHome.DiaryDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -75,5 +78,39 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
 
     return new PageImpl<>(shopInfoDtos, Pageable.unpaged(), total);
 
+  }
+
+  @Override
+  public ShopInfoDto findByIdWithDto(Long itemId) {
+    QShop shop = QShop.shop;
+
+    // private Long userId;
+    // private Long itemId;
+    // private String nickname;
+    // private String itemName;
+    // private String subcategoryName;
+    // private int price;
+    // private String file;
+
+    ShopInfoDto shopInfoDto = jpaQueryFactory
+        .select(Projections.constructor(ShopInfoDto.class,
+            shop.userDo.userId,
+            shop.itemId,
+            shop.userDo.nickname,
+            shop.itemName,
+            shop.shopSubcategory.subcategoryName,
+            shop.price,
+            shop.itemFile.fileName))
+        .from(shop)
+        .where(shop.itemId.eq(itemId)) // Add condition to filter by itemId
+        .fetchOne(); // Fetch a single result
+
+    if (shopInfoDto != null) {
+      String fileName = shopInfoDto.getFile(); // Assuming getFile() returns the file name
+      String fileUrl = s3Util.getUrl(fileName);
+      shopInfoDto.setFile(fileUrl); // Assuming setFile() sets the URL
+    }
+
+    return shopInfoDto;
   }
 }

@@ -32,6 +32,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @RestController
@@ -40,6 +42,14 @@ public class ShopController {
 
   @Autowired
   ShopService shopService;
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping
+  public ResponseEntity<?> getItem(@RequestParam Long itemId) {
+
+    ShopInfoDto shopInfoDto = shopService.getItem(itemId);
+    return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
+  }
 
   @Operation(summary = "아이템 리스트")
   @PostMapping
