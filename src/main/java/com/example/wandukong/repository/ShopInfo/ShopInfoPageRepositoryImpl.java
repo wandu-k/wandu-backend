@@ -8,15 +8,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.example.wandukong.domain.QUserDo;
+import com.example.wandukong.domain.ShopInfo.QBuyItem;
 import com.example.wandukong.domain.ShopInfo.QShop;
-import com.example.wandukong.domain.ShopInfo.QShopSubCategory;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
-import com.example.wandukong.dto.MiniHome.DiaryDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,12 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
   @Override
   public Page<ShopInfoDto> SearchAndfindAll(SearchItemDto searchItemDto) {
 
+    BooleanBuilder builder = new BooleanBuilder();
+
     log.info("상점 리파지토리 진입");
 
     QShop shop = QShop.shop;
     QUserDo userDo = QUserDo.userDo;
-
-    BooleanBuilder builder = new BooleanBuilder();
 
     if (searchItemDto.getUserId() != null) {
       builder.and(shop.userDo.userId.eq(searchItemDto.getUserId()));
@@ -81,8 +82,15 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
   }
 
   @Override
-  public ShopInfoDto findByIdWithDto(Long itemId) {
+  public ShopInfoDto findByIdWithDto(Long itemId, Long userId) {
     QShop shop = QShop.shop;
+    QBuyItem buyItem = QBuyItem.buyItem;
+
+    NumberExpression<Long> purchaseCount = buyItem.shop.itemId.count();
+
+    NumberExpression<Integer> purchaseStatus = new CaseBuilder()
+        .when(buyItem.shop.itemId.isNotNull()).then(1)
+        .otherwise(0);
 
     // private Long userId;
     // private Long itemId;
@@ -98,10 +106,15 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             shop.itemId,
             shop.userDo.nickname,
             shop.itemName,
+            shop.shopSubcategory.category.categoryName,
             shop.shopSubcategory.subcategoryName,
             shop.price,
-            shop.itemFile.fileName))
+            shop.itemFile.fileName,
+            purchaseStatus,
+            purchaseCount.intValue()))
         .from(shop)
+        .leftJoin(buyItem)
+        .on(buyItem.shop.itemId.eq(shop.itemId).and(buyItem.userDo.userId.eq(userId)))
         .where(shop.itemId.eq(itemId)) // Add condition to filter by itemId
         .fetchOne(); // Fetch a single result
 

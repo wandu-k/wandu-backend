@@ -143,8 +143,8 @@ public class ShopServiceImpl implements ShopService {
   }
 
   @Override
-  public ShopInfoDto getItem(Long itemId) {
-    ShopInfoDto shopInfoDto = shopInfoRepository.findByIdWithDto(itemId);
+  public ShopInfoDto getItem(Long itemId, Long userId) {
+    ShopInfoDto shopInfoDto = shopInfoRepository.findByIdWithDto(itemId, userId);
     return shopInfoDto;
   }
 

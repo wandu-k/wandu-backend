@@ -2,14 +2,13 @@ package com.example.wandukong.service.diary;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.diary.Diary;
 import com.example.wandukong.dto.SearchDiaryDto;
 import com.example.wandukong.dto.MiniHome.DiaryDto;
-import com.example.wandukong.model.ApiResponseDto;
+import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.repository.diary.DiaryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,29 +19,13 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryRepository diaryRepository;
 
+    @Transactional
     @Override
-    public ApiResponseDto putPost(DiaryDto miniHomeDiaryDto) {
+    public void putPost(Long postId, DiaryDto diaryDto) throws PostNotFoundException {
 
-        Diary miniHomeDiary = Diary.builder()
-                .postId(miniHomeDiaryDto.getPostId())
-                .userDo(UserDo.builder().userId(miniHomeDiaryDto.getUserId()).build())
-                .title(miniHomeDiaryDto.getTitle())
-                .content(miniHomeDiaryDto.getContent())
-                .build();
+        Diary diary = diaryRepository.findById(postId).orElseThrow(() -> new PostNotFoundException());
 
-        diaryRepository.save(miniHomeDiary);
-
-        if (miniHomeDiaryDto.getPostId() != null) {
-            return ApiResponseDto.builder()
-                    .message("게시글 수정이 완료되었습니다.")
-                    .status(HttpStatus.OK)
-                    .build();
-        } else {
-            return ApiResponseDto.builder()
-                    .message("게시글 등록이 완료되었습니다.")
-                    .status(HttpStatus.CREATED)
-                    .build();
-        }
+        diary.updatePost(diary.getTitle(), diary.getContent());
     }
 
     @Override
@@ -63,6 +46,14 @@ public class DiaryServiceImpl implements DiaryService {
                 .build();
 
         return diarydto;
+    }
+
+    @Override
+    public void addPost(DiaryDto diaryDto) {
+
+        Diary diary = diaryDto.toEntity();
+
+        diaryRepository.save(diary);
     }
 
 }

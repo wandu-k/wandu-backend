@@ -45,9 +45,12 @@ public class ShopController {
 
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping
-  public ResponseEntity<?> getItem(@RequestParam Long itemId) {
+  public ResponseEntity<?> getItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+      @RequestParam Long itemId) {
 
-    ShopInfoDto shopInfoDto = shopService.getItem(itemId);
+    Long userId = customUserDetails.getAccountDto().getUserId();
+
+    ShopInfoDto shopInfoDto = shopService.getItem(itemId, userId);
     return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
   }
 

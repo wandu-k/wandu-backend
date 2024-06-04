@@ -18,5 +18,5 @@ public interface ShopService {
 
         PageResponseDto<ShopInfoDto> getShopItemList(SearchItemDto searchItemDto);
 
-        ShopInfoDto getItem(Long itemId);
+        ShopInfoDto getItem(Long itemId, Long userId);
 }

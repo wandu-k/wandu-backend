@@ -7,19 +7,21 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.SearchDiaryDto;
 import com.example.wandukong.dto.MiniHome.DiaryDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
-import com.example.wandukong.model.ApiResponseDto;
+import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.service.diary.DiaryService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,9 +35,11 @@ public class DiaryController {
 
     private final DiaryService miniHomeDiaryService;
 
-    @GetMapping
-    public ResponseEntity<?> getPost(@RequestParam Long postId) {
-        log.info("다이어리 get 진입");
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getPost(@PathVariable Long postId) {
+
+        log.info("다이어리 get 단건 조회 컨트롤러 진입");
 
         DiaryDto diaryDto = miniHomeDiaryService.getPost(postId);
 
@@ -43,26 +47,44 @@ public class DiaryController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping
-    public ResponseEntity<?> getList(@RequestBody SearchDiaryDto searchDiaryDto) {
-        log.info("다이어리 Post 진입");
+    @GetMapping("/list")
+    public ResponseEntity<?> getList(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) LocalDate date) {
+
+        SearchDiaryDto searchDiaryDto = new SearchDiaryDto(date, null, userId);
+
+        log.info("다이어리 get 리스트 조회 컨트롤러 진입");
+
         List<DiaryDto> list = miniHomeDiaryService.getList(searchDiaryDto);
+
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping
+    @PostMapping
+    public ResponseEntity<?> addPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody DiaryDto diaryDto) throws BadRequestException {
+        log.info("다이어리 Post 진입");
+        if (!customUserDetails.getAccountDto().getUserId().equals(diaryDto.getUserId())) {
+            throw new BadRequestException();
+        }
+        miniHomeDiaryService.addPost(diaryDto);
+        return new ResponseEntity<>("게시글 등록 완료", HttpStatus.CREATED);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PutMapping("/{postId}")
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody DiaryDto miniHomeDiaryDto) throws BadRequestException {
+            @PathVariable Long postId, @RequestBody DiaryDto diaryDto)
+            throws BadRequestException, PostNotFoundException {
 
         log.info("다이어리 Put 진입");
 
-        if (customUserDetails.getAccountDto().getUserId() != miniHomeDiaryDto.getUserId()) {
+        if (!customUserDetails.getAccountDto().getUserId().equals(diaryDto.getUserId())) {
             throw new BadRequestException();
         }
-
-        ApiResponseDto apiResponse = miniHomeDiaryService.putPost(miniHomeDiaryDto);
-        return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+        miniHomeDiaryService.putPost(postId, diaryDto);
+        return new ResponseEntity<>("수정이 완료되었습니다.", HttpStatus.OK);
     }
-
 }
