@@ -14,6 +14,7 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
@@ -33,74 +34,29 @@ import jakarta.transaction.Transactional;
 public class InventoryItemServiceimpl implements InventoryItemService {
 
         @Autowired
-        private AccountRepository userRepository;
-
-        @Autowired
-        private ShopInfoRepository shopRepository;
-
-        @Autowired
         private BuyItemRepository buyItemRepository;
 
         @Autowired
         private BuyItemPageRepository buyItemPageRepository;
 
-        @Transactional
         @Override
-        public PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, Long userId)
-                        throws UserNotFoundException {
-                // 사용자 정보 조회
-                UserDo user = userRepository.findById(userId)
-                                .orElseThrow(() -> new UserNotFoundException());
+        public PageResponseDto<ShopInfoDto> getMybuylist(Long userId, SearchItemDto searchItemDto) {
 
                 // jpa를 사용하여 페이지 별로 사용자가 구매 내역 정보를 가져옴
-                Page<BuyItem> buyItemPage = buyItemPageRepository.findByUserDoUserId(user, pageRequestDto);
+                Page<ShopInfoDto> buyItemPage = buyItemPageRepository.findByUserDoUserId(userId, searchItemDto);
 
                 // 가져온 구매 내역 정보를 BuyItemDto로 변환
-                List<BuyItemAllDto> buyitemList = buyItemPage.getContent().stream().map(buyitem -> {
-
-                        String nickName = buyitem.getShop().getUserDo().getNickname();
-
-                        BuyItemDto buyItemDto = BuyItemDto.builder()
-                                        .itemBuyId(buyitem.getItemBuyId())
-                                        .buyDate(buyitem.getBuyDate())
-                                        .itemId(buyitem.getShop().getItemId())
-                                        .userId(buyitem.getUserDo().getUserId())
-                                        .build();
-                        // ShopDto를 생성하여 설정
-                        ShopDto shopDto = ShopDto.builder()
-                                        .itemId(buyitem.getShop().getItemId())
-                                        .itemName(buyitem.getShop().getItemName())
-                                        .subcategoryId(buyitem.getShop().getShopSubcategory().getSubcategoryId())
-                                        .build();
-
-                        ItemFile itemFile = buyitem.getShop().getItemFile();
-
-                        ItemFileDto itemFileDto = ItemFileDto.builder()
-                                        .itemId(buyitem.getShop().getItemFile().getItemId())
-                                        .fileName(itemFile.getFileName())
-                                        .build();
-
-                        ShopInfoDto shopInfoDto = ShopInfoDto.builder()
-                                        // .shopDto(shopDto)
-                                        // .nickName(nickName)
-                                        // .itemFileDto(itemFileDto)
-                                        .build();
-
-                        // BuyItemAllDto를 생성하여 반환-구매내역과 그에 해당하는 상점 정보를 가져오기위함
-                        return BuyItemAllDto.builder()
-                                        .buyItemDto(buyItemDto)
-                                        .shopInfoDto(shopInfoDto)
-                                        .build();
-                }).collect(Collectors.toList());
+                List<ShopInfoDto> buyitemList = buyItemPage.getContent();
 
                 // 반환된 목록을 포함하는 PageResponseDto를 생성
-                PageResponseDto<BuyItemAllDto> responseDto = PageResponseDto.<BuyItemAllDto>withAll()
+                PageResponseDto<ShopInfoDto> responseDto = PageResponseDto.<ShopInfoDto>withAll()
                                 .dtoList(buyitemList)
-                                .pageRequestDto(pageRequestDto)
+                                .pageRequestDto(new PageRequestDto(searchItemDto.getCategoryId(),
+                                                searchItemDto.getPage(),
+                                                searchItemDto.getSize()))
                                 .total(buyItemPage.getTotalElements())
                                 .build();
                 return responseDto;
-
         }
 
         @Override

@@ -2,12 +2,11 @@ package com.example.wandukong.repository.ShopInfo;
 
 import org.springframework.data.domain.Page;
 
-import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.domain.ShopInfo.BuyItem;
-import com.example.wandukong.dto.page.PageRequestDto;
+import com.example.wandukong.dto.SearchItemDto;
+import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 
 public interface BuyItemPageRepository {
 
-  Page<BuyItem> findByUserDoUserId(UserDo user, PageRequestDto pageRequestDto);
+  Page<ShopInfoDto> findByUserDoUserId(Long userId, SearchItemDto searchItemDto);
 
 }
