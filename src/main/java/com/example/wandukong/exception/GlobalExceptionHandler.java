@@ -83,7 +83,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> badRequestException(BadRequestException e) {
 
         String message = "잘못된 요청입니다.";
-        log.info(message);
+        log.error(message, e);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> entityAlreadyExistsException(EntityAlreadyExistsException e) {
+
+        String message = "이미 엔티티가 존재합니다";
+        log.error(message, e);
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 }

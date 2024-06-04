@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +15,8 @@ import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
-import com.example.wandukong.service.ShopInfo.BuyItemService;
+import com.example.wandukong.service.ShopInfo.InventoryItemService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,7 +27,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class ItemInventoryController {
 
   @Autowired
-  BuyItemService buyitemservice;
+  InventoryItemService buyitemservice;
 
   // 구매한 아이템 내역
   @SecurityRequirement(name = "Baerer Authentication")
@@ -51,20 +49,6 @@ public class ItemInventoryController {
       } else {
         return new ResponseEntity<>("해당 아이템의 정보에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
       }
-    } else {
-      return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
-    }
-  }
-
-  // 아이템 구매
-  @SecurityRequirement(name = "Baerer Authentication")
-  @PostMapping("/purchase")
-  public ResponseEntity<?> purchaseItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestBody ShopInfoDto shopInfoDto) throws UserNotFoundException {
-    if (customUserDetails != null) {
-      buyitemservice.purchaseItem(shopInfoDto, customUserDetails.getAccountDto());
-
-      return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
     } else {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
     }

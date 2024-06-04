@@ -21,16 +21,16 @@ import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ItemFileDto;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.exception.CustomException.EntityAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.AccountRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemPageRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
-
 import jakarta.transaction.Transactional;
 
 @Service
-public class BuyItemServiceimpl implements BuyItemService {
+public class InventoryItemServiceimpl implements InventoryItemService {
 
         @Autowired
         private AccountRepository userRepository;
@@ -103,30 +103,18 @@ public class BuyItemServiceimpl implements BuyItemService {
 
         }
 
-        @Transactional
         @Override
-        public void purchaseItem(ShopInfoDto shopInfoDto, AccountDto userDto) throws UserNotFoundException {
-                // // 현재 사용자 정보 조회
-                // UserDo user = userRepository.findById(userDto.getUserId())
-                // .orElseThrow(() -> new UserNotFoundException());
+        public void addItem(BuyItemDto buyItemDto) throws EntityAlreadyExistsException {
 
-                // // 구매할 아이템 정보 조회
-                // Shop shop = shopRepository.findById(shopInfoDto.getShopDto().getItemId())
-                // .orElseThrow(() -> new IllegalArgumentException());
+                BuyItem buyItem = buyItemRepository.findByShop_ItemId(buyItemDto.getItemId());
 
-                // // BuyItem 엔티티 생성 및 저장
-                // BuyItem buyItem = BuyItem.builder()
-                // .buyDate(new Date())
-                // .userDo(user)
-                // .shop(shop)
-                // .build();
+                if (buyItem != null) {
+                        throw new EntityAlreadyExistsException();
+                }
 
-                // // 사용자의 포인트 차감 및 업데이트
-                // int totalPrice = shop.getPrice();
-                // Long updatedPoint = user.getPoint() - totalPrice;
-                // user.updateUserPoint(updatedPoint);
+                buyItem = buyItemDto.toEntity();
 
-                // buyItemRepository.save(buyItem);
+                buyItemRepository.save(buyItem);
         }
 
 }

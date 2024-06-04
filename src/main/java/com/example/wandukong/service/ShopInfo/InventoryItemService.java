@@ -4,14 +4,16 @@ import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
+import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
+import com.example.wandukong.exception.CustomException.EntityAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 
-public interface BuyItemService {
+public interface InventoryItemService {
 
   PageResponseDto<BuyItemAllDto> getMybuylist(PageRequestDto pageRequestDto, Long userId)
       throws UserNotFoundException;
 
-  void purchaseItem(ShopInfoDto shopInfoDto, AccountDto userDto) throws UserNotFoundException;
+  void addItem(BuyItemDto buyItemDto) throws EntityAlreadyExistsException;
 
 }

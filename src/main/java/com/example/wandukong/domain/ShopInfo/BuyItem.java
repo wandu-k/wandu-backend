@@ -1,6 +1,6 @@
 package com.example.wandukong.domain.ShopInfo;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.wandukong.domain.UserDo;
@@ -34,7 +34,7 @@ public class BuyItem {
     private Long itemBuyId;
 
     @Column(name = "buyDate")
-    private Date buyDate;
+    private LocalDate buyDate;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -43,10 +43,6 @@ public class BuyItem {
     @ManyToOne
     @JoinColumn(name = "itemId", referencedColumnName = "itemId")
     private Shop shop;
-
-    @ManyToOne
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
-    private Category category;
 
     @OneToMany(mappedBy = "buyItem", cascade = CascadeType.ALL)
     private List<BgmList> bgmList;

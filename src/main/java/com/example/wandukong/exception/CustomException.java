@@ -83,4 +83,11 @@ public class CustomException extends Exception {
 
     }
 
+    public static class EntityAlreadyExistsException extends Exception {
+        public EntityAlreadyExistsException() {
+
+        }
+
+    }
+
 }
