@@ -16,6 +16,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
@@ -52,7 +53,6 @@ public class AccountServiceImpl implements AccountService {
     private String bucketName;
 
     // 회원가입
-    @Transactional
     @Override
     public void register(MultipartFile profileImage, AccountDto accountDto)
             throws UserAlreadyExistsException, IOException {
@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
             userDo = accountRepository.save(userDo);
 
             if (profileImage != null) {
-                String profileImagePath = profileUpload(profileImage, accountDto);
+                String profileImagePath = profileUpload(profileImage, userDo.getUserId());
                 userDo.updateProfileImage(profileImagePath);
             }
 
@@ -101,31 +101,31 @@ public class AccountServiceImpl implements AccountService {
     // 유저정보 업데이트
     @Transactional
     @Override
-    public void updateProfile(MultipartFile profileImage, AccountDto accountDto)
+    public void updateProfile(Long userId, MultipartFile profileImage, UserDto userDto)
             throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(accountDto.getUserId())
+        UserDo userDo = accountRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
-            String profileImagePath = profileUpload(profileImage, accountDto);
+            String profileImagePath = profileUpload(profileImage, userId);
             userDo.updateProfileImage(profileImagePath);
         }
-        userDo.updateProfile(accountDto.getUsername(), accountDto.getName(), accountDto.getNickname(),
-                accountDto.getBirthday(), accountDto.getPhone(), accountDto.getGender());
+        userDo.updateProfile(userDto.getNickname(),
+                userDto.getBirthday());
     }
 
     // 프로필 이미지 업로드
-    private String profileUpload(MultipartFile profileImage, AccountDto accountDto) throws IOException {
+    private String profileUpload(MultipartFile profileImage, Long userId) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(profileImage.getContentType());
 
-        String filePath = "users/" + accountDto.getUserId() + "/profile/";
+        String filePath = "users/" + userId + "/profile/";
 
         String extension = profileImage.getOriginalFilename()
                 .substring(profileImage.getOriginalFilename().lastIndexOf('.'));
 
-        String filename = "profile" + "_" + accountDto.getUserId() + extension;
+        String filename = "profile" + "_" + userId + extension;
 
         String profileImagePath = filePath + filename;
 

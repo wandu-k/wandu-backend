@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
+import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
@@ -77,13 +79,18 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long userId,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart AccountDto accountDto)
-            throws IOException, UserNotFoundException, UserAlreadyExistsException {
-        accountService.updateProfile(profileImage, accountDto);
+            @RequestPart UserDto userDto)
+            throws IOException, BadRequestException, UserNotFoundException {
+
+        if (customUserDetails.getAccountDto().getUserId().equals(userId)) {
+            throw new BadRequestException();
+        }
+        accountService.updateProfile(userId, profileImage, userDto);
         return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
 
     }

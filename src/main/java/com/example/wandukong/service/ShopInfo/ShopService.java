@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.SearchItemDto;
-import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.dto.ShopInfo.ShopDto;

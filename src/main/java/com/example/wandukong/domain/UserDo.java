@@ -16,8 +16,6 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.AccountDto;
-import com.example.wandukong.dto.UserDto;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -135,14 +133,9 @@ public class UserDo {
     }
 
     // 필드 업데이트 메서드
-    public void updateProfile(String email, String name, String nickname, Date birthday,
-            String phone, String gender) {
-        this.email = email;
-        this.name = name;
+    public void updateProfile(String nickname, Date birthday) {
         this.nickname = nickname;
         this.birthday = birthday;
-        this.phone = phone;
-        this.gender = gender;
     }
 
     public void updateProfileImage(String profileImage) {
