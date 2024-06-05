@@ -15,6 +15,7 @@ public class UserDto {
     private Date signupDay;
     private Date birthday;
     private String role;
+    private String intro;
     private Long followCount;
     private Long followerCount;
 
@@ -26,7 +27,8 @@ public class UserDto {
     public UserDto(Long userId, Long hpId, String email, String password, String profileImage, String nickname,
             String name,
             String phone,
-            String gender, Date signupDay, Date birthday, String role, Long followCount, Long followerCount) {
+            String gender, Date signupDay, Date birthday, String role, String intro, Long followCount,
+            Long followerCount) {
         this.userId = userId;
         this.profileImage = profileImage;
         this.nickname = nickname;
@@ -34,6 +36,7 @@ public class UserDto {
         this.signupDay = signupDay;
         this.birthday = birthday;
         this.role = role;
+        this.intro = intro;
         this.followCount = followCount != null ? followCount : 0L;
         this.followerCount = followerCount != null ? followerCount : 0L;
     }

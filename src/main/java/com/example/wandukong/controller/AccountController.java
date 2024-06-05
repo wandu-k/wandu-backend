@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "계정", description = "계정 API")
-@RequestMapping("/api/user/auth")
+@RequestMapping("/api/user")
 @RestController
 public class AccountController {
 
@@ -48,7 +48,7 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping
+    @GetMapping("/{userId}")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws UserNotFoundException {
 
@@ -62,7 +62,7 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping()
+    @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         if (customUserDetails != null) {
             AccountDto accountDto = customUserDetails.getAccountDto();
@@ -102,7 +102,7 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "비밀번호가 일치 하지 않습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PatchMapping
+    @PatchMapping("/{userId}")
     public ResponseEntity<?> updatePassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String currentPassword, @RequestParam String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {

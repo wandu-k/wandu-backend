@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
             userDo.updateProfileImage(profileImagePath);
         }
         userDo.updateProfile(userDto.getNickname(),
-                userDto.getBirthday());
+                userDto.getBirthday(), userDto.getIntro());
     }
 
     // 프로필 이미지 업로드

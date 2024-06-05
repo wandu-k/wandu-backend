@@ -21,9 +21,11 @@ public class AccountDto {
     private String role;
     private int point;
 
+    private String intro;
+
     @Builder
     public AccountDto(Long userId, String username, String password, String profileImage, String nickname, String name,
-            String phone, String gender, Date signupDay, Date birthday, String role, int point) {
+            String phone, String gender, Date signupDay, Date birthday, String role, int point, String intro) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -36,13 +38,10 @@ public class AccountDto {
         this.birthday = birthday;
         this.role = role;
         this.point = point;
+        this.intro = intro;
     }
 
     public AccountDto() {
-    }
-
-    public void setPoint(int updatedPoint) {
-        this.point = updatedPoint;
     }
 
 }

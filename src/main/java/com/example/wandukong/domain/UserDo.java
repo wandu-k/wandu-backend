@@ -47,9 +47,6 @@ public class UserDo {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "nickname")
     private String nickname;
 
@@ -58,6 +55,9 @@ public class UserDo {
 
     @Column(name = "birthday")
     private Date birthday;
+
+    @Column(name = "intro")
+    private String intro;
 
     @Column(name = "phone")
     private String phone;
@@ -68,9 +68,6 @@ public class UserDo {
     @CreationTimestamp
     @Column(name = "signupDay")
     private Date signupDay;
-
-    @Column(name = "gender")
-    private String gender;
 
     @ColumnDefault("'ROLE_USER'")
     @Column(name = "role")
@@ -104,18 +101,19 @@ public class UserDo {
     private List<GuestRoom> guestRooms;
 
     @Builder
-    public UserDo(Long userId, String email, String password, String name, String nickname, String profileImage,
-            Date birthday, String phone, String gender, int point) {
+    public UserDo(Long userId, String email, String password, String nickname, String profileImage, Date birthday,
+            String intro, String phone, int point, Date signupDay, String role) {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.name = name;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.birthday = birthday;
+        this.intro = intro;
         this.phone = phone;
-        this.gender = gender;
         this.point = point;
+        this.signupDay = signupDay;
+        this.role = role;
     }
 
     public AccountDto toDto() {
@@ -123,19 +121,19 @@ public class UserDo {
                 .userId(userId)
                 .nickname(nickname)
                 .profileImage(profileImage)
-                .gender(gender)
                 .birthday(birthday)
                 .signupDay(signupDay)
                 .role(role)
                 .point(point)
+                .intro(intro)
                 .build();
         return accountDtoDto;
     }
 
-    // 필드 업데이트 메서드
-    public void updateProfile(String nickname, Date birthday) {
+    public void updateProfile(String nickname, Date birthday, String intro) {
         this.nickname = nickname;
         this.birthday = birthday;
+        this.intro = intro;
     }
 
     public void updateProfileImage(String profileImage) {
