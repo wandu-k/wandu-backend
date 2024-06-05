@@ -87,7 +87,7 @@ public class AccountController {
             @RequestPart UserDto userDto)
             throws IOException, BadRequestException, UserNotFoundException {
 
-        if (customUserDetails.getAccountDto().getUserId().equals(userId)) {
+        if (!customUserDetails.getAccountDto().getUserId().equals(userId)) {
             throw new BadRequestException();
         }
         accountService.updateProfile(userId, profileImage, userDto);
