@@ -16,12 +16,14 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.MyStatisticsDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
 import com.example.wandukong.repository.user.UserRepository;
+import com.example.wandukong.repository.user.UserRepositoryCustom;
 import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
@@ -157,5 +159,13 @@ public class AccountServiceImpl implements AccountService {
         }
         String encodedPw = passwordEncoder.encode(newPassword);
         userDo.changePassword(encodedPw);
+    }
+
+    @Override
+    public MyStatisticsDto getMyStatistics(Long userId) {
+
+        MyStatisticsDto myStatisticsDto = accountRepository.getMyStatistics(userId);
+
+        return myStatisticsDto;
     }
 }

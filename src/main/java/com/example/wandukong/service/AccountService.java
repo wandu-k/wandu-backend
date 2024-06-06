@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.MyStatisticsDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
 import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
@@ -23,5 +24,7 @@ public interface AccountService {
 
     void updateProfile(Long userId, MultipartFile profileImage, UserDto userDto)
             throws IOException, UserNotFoundException;
+
+    MyStatisticsDto getMyStatistics(Long userId);
 
 }
