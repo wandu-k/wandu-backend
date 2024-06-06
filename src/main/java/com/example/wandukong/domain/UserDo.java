@@ -24,6 +24,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -69,9 +70,8 @@ public class UserDo {
     @Column(name = "signupDay")
     private Date signupDay;
 
-    @ColumnDefault("'ROLE_USER'")
     @Column(name = "role")
-    private String role = "ROLE_USER";
+    private String role;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MiniHomePost> minihomePost;
@@ -128,6 +128,13 @@ public class UserDo {
                 .intro(intro)
                 .build();
         return accountDtoDto;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.role == null) {
+            this.role = "ROLE_USER";
+        }
     }
 
     public void updateProfile(String nickname, Date birthday, String intro) {
