@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.CustomUserDetails;
+import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
@@ -50,7 +51,7 @@ public class ItemInventoryController {
 
     log.info(searchItemDto.toString());
 
-    PageResponseDto<ShopInfoDto> responseDto = inventoryItemService.getMybuylist(userId, searchItemDto);
+    PageResponseDto<InventoryItemDto> responseDto = inventoryItemService.getMybuylist(userId, searchItemDto);
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
 }

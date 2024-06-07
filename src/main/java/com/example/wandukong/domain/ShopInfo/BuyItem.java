@@ -9,6 +9,7 @@ import com.example.wandukong.domain.UserDo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -47,4 +48,17 @@ public class BuyItem {
 
     @OneToMany(mappedBy = "buyItem", cascade = CascadeType.ALL)
     private List<BgmList> bgmList;
+
+    @OneToOne(mappedBy = "head", fetch = FetchType.LAZY)
+    private Avatar head;
+
+    @OneToOne(mappedBy = "eye", fetch = FetchType.LAZY)
+    private Avatar eye;
+
+    @OneToOne(mappedBy = "mouse", fetch = FetchType.LAZY)
+    private Avatar mouse;
+
+    @OneToOne(mappedBy = "cloth", fetch = FetchType.LAZY)
+    private Avatar cloth;
+
 }

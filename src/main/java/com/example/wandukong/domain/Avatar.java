@@ -7,6 +7,7 @@ import com.example.wandukong.util.S3Util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -24,31 +25,28 @@ import lombok.NoArgsConstructor;
 @Table(name = "Avatar")
 public class Avatar {
 
-    @Transient
-    S3Util s3Util;
-
     @Id
     @Column(name = "userId", unique = true)
     private Long userId;
 
     @MapsId(value = "userId")
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private UserDo userDo;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "headId")
     private BuyItem head;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eyeId")
     private BuyItem eye;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mouseId")
     private BuyItem mouse;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clothId")
     private BuyItem cloth;
 
@@ -77,14 +75,4 @@ public class Avatar {
     public void setCloth(BuyItem cloth) {
         this.cloth = cloth;
     }
-
-    // public AvatarDto toDto() {
-    // AvatarDto avatarDto = new AvatarDto(
-    // s3Util.getUrl(haed.getShop().getItemFile().getFileName()),
-    // s3Util.getUrl(eye.getShop().getItemFile().getFileName()),
-    // s3Util.getUrl(mouse.getShop().getItemFile().getFileName()),
-    // s3Util.getUrl(cloth.getShop().getItemFile().getFileName()));
-    // return avatarDto;
-    // }
-
 }

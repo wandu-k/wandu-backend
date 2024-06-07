@@ -57,22 +57,36 @@ public class AvatarServiceImpl implements AvatarService {
             return avatarRepository.save(newAvatar);
         });
 
-        BuyItem item = BuyItem.builder().itemId(requestAvatarDto.getItemId()).build();
-
         Long subcategoryId = requestAvatarDto.getSubcategoryId();
+        Long itemId = requestAvatarDto.getItemId();
 
         if (subcategoryId == 1) {
-            avatar.setHead(item);
+            if (itemId != null) {
+                avatar.setHead(BuyItem.builder().itemId(itemId).build());
+            } else {
+                avatar.setHead(null);
+            }
         } else if (subcategoryId == 2) {
-            avatar.setEye(item);
+            if (itemId != null) {
+                avatar.setEye(BuyItem.builder().itemId(itemId).build());
+            } else {
+                avatar.setEye(null);
+            }
         } else if (subcategoryId == 3) {
-            avatar.setMouse(item);
+            if (itemId != null) {
+                avatar.setMouse(BuyItem.builder().itemId(itemId).build());
+            } else {
+                avatar.setMouse(null);
+            }
         } else if (subcategoryId == 4) {
-            avatar.setCloth(item);
+            if (itemId != null) {
+                avatar.setCloth(BuyItem.builder().itemId(itemId).build());
+            } else {
+                avatar.setCloth(null);
+            }
         } else {
             throw new IllegalArgumentException("Invalid subcategory ID: " + subcategoryId);
         }
-
         avatarRepository.save(avatar);
     }
 }

@@ -7,14 +7,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 
+import com.example.wandukong.domain.Avatar;
+import com.example.wandukong.domain.QAvatar;
 import com.example.wandukong.domain.QUserDo;
+import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.QBuyItem;
 import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
+import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -29,13 +34,11 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
   private final S3Util s3Util;
 
   @Override
-  public Page<ShopInfoDto> findByUserDoUserId(Long userId, SearchItemDto searchItemDto) {
-
+  public Page<InventoryItemDto> findByUserDoUserId(Long userId, SearchItemDto searchItemDto) {
     BooleanBuilder builder = new BooleanBuilder();
 
     QShop shop = QShop.shop;
     QUserDo userDo = QUserDo.userDo;
-
     QBuyItem buyItem = QBuyItem.buyItem;
 
     // UserId로 필터링
@@ -51,31 +54,42 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
       log.info("카테고리 이름으로 조회");
     }
 
-    List<Shop> buyItems = jpaQueryFactory.selectFrom(shop)
-        .leftJoin(shop.userDo, userDo).fetchJoin()
-        .leftJoin(shop.buyItem, buyItem).fetchJoin()
+    List<Tuple> results = jpaQueryFactory.select(shop, buyItem)
+        .from(shop)
+        .leftJoin(shop.userDo, userDo)
+        .leftJoin(shop.buyItem, buyItem)
         .where(builder)
         .offset(searchItemDto.getOffset())
         .limit(searchItemDto.getSize())
         .fetch();
-    // Convert Shop entities to ShopInfoDto
-    List<ShopInfoDto> shopInfoDtos = buyItems.stream()
-        .map(s -> ShopInfoDto.builder()
-            .userId(s.getUserDo().getUserId())
-            .itemId(s.getItemId())
-            .nickname(s.getUserDo().getNickname())
-            .itemName(s.getItemName())
-            .file(s3Util.getUrl(s.getItemFile().getFileName()))
-            .subcategoryName(s.getShopSubcategory().getSubcategoryName())
-            .subcategoryId(s.getShopSubcategory().getSubcategoryId())
-            .purchaseStatus(1)
-            .build())
+
+    List<InventoryItemDto> inventoryItemDtos = results.stream()
+        .map(tuple -> {
+          Shop shopEntity = tuple.get(shop);
+          BuyItem buyItemEntity = tuple.get(buyItem);
+          int enable = 0;
+          if (buyItemEntity.getHead() != null || buyItemEntity.getEye() != null ||
+              buyItemEntity.getMouse() != null || buyItemEntity.getCloth() != null) {
+            enable = 1;
+          }
+          return InventoryItemDto.builder()
+              .userId(shopEntity.getUserDo().getUserId())
+              .itemId(shopEntity.getItemId())
+              .nickname(shopEntity.getUserDo().getNickname())
+              .itemName(shopEntity.getItemName())
+              .file(s3Util.getUrl(shopEntity.getItemFile().getFileName()))
+              .subcategoryName(shopEntity.getShopSubcategory().getSubcategoryName())
+              .subcategoryId(shopEntity.getShopSubcategory().getSubcategoryId())
+              .enable(enable)
+              .build();
+        })
         .collect(Collectors.toList());
 
     long total = jpaQueryFactory.selectFrom(shop)
         .leftJoin(shop.buyItem, buyItem)
-        .where(builder).fetch().size();
+        .where(builder)
+        .fetch().size();
 
-    return new PageImpl<>(shopInfoDtos, searchItemDto.of(), total);
+    return new PageImpl<>(inventoryItemDtos, searchItemDto.of(), total);
   }
 }

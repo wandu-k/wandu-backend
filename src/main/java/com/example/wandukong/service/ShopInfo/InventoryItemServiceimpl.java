@@ -14,6 +14,7 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
@@ -40,16 +41,16 @@ public class InventoryItemServiceimpl implements InventoryItemService {
         private BuyItemPageRepository buyItemPageRepository;
 
         @Override
-        public PageResponseDto<ShopInfoDto> getMybuylist(Long userId, SearchItemDto searchItemDto) {
+        public PageResponseDto<InventoryItemDto> getMybuylist(Long userId, SearchItemDto searchItemDto) {
 
                 // jpa를 사용하여 페이지 별로 사용자가 구매 내역 정보를 가져옴
-                Page<ShopInfoDto> buyItemPage = buyItemPageRepository.findByUserDoUserId(userId, searchItemDto);
+                Page<InventoryItemDto> buyItemPage = buyItemPageRepository.findByUserDoUserId(userId, searchItemDto);
 
                 // 가져온 구매 내역 정보를 BuyItemDto로 변환
-                List<ShopInfoDto> buyitemList = buyItemPage.getContent();
+                List<InventoryItemDto> buyitemList = buyItemPage.getContent();
 
                 // 반환된 목록을 포함하는 PageResponseDto를 생성
-                PageResponseDto<ShopInfoDto> responseDto = PageResponseDto.<ShopInfoDto>withAll()
+                PageResponseDto<InventoryItemDto> responseDto = PageResponseDto.<InventoryItemDto>withAll()
                                 .dtoList(buyitemList)
                                 .pageRequestDto(new PageRequestDto(searchItemDto.getCategoryId(),
                                                 searchItemDto.getPage(),

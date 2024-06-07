@@ -1,5 +1,6 @@
 package com.example.wandukong.service.ShopInfo;
 
+import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageResponseDto;
 import com.example.wandukong.dto.ShopInfo.BuyItemAllDto;
@@ -9,7 +10,7 @@ import com.example.wandukong.exception.CustomException.EntityAlreadyExistsExcept
 
 public interface InventoryItemService {
 
-  PageResponseDto<ShopInfoDto> getMybuylist(Long userId, SearchItemDto searchItemDto);
+  PageResponseDto<InventoryItemDto> getMybuylist(Long userId, SearchItemDto searchItemDto);
 
   void addItem(BuyItemDto buyItemDto) throws EntityAlreadyExistsException;
 
