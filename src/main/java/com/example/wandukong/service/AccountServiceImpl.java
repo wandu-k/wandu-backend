@@ -50,6 +50,7 @@ public class AccountServiceImpl implements AccountService {
     private String bucketName;
 
     // 회원가입
+    @Transactional
     @Override
     public void register(MultipartFile profileImage, AccountDto accountDto)
             throws UserAlreadyExistsException, IOException {
