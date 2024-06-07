@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +15,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.AccountDto;
+import com.example.wandukong.dto.AvatarDto;
 import com.example.wandukong.dto.MyStatisticsDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
@@ -23,8 +23,6 @@ import com.example.wandukong.exception.CustomException.UserAlreadyExistsExceptio
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
 import com.example.wandukong.repository.user.UserRepository;
-import com.example.wandukong.repository.user.UserRepositoryCustom;
-import com.example.wandukong.security.jwt.JwtTokenProvider;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -43,10 +41,7 @@ public class AccountServiceImpl implements AccountService {
     MiniHomeRepository miniHpRepository;
 
     @Autowired
-    AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    AvatarService avatarService;
 
     @Autowired
     AmazonS3 amazonS3;
@@ -83,6 +78,10 @@ public class AccountServiceImpl implements AccountService {
                     .userDo(userDo)
                     .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
+
+            AvatarDto avatarDto = new AvatarDto();
+            // 회원가입이 완료되면 아바타도 생성
+            avatarService.putAvatar(userDo.getUserId(), avatarDto);
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 

@@ -10,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.AccountDto;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.UserDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
-import com.example.wandukong.exception.CustomException.UserAlreadyExistsException;
 import com.example.wandukong.exception.CustomException.UserNotFoundException;
 import com.example.wandukong.service.AccountService;
 
@@ -48,7 +45,7 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/{userId}")
+    @GetMapping
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws UserNotFoundException {
 
@@ -62,15 +59,12 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 이용자입니다."),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping("/{userId}")
+    @DeleteMapping
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails != null) {
-            AccountDto accountDto = customUserDetails.getAccountDto();
-            accountService.deleteAccount(accountDto.getUserId());
-            return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
-        }
+        Long userId = customUserDetails.getAccountDto().getUserId();
+        accountService.deleteAccount(userId);
+        return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
 
-        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
     }
 
     @Operation(summary = "계정 수정", description = "계정을 수정을 합니다.")
@@ -79,17 +73,15 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "해당하는 회원이 없습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long userId,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
             @RequestPart UserDto userDto)
-            throws IOException, BadRequestException, UserNotFoundException {
+            throws IOException, UserNotFoundException {
 
-        if (!customUserDetails.getAccountDto().getUserId().equals(userId)) {
-            throw new BadRequestException();
-        }
+        Long userId = customUserDetails.getAccountDto().getUserId();
+
         accountService.updateProfile(userId, profileImage, userDto);
         return new ResponseEntity<>("회원 정보 수정이 완료되었습니다.", HttpStatus.OK);
 
@@ -102,17 +94,16 @@ public class AccountController {
             @ApiResponse(responseCode = "422", description = "비밀번호가 일치 하지 않습니다.")
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    @PatchMapping("/{userId}")
+    @PatchMapping
     public ResponseEntity<?> updatePassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String currentPassword, @RequestParam String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
-        if (customUserDetails != null) {
-            Long userID = customUserDetails.getAccountDto().getUserId();
 
-            accountService.updatePassword(userID, currentPassword, newPassword);
-            return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("인증되지 않은 이용자입니다.", HttpStatus.UNAUTHORIZED);
+        Long userID = customUserDetails.getAccountDto().getUserId();
+
+        accountService.updatePassword(userID, currentPassword, newPassword);
+        return new ResponseEntity<>("비밀번호 변경이 완료되었습니다.", HttpStatus.OK);
+
     }
 
 }
