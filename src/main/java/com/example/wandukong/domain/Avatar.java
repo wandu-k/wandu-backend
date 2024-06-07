@@ -63,11 +63,20 @@ public class Avatar {
         this.cloth = cloth;
     }
 
-    public void AvatarUpdate(Long haed, Long eye, Long mouse, Long cloth) {
-        this.haed = BuyItem.builder().itemBuyId(haed).build();
-        this.eye = BuyItem.builder().itemBuyId(eye).build();
-        this.mouse = BuyItem.builder().itemBuyId(mouse).build();
-        this.cloth = BuyItem.builder().itemBuyId(cloth).build();
+    public void setHaed(BuyItem haed) {
+        this.haed = haed;
+    }
+
+    public void setEye(BuyItem eye) {
+        this.eye = eye;
+    }
+
+    public void setMouse(BuyItem mouse) {
+        this.mouse = mouse;
+    }
+
+    public void setCloth(BuyItem cloth) {
+        this.cloth = cloth;
     }
 
     public AvatarDto toDto() {

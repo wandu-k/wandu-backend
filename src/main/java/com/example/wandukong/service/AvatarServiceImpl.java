@@ -5,12 +5,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.Avatar;
-import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.dto.AvatarDto;
 import com.example.wandukong.repository.AvatarRepository;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,13 +17,23 @@ public class AvatarServiceImpl implements AvatarService {
     private final AvatarRepository avatarRepository;
 
     @Override
-    public void putAvatar(Long userId, AvatarDto avatarDto) {
+    public void patchAvatar(Long userId, AvatarDto avatarDto) {
 
         Optional<Avatar> avatar = avatarRepository.findById(userId);
 
         if (avatar.isPresent()) {
-            avatar.get().AvatarUpdate(toLong(avatarDto.getHead()), toLong(avatarDto.getEye()),
-                    toLong(avatarDto.getMouse()), toLong(avatarDto.getCloth()));
+            if (avatarDto.getHead() != null) {
+                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getHead())).build());
+            }
+            if (avatarDto.getEye() != null) {
+                avatar.get().setEye(BuyItem.builder().itemBuyId(toLong(avatarDto.getEye())).build());
+            }
+            if (avatarDto.getMouse() != null) {
+                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getMouse())).build());
+            }
+            if (avatarDto.getCloth() != null) {
+                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getCloth())).build());
+            }
         } else {
             Avatar newavatar = Avatar.builder()
                     .userId(userId)

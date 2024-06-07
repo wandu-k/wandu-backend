@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,13 +36,13 @@ public class AvatarController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<?> putAvatar(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody AvatarDto avatarDto) {
 
         Long userId = customUserDetails.getAccountDto().getUserId();
 
-        avatarService.putAvatar(userId, avatarDto);
+        avatarService.patchAvatar(userId, avatarDto);
 
         return new ResponseEntity<>("아바타 편집 완료", HttpStatus.OK);
     }
