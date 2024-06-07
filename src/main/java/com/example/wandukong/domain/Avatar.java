@@ -3,7 +3,6 @@ package com.example.wandukong.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.wandukong.domain.ShopInfo.BuyItem;
-import com.example.wandukong.dto.AvatarDto;
 import com.example.wandukong.util.S3Util;
 
 import jakarta.persistence.Column;
@@ -38,8 +37,8 @@ public class Avatar {
     private UserDo userDo;
 
     @OneToOne
-    @JoinColumn(name = "haedId")
-    private BuyItem haed;
+    @JoinColumn(name = "headId")
+    private BuyItem head;
 
     @OneToOne
     @JoinColumn(name = "eyeId")
@@ -54,17 +53,17 @@ public class Avatar {
     private BuyItem cloth;
 
     @Builder
-    public Avatar(Long userId, UserDo userDo, BuyItem haed, BuyItem eye, BuyItem mouse, BuyItem cloth) {
+    public Avatar(Long userId, UserDo userDo, BuyItem head, BuyItem eye, BuyItem mouse, BuyItem cloth) {
         this.userId = userId;
         this.userDo = userDo;
-        this.haed = haed;
+        this.head = head;
         this.eye = eye;
         this.mouse = mouse;
         this.cloth = cloth;
     }
 
-    public void setHaed(BuyItem haed) {
-        this.haed = haed;
+    public void setHead(BuyItem head) {
+        this.head = head;
     }
 
     public void setEye(BuyItem eye) {
@@ -79,13 +78,13 @@ public class Avatar {
         this.cloth = cloth;
     }
 
-    public AvatarDto toDto() {
-        AvatarDto avatarDto = new AvatarDto(
-                s3Util.getUrl(haed.getShop().getItemFile().getFileName()),
-                s3Util.getUrl(eye.getShop().getItemFile().getFileName()),
-                s3Util.getUrl(mouse.getShop().getItemFile().getFileName()),
-                s3Util.getUrl(cloth.getShop().getItemFile().getFileName()));
-        return avatarDto;
-    }
+    // public AvatarDto toDto() {
+    // AvatarDto avatarDto = new AvatarDto(
+    // s3Util.getUrl(haed.getShop().getItemFile().getFileName()),
+    // s3Util.getUrl(eye.getShop().getItemFile().getFileName()),
+    // s3Util.getUrl(mouse.getShop().getItemFile().getFileName()),
+    // s3Util.getUrl(cloth.getShop().getItemFile().getFileName()));
+    // return avatarDto;
+    // }
 
 }

@@ -15,7 +15,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.dto.AccountDto;
-import com.example.wandukong.dto.AvatarDto;
+import com.example.wandukong.dto.RequestAvatarDto;
 import com.example.wandukong.dto.MyStatisticsDto;
 import com.example.wandukong.dto.UserDto;
 import com.example.wandukong.exception.CustomException.IncorrectPasswordException;
@@ -79,9 +79,6 @@ public class AccountServiceImpl implements AccountService {
                     .userDo(userDo)
                     .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
-
-            // 회원가입이 완료되면 아바타도 생성
-            avatarService.postAvatar(userDo.getUserId());
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 

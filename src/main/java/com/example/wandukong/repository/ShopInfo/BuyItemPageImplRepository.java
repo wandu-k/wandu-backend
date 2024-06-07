@@ -67,6 +67,7 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
             .itemName(s.getItemName())
             .file(s3Util.getUrl(s.getItemFile().getFileName()))
             .subcategoryName(s.getShopSubcategory().getSubcategoryName())
+            .subcategoryId(s.getShopSubcategory().getSubcategoryId())
             .purchaseStatus(1)
             .build())
         .collect(Collectors.toList());

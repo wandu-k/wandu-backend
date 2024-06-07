@@ -11,14 +11,12 @@ import lombok.ToString;
 @ToString
 @Getter
 public class BuyItemDto {
-  private Long itemBuyId;
   private Long userId;
   private Long itemId;
   private LocalDate buyDate;
 
   @Builder
-  public BuyItemDto(Long itemBuyId, LocalDate buyDate, Long userId, Long itemId) {
-    this.itemBuyId = itemBuyId;
+  public BuyItemDto(LocalDate buyDate, Long userId, Long itemId) {
     this.buyDate = buyDate;
     this.userId = userId;
     this.itemId = itemId;
@@ -30,10 +28,9 @@ public class BuyItemDto {
 
   public BuyItem toEntity() {
     return BuyItem.builder()
-        .itemBuyId(itemBuyId)
+        .itemId(itemId)
         .buyDate(buyDate)
         .userDo(UserDo.builder().userId(userId).build())
-        .shop(Shop.builder().itemId(itemId).build())
         .build();
   }
 }

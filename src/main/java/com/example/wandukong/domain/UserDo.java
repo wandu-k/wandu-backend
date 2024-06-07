@@ -8,7 +8,6 @@ import com.example.wandukong.domain.ask.Ask;
 import com.example.wandukong.domain.forum.ForumPost;
 import com.example.wandukong.domain.forum.ForumPostReview;
 import com.example.wandukong.domain.guest.GuestRoom;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.MiniHome.MiniHomePost;

@@ -1,11 +1,11 @@
 package com.example.wandukong.service;
 
-import com.example.wandukong.dto.AvatarDto;
+import com.example.wandukong.dto.RequestAvatarDto;
+import com.example.wandukong.dto.ResponseAvatarDto;
 
 public interface AvatarService {
+    ResponseAvatarDto getAvatar(Long userId);
 
-    void patchAvatar(Long userId, AvatarDto avatarDto);
-
-    AvatarDto getAvatar(Long userId);
+    void putAvatar(Long userId, RequestAvatarDto requestAvatarDto);
 
 }

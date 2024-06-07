@@ -30,7 +30,7 @@ public class BgmList {
   private Long bgmListId;
 
   @ManyToOne
-  @JoinColumn(name = "itemBuyId", referencedColumnName = "itemBuyId")
+  @JoinColumn(name = "itemId", referencedColumnName = "itemId")
   private BuyItem buyItem;
 
   @ManyToOne

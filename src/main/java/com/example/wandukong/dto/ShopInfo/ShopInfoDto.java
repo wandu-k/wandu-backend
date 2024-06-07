@@ -13,6 +13,7 @@ public class ShopInfoDto {
   private String itemName;
   private String categoryName;
   private String subcategoryName;
+  private Long subcategoryId;
   private int price;
   private String file;
   private int purchaseStatus;
@@ -20,7 +21,7 @@ public class ShopInfoDto {
 
   @Builder
   public ShopInfoDto(Long userId, Long itemId, String nickname, String itemName, String categoryName,
-      String subcategoryName, int price,
+      String subcategoryName, int price, Long subcategoryId,
       String file, int purchaseStatus, int purchase) {
     this.userId = userId;
     this.itemId = itemId;
@@ -29,6 +30,7 @@ public class ShopInfoDto {
     this.categoryName = categoryName;
     this.subcategoryName = subcategoryName;
     this.price = price;
+    this.subcategoryId = subcategoryId;
     this.file = file;
     this.purchaseStatus = purchaseStatus;
     this.purchase = purchase;

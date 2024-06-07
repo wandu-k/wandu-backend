@@ -109,6 +109,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             shop.shopSubcategory.category.categoryName,
             shop.shopSubcategory.subcategoryName,
             shop.price,
+            shop.shopSubcategory.subcategoryId,
             shop.itemFile.fileName,
             purchaseStatus,
             purchaseCount.intValue()))

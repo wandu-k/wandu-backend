@@ -2,12 +2,18 @@ package com.example.wandukong.service;
 
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.Avatar;
+import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
-import com.example.wandukong.dto.AvatarDto;
+import com.example.wandukong.domain.ShopInfo.ShopSubCategory;
+import com.example.wandukong.dto.RequestAvatarDto;
+import com.example.wandukong.dto.ResponseAvatarDto;
 import com.example.wandukong.repository.AvatarRepository;
+import com.example.wandukong.util.S3Util;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,50 +21,51 @@ import lombok.RequiredArgsConstructor;
 public class AvatarServiceImpl implements AvatarService {
 
     private final AvatarRepository avatarRepository;
+    private S3Util s3Util;
 
     @Override
-    public void patchAvatar(Long userId, AvatarDto avatarDto) {
-
-        Optional<Avatar> avatar = avatarRepository.findById(userId);
-
-        if (avatar.isPresent()) {
-            if (avatarDto.getHead() != null) {
-                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getHead())).build());
-            }
-            if (avatarDto.getEye() != null) {
-                avatar.get().setEye(BuyItem.builder().itemBuyId(toLong(avatarDto.getEye())).build());
-            }
-            if (avatarDto.getMouse() != null) {
-                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getMouse())).build());
-            }
-            if (avatarDto.getCloth() != null) {
-                avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getCloth())).build());
-            }
-        }
-    }
-
-    @Override
-    public AvatarDto getAvatar(Long userId) {
+    public ResponseAvatarDto getAvatar(Long userId) {
 
         Avatar avatar = avatarRepository.findById(userId).orElse(null);
 
-        AvatarDto avatarDto = avatar.toDto();
+        ResponseAvatarDto responseAvatarDto = ResponseAvatarDto.builder()
+                .userId(userId)
+                .head(s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName()))
+                .eye(s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName()))
+                .mouse(s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName()))
+                .cloth(s3Util.getUrl(avatar.getCloth().getShop().getItemFile().getFileName()))
+                .build();
 
-        return avatarDto;
+        return responseAvatarDto;
 
-    }
-
-    private Long toLong(String string) {
-        if (string == null) {
-            return null;
-        }
-        return Long.valueOf(string);
     }
 
     @Override
-    public void postAvatar(Long userId) {
-        Avatar avatar = Avatar.builder().userId(userId).build();
+    public void putAvatar(Long userId, RequestAvatarDto requestAvatarDto) {
+
+        Avatar avatar = avatarRepository.findById(userId).orElseGet(() -> {
+            Avatar newAvatar = Avatar.builder()
+                    .userId(userId)
+                    .build();
+            return avatarRepository.save(newAvatar);
+        });
+
+        BuyItem item = BuyItem.builder().itemId(requestAvatarDto.getItemId()).build();
+
+        Long subcategoryId = requestAvatarDto.getSubcategoryId();
+
+        if (subcategoryId == 1) {
+            avatar.setHead(item);
+        } else if (subcategoryId == 2) {
+            avatar.setEye(item);
+        } else if (subcategoryId == 3) {
+            avatar.setMouse(item);
+        } else if (subcategoryId == 4) {
+            avatar.setCloth(item);
+        } else {
+            throw new IllegalArgumentException("Invalid subcategory ID: " + subcategoryId);
+        }
+
         avatarRepository.save(avatar);
     }
-
 }

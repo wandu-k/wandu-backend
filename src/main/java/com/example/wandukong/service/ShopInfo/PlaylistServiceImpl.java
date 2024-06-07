@@ -85,7 +85,7 @@ public class PlaylistServiceImpl implements PlaylistService {
       BgmListDto bgmListDto = BgmListDto.builder()
           .bgmListId(bgmList.getBgmListId())
           .playlistId(bgmList.getPlaylist().getPlaylistId())
-          .itemBuyId(bgmList.getBuyItem().getItemBuyId())
+          .itemBuyId(bgmList.getBuyItem().getItemId())
           .build();
 
       Playlist playlist = bgmList.getPlaylist();
@@ -97,7 +97,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
       BuyItem buyItem = bgmList.getBuyItem();
       BuyItemDto buyItemDto = BuyItemDto.builder()
-          .itemBuyId(buyItem.getItemBuyId())
+          .itemId(buyItem.getItemId())
           .buyDate(buyItem.getBuyDate())
           .itemId(buyItem.getShop().getItemId())
           .userId(buyItem.getUserDo().getUserId())
@@ -192,7 +192,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   // bgmList생성 메소드
   public void createBgmList(PlaylistDto playlistDto, BuyItemDto buyItemDto) {
     Long playlistId = playlistDto.getPlaylistId();
-    Long itemBuyId = buyItemDto.getItemBuyId();
+    Long itemBuyId = buyItemDto.getItemId();
 
     // Playlist와 BuyItem 조회
     Playlist playlist = playlistRepository.findById(playlistId)
