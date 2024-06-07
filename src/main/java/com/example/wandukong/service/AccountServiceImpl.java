@@ -80,9 +80,8 @@ public class AccountServiceImpl implements AccountService {
                     .introduction(userDo.getNickname() + "의 미니홈입니다.")
                     .build();
 
-            AvatarDto avatarDto = new AvatarDto();
             // 회원가입이 완료되면 아바타도 생성
-            avatarService.putAvatar(userDo.getUserId(), avatarDto);
+            avatarService.postAvatar(userDo.getUserId());
 
             log.info("홈피 유저 아이디 : " + miniHome.getUserDo().getUserId());
 

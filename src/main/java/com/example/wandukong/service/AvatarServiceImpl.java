@@ -34,13 +34,7 @@ public class AvatarServiceImpl implements AvatarService {
             if (avatarDto.getCloth() != null) {
                 avatar.get().setHaed(BuyItem.builder().itemBuyId(toLong(avatarDto.getCloth())).build());
             }
-        } else {
-            Avatar newavatar = Avatar.builder()
-                    .userId(userId)
-                    .build();
-            avatarRepository.save(newavatar);
         }
-
     }
 
     @Override
@@ -59,6 +53,12 @@ public class AvatarServiceImpl implements AvatarService {
             return null;
         }
         return Long.valueOf(string);
+    }
+
+    @Override
+    public void postAvatar(Long userId) {
+        Avatar avatar = Avatar.builder().userId(userId).build();
+        avatarRepository.save(avatar);
     }
 
 }
