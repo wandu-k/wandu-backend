@@ -21,8 +21,9 @@ import lombok.RequiredArgsConstructor;
 public class AvatarServiceImpl implements AvatarService {
 
     private final AvatarRepository avatarRepository;
-    private S3Util s3Util;
+    private final S3Util s3Util;
 
+    // 추후 JQPL 이나 QueryDsl 로 개선 필요
     @Override
     public ResponseAvatarDto getAvatar(Long userId) {
 
@@ -30,10 +31,16 @@ public class AvatarServiceImpl implements AvatarService {
 
         ResponseAvatarDto responseAvatarDto = ResponseAvatarDto.builder()
                 .userId(userId)
-                .head(s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName()))
-                .eye(s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName()))
-                .mouse(s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName()))
-                .cloth(s3Util.getUrl(avatar.getCloth().getShop().getItemFile().getFileName()))
+                .head(avatar.getHead() != null ? s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName())
+                        : null)
+                .eye(avatar.getEye() != null ? s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName())
+                        : null)
+                .mouse(avatar.getMouse() != null
+                        ? s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName())
+                        : null)
+                .cloth(avatar.getCloth() != null
+                        ? s3Util.getUrl(avatar.getCloth().getShop().getItemFile().getFileName())
+                        : null)
                 .build();
 
         return responseAvatarDto;
