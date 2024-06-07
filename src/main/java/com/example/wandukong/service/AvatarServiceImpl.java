@@ -35,4 +35,15 @@ public class AvatarServiceImpl implements AvatarService {
 
     }
 
+    @Override
+    public AvatarDto getAvatar(Long userId) {
+
+        Avatar avatar = avatarRepository.findById(userId).orElse(null);
+
+        AvatarDto avatarDto = avatar.toDto();
+
+        return avatarDto;
+
+    }
+
 }

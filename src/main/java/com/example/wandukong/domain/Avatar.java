@@ -1,6 +1,11 @@
 package com.example.wandukong.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.wandukong.domain.ShopInfo.BuyItem;
+import com.example.wandukong.dto.AvatarDto;
+import com.example.wandukong.util.S3Util;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +24,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Avatar")
 public class Avatar {
+
+    @Transient
+    S3Util s3Util;
 
     @Id
     @Column(name = "userId", unique = true)
@@ -60,4 +69,14 @@ public class Avatar {
         this.mouse = BuyItem.builder().itemBuyId(mouse).build();
         this.cloth = BuyItem.builder().itemBuyId(cloth).build();
     }
+
+    public AvatarDto toDto() {
+        AvatarDto avatarDto = new AvatarDto(
+                s3Util.getUrl(haed.getShop().getItemFile().getFileName()),
+                s3Util.getUrl(eye.getShop().getItemFile().getFileName()),
+                s3Util.getUrl(mouse.getShop().getItemFile().getFileName()),
+                s3Util.getUrl(cloth.getShop().getItemFile().getFileName()));
+        return avatarDto;
+    }
+
 }
