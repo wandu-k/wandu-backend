@@ -1,24 +1,21 @@
 package com.example.wandukong.dto.ShopInfo;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-@Component
 public class BgmListDto {
   private Long bgmListId;
   private Long playlistId;
-  private Long itemBuyId;
+  private Long itemId;
+  private Long userId;
 
   @Builder
-  public BgmListDto(Long itemBuyId, Long playlistId, Long bgmListId) {
+  public BgmListDto(Long itemId, Long playlistId, Long bgmListId, Long userId) {
     this.bgmListId = bgmListId;
     this.playlistId = playlistId;
-    this.itemBuyId = itemBuyId;
+    this.itemId = itemId;
+    this.userId = userId;
   }
 
   /* 브금목록 */

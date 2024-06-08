@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 
-import com.example.wandukong.domain.Avatar;
-import com.example.wandukong.domain.QAvatar;
 import com.example.wandukong.domain.QUserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.QBuyItem;
@@ -16,7 +14,6 @@ import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;

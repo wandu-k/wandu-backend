@@ -15,15 +15,13 @@ public class PlaylistDto {
 
   private Long playlistId;
   private String plName;
-  private Long hpId;
   private Long userId;
   private LocalDate plDate;
 
   @Builder
-  public PlaylistDto(Long userId, Long playlistId, Long hpId, String plName, LocalDate plDate) {
+  public PlaylistDto(Long userId, Long playlistId, String plName, LocalDate plDate) {
     this.playlistId = playlistId;
     this.plName = plName;
-    this.hpId = hpId;
     this.userId = userId;
     this.plDate = plDate;
   }

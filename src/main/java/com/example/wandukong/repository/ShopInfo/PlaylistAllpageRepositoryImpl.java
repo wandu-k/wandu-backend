@@ -15,7 +15,6 @@ import com.querydsl.jpa.JPQLQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-@Repository
 public class PlaylistAllpageRepositoryImpl extends QuerydslRepositorySupport implements PlaylistAllpageRepository {
 
   public PlaylistAllpageRepositoryImpl() {

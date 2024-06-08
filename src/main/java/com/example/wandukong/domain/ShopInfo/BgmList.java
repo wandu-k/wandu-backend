@@ -36,9 +36,4 @@ public class BgmList {
   @ManyToOne
   @JoinColumn(name = "playlistId", referencedColumnName = "playlistId")
   private Playlist playlist;
-
-  public void updatePost(Long bgmListId2, String plName, LocalDate plDate, Long itemBuyId) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updatePost'");
-  }
 }

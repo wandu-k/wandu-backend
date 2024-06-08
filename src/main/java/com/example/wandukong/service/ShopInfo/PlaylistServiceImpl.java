@@ -1,7 +1,7 @@
 package com.example.wandukong.service.ShopInfo;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,172 +42,129 @@ import lombok.extern.slf4j.Slf4j;
 public class PlaylistServiceImpl implements PlaylistService {
 
   @Autowired
-  PlaylistAllpageRepository playlistAllpageRepository;
-
-  @Autowired
-  AccountRepository accountRepository;
-
-  @Autowired
-  BuyItemRepository buyItemRepository;
-
-  @Autowired
-  BgmListRepository bgmListRepository;
-
-  @Autowired
   PlaylistRepository playlistRepository;
 
-  @Transactional
   @Override
-  public SliceResponseDto<PlaylistAllDto> getAllplaylist(SliceRequestDto sliceRequestDto, Long userId) {
+  public List<PlaylistDto> getAllplaylist(Long userId) {
 
-    UserDo userDo = accountRepository.findById(userId)
-        .orElseThrow(() -> new UsernameNotFoundException(null));
+    List<Playlist> playlists = playlistRepository.findAllByUserDo_UserId(userId);
 
-    AccountDto userDto = AccountDto.builder()
-        .userId(userDo.getUserId())
-        .build();
+    List<PlaylistDto> playlistDtos = new ArrayList<>();
 
-    Pageable pageable = sliceRequestDto.of();
+    for (Playlist playlist : playlists) {
 
-    Page<BgmList> bgmListPage;
-
-    if (sliceRequestDto.getLastId() == null) {
-      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto, userId);
-    } else {
-      bgmListPage = playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto,
-          sliceRequestDto.getLastId(),
-          userId);
-    }
-
-    List<PlaylistAllDto> dtoList = bgmListPage.getContent().stream().map(bgmList -> {
-      String playNickname = bgmList.getPlaylist().getUserDo().getNickname();
-
-      BgmListDto bgmListDto = BgmListDto.builder()
-          .bgmListId(bgmList.getBgmListId())
-          .playlistId(bgmList.getPlaylist().getPlaylistId())
-          .itemBuyId(bgmList.getBuyItem().getItemId())
-          .build();
-
-      Playlist playlist = bgmList.getPlaylist();
       PlaylistDto playlistDto = PlaylistDto.builder()
           .playlistId(playlist.getPlaylistId())
           .plName(playlist.getPlName())
-          .userId(playlist.getUserDo().getUserId())
+          .userId(playlist.getPlaylistId())
+          .plDate(playlist.getPlDate())
           .build();
 
-      BuyItem buyItem = bgmList.getBuyItem();
-      BuyItemDto buyItemDto = BuyItemDto.builder()
-          .itemId(buyItem.getItemId())
-          .buyDate(buyItem.getBuyDate())
-          .itemId(buyItem.getShop().getItemId())
-          .userId(buyItem.getUserDo().getUserId())
-          .build();
+      playlistDtos.add(playlistDto);
+    }
 
-      Shop shop = buyItem.getShop();
-      ShopDto shopDto = ShopDto.builder()
-          .itemId(shop.getItemId())
-          .itemName(shop.getItemName())
-          .subcategoryId(shop.getShopSubcategory().getSubcategoryId())
-          .build();
+    // Pageable pageable = sliceRequestDto.of();
 
-      ItemFile itemFile = shop.getItemFile();
-      ItemFileDto itemFileDto = ItemFileDto.builder()
-          .itemId(shop.getItemId())
-          .fileName(itemFile.getFileName())
-          .build();
+    // Page<BgmList> bgmListPage;
 
-      // ShopInfoDto shopInfoDto = ShopInfoDto.builder()
-      // .shopDto(shopDto)
-      // .itemFileDto(itemFileDto)
-      // .build();
+    // if (sliceRequestDto.getLastId() == null) {
+    // bgmListPage =
+    // playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto,
+    // userId);
+    // } else {
+    // bgmListPage =
+    // playlistAllpageRepository.findAllByBgmListsAndBuyItemAndPlaylist(sliceRequestDto,
+    // sliceRequestDto.getLastId(),
+    // userId);
+    // }
 
-      return PlaylistAllDto.builder()
-          .userDto(userDto)
-          .bgmListDto(bgmListDto)
-          .buyItemDto(buyItemDto)
-          .playlistDto(playlistDto)
+    // List<PlaylistAllDto> dtoList = bgmListPage.getContent().stream().map(bgmList
+    // -> {
+    // String playNickname = bgmList.getPlaylist().getUserDo().getNickname();
 
-          .build();
-    }).collect(Collectors.toList());
+    // BgmListDto bgmListDto = BgmListDto.builder()
+    // .bgmListId(bgmList.getBgmListId())
+    // .playlistId(bgmList.getPlaylist().getPlaylistId())
+    // .itemBuyId(bgmList.getBuyItem().getItemId())
+    // .build();
 
-    boolean hasNext = dtoList.size() == sliceRequestDto.getLimit();
+    // Playlist playlist = bgmList.getPlaylist();
+    // PlaylistDto playlistDto = PlaylistDto.builder()
+    // .playlistId(playlist.getPlaylistId())
+    // .plName(playlist.getPlName())
+    // .userId(playlist.getUserDo().getUserId())
+    // .build();
 
-    SliceResponseDto<PlaylistAllDto> responseDto = SliceResponseDto.<PlaylistAllDto>withAll()
-        .dtoList(dtoList)
-        .hasMoreData(hasNext)
-        .sliceRequestDto(sliceRequestDto)
-        .build();
+    // BuyItem buyItem = bgmList.getBuyItem();
+    // BuyItemDto buyItemDto = BuyItemDto.builder()
+    // .itemId(buyItem.getItemId())
+    // .buyDate(buyItem.getBuyDate())
+    // .itemId(buyItem.getShop().getItemId())
+    // .userId(buyItem.getUserDo().getUserId())
+    // .build();
 
-    return responseDto;
+    // Shop shop = buyItem.getShop();
+    // ShopDto shopDto = ShopDto.builder()
+    // .itemId(shop.getItemId())
+    // .itemName(shop.getItemName())
+    // .subcategoryId(shop.getShopSubcategory().getSubcategoryId())
+    // .build();
+
+    // ItemFile itemFile = shop.getItemFile();
+    // ItemFileDto itemFileDto = ItemFileDto.builder()
+    // .itemId(shop.getItemId())
+    // .fileName(itemFile.getFileName())
+    // .build();
+
+    // // ShopInfoDto shopInfoDto = ShopInfoDto.builder()
+    // // .shopDto(shopDto)
+    // // .itemFileDto(itemFileDto)
+    // // .build();
+
+    // return PlaylistAllDto.builder()
+    // .userDto(userDto)
+    // .bgmListDto(bgmListDto)
+    // .buyItemDto(buyItemDto)
+    // .playlistDto(playlistDto)
+
+    // .build();
+    // }).collect(Collectors.toList());
+
+    // boolean hasNext = dtoList.size() == sliceRequestDto.getLimit();
+
+    // SliceResponseDto<PlaylistAllDto> responseDto =
+    // SliceResponseDto.<PlaylistAllDto>withAll()
+    // .dtoList(dtoList)
+    // .hasMoreData(hasNext)
+    // .sliceRequestDto(sliceRequestDto)
+    // .build();
+
+    return playlistDtos;
   }
 
   @Transactional
   @Override
-  public ApiResponseDto putMyPlaylist(PlaylistDto playlistDto, BuyItemDto buyItemDto)
-      throws BgmListNotFoundException, BadRequestException {
+  public void putMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId) {
 
-    Long playlistId = playlistDto.getPlaylistId();
+    Playlist playlist = playlistRepository.findByPlaylistIdAndUserDo_UserId(playlistId, userId);
 
-    // 해당 플리가 존재할 경우 해당 번호의 플리 조회
-    if (playlistId != null) {
-
-      Playlist playlist = playlistRepository.findById(playlistId).orElse(null);
-
-      BgmList bgmList = bgmListRepository.findById(playlist.getPlaylistId()).orElse(null);
-
-      BuyItem buyItem = buyItemRepository.findById(bgmList.getBgmListId()).orElse(null);
-
-      // bgmList 삭제
-      bgmListRepository.deleteById(bgmList.getBgmListId());
-
-      playlist.updatePlaylist(playlistDto.getPlName());
-      // bgmList 재생성
-      createBgmList(playlistDto, buyItemDto);
-
-      ApiResponseDto apiResponseDto = ApiResponseDto.builder()
-          .message("수정완료")
-          .status(HttpStatus.OK)
-          .build();
-      return apiResponseDto;
-    } else {
-      log.info("플리가 없습니다. 플리 등록을 시작합니다.");
-
-      Playlist newplaylist = Playlist.builder()
-          .userDo(UserDo.builder().userId(playlistDto.getUserId()).build())
-          .plName(playlistDto.getPlName())
-          .build();
-      playlistRepository.save(newplaylist);
-
-      createBgmList(playlistDto, buyItemDto);
-
-      ApiResponseDto apiResponse = ApiResponseDto.builder()
-          .message("플레이리스트 등록이 완료되었습니다.")
-          .status(HttpStatus.OK)
-          .build();
-
-      return apiResponse;
-    }
+    playlist.updatePlaylist(playlistDto.getPlName());
   }
 
-  // bgmList생성 메소드
-  public void createBgmList(PlaylistDto playlistDto, BuyItemDto buyItemDto) {
-    Long playlistId = playlistDto.getPlaylistId();
-    Long itemBuyId = buyItemDto.getItemId();
+  // 플레이어 생성
+  @Override
+  public void addPlayList(Long userId, PlaylistDto playlistDto) {
+    Playlist playlist = Playlist.builder()
+        .userDo(UserDo.builder()
+            .userId(userId).build())
+        .plName(playlistDto.getPlName())
+        .build();
 
-    // Playlist와 BuyItem 조회
-    Playlist playlist = playlistRepository.findById(playlistId)
-        .orElseThrow(() -> new UsernameNotFoundException("Playlist not found"));
-    BuyItem buyItem = buyItemRepository.findById(itemBuyId)
-        .orElseThrow(() -> new UsernameNotFoundException("BuyItem not found"));
-
-    // BuyItem의 Shop의 CategoryId가 1일 경우에만 BgmList 생성 및 저장
-    if (buyItem.getShop().getShopSubcategory().getSubcategoryId() == 1) {
-      BgmList newBgmList = BgmList.builder()
-          .playlist(playlist)
-          .buyItem(buyItem)
-          .build();
-      bgmListRepository.save(newBgmList);
-    }
+    playlistRepository.save(playlist);
   }
 
+  @Override
+  public void deleteMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId) {
+    playlistRepository.deleteByPlaylistIdAndUserDo_userId(playlistId, userId);
+  }
 }

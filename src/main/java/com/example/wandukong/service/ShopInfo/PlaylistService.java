@@ -1,19 +1,16 @@
 package com.example.wandukong.service.ShopInfo;
 
-import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
-import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
-import com.example.wandukong.dto.ShopInfo.BuyItemDto;
-import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
-import com.example.wandukong.exception.CustomException.BgmListNotFoundException;
-import com.example.wandukong.model.ApiResponseDto;
+import java.util.List;
 
 public interface PlaylistService {
 
-  SliceResponseDto<PlaylistAllDto> getAllplaylist(SliceRequestDto sliceRequestDto, Long userId);
+  List<PlaylistDto> getAllplaylist(Long userId);
 
-  ApiResponseDto putMyPlaylist(PlaylistDto playlistDto, BuyItemDto buyItemDto)
-      throws BgmListNotFoundException, BadRequestException;
+  void putMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId);
+
+  void addPlayList(Long userId, PlaylistDto playlistDto);
+
+  void deleteMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId);
 
 }
