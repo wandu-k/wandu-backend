@@ -11,6 +11,6 @@ public interface PlaylistService {
 
   void addPlayList(Long userId, PlaylistDto playlistDto);
 
-  void deleteMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId);
+  void deleteMyPlaylist(Long playlistId, Long userId);
 
 }
