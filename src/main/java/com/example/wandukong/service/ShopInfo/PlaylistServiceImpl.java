@@ -67,4 +67,14 @@ public class PlaylistServiceImpl implements PlaylistService {
   public void deleteMyPlaylist(Long playlistId, Long userId) {
     playlistRepository.deleteByPlaylistIdAndUserDo_userId(playlistId, userId);
   }
+
+  @Override
+  public PlaylistDto getPlaylist(Long playlistId) {
+    Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(null);
+
+    PlaylistDto playlistDto = PlaylistDto.builder().playlistId(playlist.getPlaylistId())
+        .plName(playlist.getPlName()).plDate(playlist.getPlDate()).build();
+
+    return playlistDto;
+  }
 }

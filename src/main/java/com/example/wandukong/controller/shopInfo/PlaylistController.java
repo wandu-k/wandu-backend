@@ -17,6 +17,7 @@ import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
+import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.service.ShopInfo.PlaylistService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,16 @@ public class PlaylistController {
 
   @Autowired
   PlaylistService playlistService;
+
+  // 특정 플레이리스트 정보 조회
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping("/playlist/{playlistId}")
+  public ResponseEntity<?> getPlaylist(@PathVariable Long playlistId)
+      throws HomeNotFoundException {
+
+    PlaylistDto playlistDto = playlistService.getPlaylist(playlistId);
+    return new ResponseEntity<>(playlistDto, HttpStatus.OK);
+  }
 
   // 사용자들의 플레이리스트 출력
   @Operation(summary = "내 플리 조회")
