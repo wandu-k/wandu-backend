@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.ShopInfo.PlaylistAllDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
@@ -48,13 +50,13 @@ public class PlaylistController {
   @SecurityRequirement(name = "Baerer Authentication")
   @GetMapping("/my/playlist")
   public ResponseEntity<?> getplaylist(
-      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+      @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(required = false) Long itemId) {
 
     // 미니홈을 접속했는지 안했는지의 여부는 프론트에서 확인합니다.
 
     Long userId = customUserDetails.getAccountDto().getUserId();
 
-    List<PlaylistDto> responseDto = playlistService.getAllplaylist(userId);
+    List<PlaylistDto> responseDto = playlistService.getAllplaylist(userId, itemId);
 
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }

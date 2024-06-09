@@ -1,12 +1,10 @@
 package com.example.wandukong.repository.ShopInfo;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
 
-import com.example.wandukong.domain.ShopInfo.BgmList;
-import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
+import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 
 public interface PlaylistAllpageRepository {
-  Page<BgmList> findAllByBgmListsAndBuyItemAndPlaylist(SliceRequestDto sliceRequestDto, Long userId);
 
-  Page<BgmList> findAllByBgmListsAndBuyItemAndPlaylist(SliceRequestDto sliceRequestDto, Long lastId, Long userId);
+  List<PlaylistDto> findAllPlaylist(Long userId, Long itemId);
 }

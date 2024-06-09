@@ -20,25 +20,11 @@ public class PlaylistServiceImpl implements PlaylistService {
   PlaylistRepository playlistRepository;
 
   @Override
-  public List<PlaylistDto> getAllplaylist(Long userId) {
+  public List<PlaylistDto> getAllplaylist(Long userId, Long itemId) {
 
-    List<Playlist> playlists = playlistRepository.findAllByUserDo_UserId(userId);
+    List<PlaylistDto> playlists = playlistRepository.findAllPlaylist(userId, itemId);
 
-    List<PlaylistDto> playlistDtos = new ArrayList<>();
-
-    for (Playlist playlist : playlists) {
-
-      PlaylistDto playlistDto = PlaylistDto.builder()
-          .playlistId(playlist.getPlaylistId())
-          .plName(playlist.getPlName())
-          .userId(playlist.getPlaylistId())
-          .plDate(playlist.getPlDate())
-          .build();
-
-      playlistDtos.add(playlistDto);
-    }
-
-    return playlistDtos;
+    return playlists;
   }
 
   @Transactional

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface PlaylistService {
 
-  List<PlaylistDto> getAllplaylist(Long userId);
+  List<PlaylistDto> getAllplaylist(Long userId, Long itemId);
 
   void putMyPlaylist(PlaylistDto playlistDto, Long playlistId, Long userId);
 

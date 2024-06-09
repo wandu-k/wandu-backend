@@ -17,13 +17,15 @@ public class PlaylistDto {
   private String plName;
   private Long userId;
   private LocalDate plDate;
+  private int include;
 
   @Builder
-  public PlaylistDto(Long userId, Long playlistId, String plName, LocalDate plDate) {
+  public PlaylistDto(Long userId, Long playlistId, String plName, LocalDate plDate, int include) {
     this.playlistId = playlistId;
     this.plName = plName;
     this.userId = userId;
     this.plDate = plDate;
+    this.include = include;
   }
 
   public PlaylistDto() {
