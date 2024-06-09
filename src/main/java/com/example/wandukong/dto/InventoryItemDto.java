@@ -17,11 +17,12 @@ public class InventoryItemDto {
     private int price;
     private String file;
     private int enable;
+    private Long categoryId;
 
     @Builder
     public InventoryItemDto(Long userId, Long itemId, String nickname, String itemName, String categoryName,
             String subcategoryName, int price, Long subcategoryId,
-            String file, int enable) {
+            String file, int enable, Long categoryId) {
         this.userId = userId;
         this.itemId = itemId;
         this.nickname = nickname;
@@ -32,5 +33,6 @@ public class InventoryItemDto {
         this.subcategoryId = subcategoryId;
         this.file = file;
         this.enable = enable;
+        this.categoryId = categoryId;
     }
 }
