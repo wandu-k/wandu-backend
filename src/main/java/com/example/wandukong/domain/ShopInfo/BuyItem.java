@@ -42,23 +42,23 @@ public class BuyItem {
     @Column(name = "buyDate")
     private LocalDate buyDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 
-    @OneToMany(mappedBy = "buyItem", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bgmListId.buyItem", cascade = CascadeType.ALL)
     private List<BgmList> bgmList;
 
-    @OneToOne(mappedBy = "head", fetch = FetchType.LAZY)
-    private Avatar head;
+    @OneToMany(mappedBy = "head", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avatar> head;
 
-    @OneToOne(mappedBy = "eye", fetch = FetchType.LAZY)
-    private Avatar eye;
+    @OneToMany(mappedBy = "eye", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avatar> eye;
 
-    @OneToOne(mappedBy = "mouse", fetch = FetchType.LAZY)
-    private Avatar mouse;
+    @OneToMany(mappedBy = "mouse", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avatar> mouse;
 
-    @OneToOne(mappedBy = "cloth", fetch = FetchType.LAZY)
-    private Avatar cloth;
+    @OneToMany(mappedBy = "cloth", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avatar> cloth;
 
 }
