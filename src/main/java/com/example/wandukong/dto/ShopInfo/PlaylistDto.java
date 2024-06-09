@@ -2,15 +2,10 @@ package com.example.wandukong.dto.ShopInfo;
 
 import java.time.LocalDate;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-@Component
 public class PlaylistDto {
 
   private Long playlistId;
@@ -20,7 +15,7 @@ public class PlaylistDto {
   private int include;
 
   @Builder
-  public PlaylistDto(Long userId, Long playlistId, String plName, LocalDate plDate, int include) {
+  public PlaylistDto(Long playlistId, String plName, Long userId, LocalDate plDate, int include) {
     this.playlistId = playlistId;
     this.plName = plName;
     this.userId = userId;

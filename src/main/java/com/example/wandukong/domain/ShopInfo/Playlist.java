@@ -10,6 +10,7 @@ import com.example.wandukong.domain.UserDo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,10 +43,10 @@ public class Playlist {
     @Column(name = "plDate")
     private LocalDate plDate;
 
-    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bgmListId.playlist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BgmList> bgmList;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UserDo userDo;
 

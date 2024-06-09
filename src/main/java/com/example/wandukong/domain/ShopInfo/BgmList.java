@@ -1,39 +1,26 @@
 package com.example.wandukong.domain.ShopInfo;
 
-import java.time.LocalDate;
+import com.example.wandukong.domain.BgmListPK;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Getter
 @Entity
 @Table(name = "BgmList")
 public class BgmList {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @EmbeddedId
   @Column(name = "bgmListId", unique = true)
-  private Long bgmListId;
+  private BgmListPK bgmListId;
 
-  @ManyToOne
-  @JoinColumn(name = "itemId", referencedColumnName = "itemId")
-  private BuyItem buyItem;
-
-  @ManyToOne
-  @JoinColumn(name = "playlistId", referencedColumnName = "playlistId")
-  private Playlist playlist;
+  public BgmList(BgmListPK bgmListId) {
+    this.bgmListId = bgmListId;
+  }
 }

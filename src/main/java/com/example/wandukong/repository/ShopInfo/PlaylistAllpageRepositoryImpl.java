@@ -16,6 +16,7 @@ import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -84,17 +85,19 @@ public class PlaylistAllpageRepositoryImpl extends QuerydslRepositorySupport imp
     QPlaylist playlist = QPlaylist.playlist;
     QBgmList bgmList = QBgmList.bgmList;
 
-    NumberExpression<Integer> include = null; // Declare include outside the if block
+    NumberExpression<Integer> include = Expressions.asNumber(0);
 
     if (itemId != null) {
       include = new CaseBuilder()
-          .when(playlist.playlistId.eq(bgmList.playlist.playlistId).and(bgmList.buyItem.itemId.eq(itemId)))
+          .when(playlist.playlistId.eq(bgmList.bgmListId.playlist.playlistId)
+              .and(bgmList.bgmListId.buyItem.itemId.eq(itemId)))
           .then(1)
           .otherwise(0);
+      ; // Declare include outside the if block
     }
 
     return jpaQueryFactory.select(Projections.constructor(PlaylistDto.class,
-        playlist.playlistId, playlist.plName, playlist.userDo.userId, playlist.plDate, include))
+        playlist.playlistId, playlist.plName, playlist.userDo.userId, playlist.plDate, include.intValue()))
         .from(playlist)
         .where(playlist.userDo.userId.eq(userId))
         .fetch();

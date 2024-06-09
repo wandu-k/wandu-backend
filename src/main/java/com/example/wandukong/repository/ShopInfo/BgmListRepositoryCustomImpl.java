@@ -26,7 +26,7 @@ public class BgmListRepositoryCustomImpl implements BgmListRepositoryCustom {
 
         List<Shop> shops = jpaQueryFactory.selectFrom(shop)
                 .leftJoin(shop.buyItem.bgmList, bgmList)
-                .where(shop.itemId.eq(bgmList.buyItem.itemId))
+                .where(shop.itemId.eq(bgmList.bgmListId.buyItem.itemId))
                 .fetch();
 
         // Convert Shop entities to ShopInfoDto
