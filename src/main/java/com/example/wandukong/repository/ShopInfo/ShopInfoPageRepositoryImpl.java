@@ -70,6 +70,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .itemName(s.getItemName())
             .file(s3Util.getUrl(s.getItemFile().getFileName()))
             .subcategoryName(s.getShopSubcategory().getSubcategoryName())
+            .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
             .build())
         .collect(Collectors.toList());
 
@@ -112,7 +113,8 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             shop.shopSubcategory.subcategoryId,
             shop.itemFile.fileName,
             purchaseStatus,
-            purchaseCount.intValue()))
+            purchaseCount.intValue(),
+            shop.shopSubcategory.category.categoryId))
         .from(shop)
         .leftJoin(buyItem)
         .on(buyItem.shop.itemId.eq(shop.itemId).and(buyItem.userDo.userId.eq(userId)))

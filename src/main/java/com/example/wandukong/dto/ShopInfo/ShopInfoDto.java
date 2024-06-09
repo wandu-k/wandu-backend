@@ -18,11 +18,12 @@ public class ShopInfoDto {
   private String file;
   private int purchaseStatus;
   private int purchase;
+  private Long categoryId;
 
   @Builder
   public ShopInfoDto(Long userId, Long itemId, String nickname, String itemName, String categoryName,
       String subcategoryName, int price, Long subcategoryId,
-      String file, int purchaseStatus, int purchase) {
+      String file, int purchaseStatus, int purchase, Long categoryId) {
     this.userId = userId;
     this.itemId = itemId;
     this.nickname = nickname;
@@ -34,6 +35,7 @@ public class ShopInfoDto {
     this.file = file;
     this.purchaseStatus = purchaseStatus;
     this.purchase = purchase;
+    this.categoryId = categoryId;
   }
 
   public void setFile(String file) {
