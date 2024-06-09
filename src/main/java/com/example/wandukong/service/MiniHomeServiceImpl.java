@@ -92,12 +92,14 @@ public class MiniHomeServiceImpl implements MiniHomeService {
     @Override
     public void setMiniHomePlaylist(Long userId, Long playlistId) {
 
-        Playlist playlist = playlistRepository.getReferenceById(playlistId);
-
         MiniHome miniHome = miniHomeRepository.findByUserDo_UserId(userId);
 
-        miniHome.updatePlaylist(playlist);
+        Playlist playlist = null;
+        if (playlistId != null) {
+            playlist = playlistRepository.getReferenceById(playlistId);
+        }
 
+        miniHome.updatePlaylist(playlist);
         miniHomeRepository.save(miniHome);
 
     }

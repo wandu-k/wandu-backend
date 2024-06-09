@@ -57,7 +57,7 @@ public class MiniHomeController {
     @PatchMapping("/minihome/playlist")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> setMiniHomePlaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody Long playlistId) throws HomeNotFoundException {
+            @RequestBody(required = false) Long playlistId) throws HomeNotFoundException {
 
         Long userId = customUserDetails.getAccountDto().getUserId();
 
