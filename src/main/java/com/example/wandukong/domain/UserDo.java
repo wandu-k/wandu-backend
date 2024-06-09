@@ -73,31 +73,31 @@ public class UserDo {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MiniHomePost> minihomePost;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Playlist> playlist;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shop;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BuyItem> buyItem;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ForumPost> forumPosts;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ForumPostReview> forumPostReviews;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ask> asks;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AdminComment> adminComments;
 
-    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GuestRoom> guestRooms;
 
     @Builder

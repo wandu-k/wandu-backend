@@ -36,7 +36,7 @@ public class ShopSubCategory {
     @Column
     private String subcategoryName;
 
-    @OneToMany(mappedBy = "shopSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "shopSubcategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shop;
 
     @Builder
