@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.service.MiniHomeService;
 
@@ -20,11 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/api/user/minihome")
+@RequestMapping("/api/user")
 @RestController
 public class MiniHomeController {
 
@@ -32,8 +34,8 @@ public class MiniHomeController {
     MiniHomeService miniHomeService;
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping
-    public ResponseEntity<?> getMiniHome(@RequestParam Long userId) throws HomeNotFoundException {
+    @GetMapping("/{userId}/minihome")
+    public ResponseEntity<?> getMiniHome(@PathVariable Long userId) throws HomeNotFoundException {
 
         MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(userId);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
@@ -52,7 +54,7 @@ public class MiniHomeController {
     // }
 
     @Operation(summary = "미니홈 플레이리스트 설정")
-    @PatchMapping("/playlist")
+    @PatchMapping("/minihome/playlist")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> setMiniHomePlaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody Long playlistId) throws HomeNotFoundException {
@@ -60,7 +62,19 @@ public class MiniHomeController {
         Long userId = customUserDetails.getAccountDto().getUserId();
 
         miniHomeService.setMiniHomePlaylist(userId, playlistId);
-        return new ResponseEntity<>("플레이리스트 설정 완료", HttpStatus.OK);
+        return new ResponseEntity<>("미니홈 플레이리스트 설정 완료", HttpStatus.OK);
+    }
+
+    @Operation(summary = "미니홈 설정")
+    @PatchMapping("/minihome")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<?> setMiniHome(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody MiniHomeDto miniHomeDto) throws HomeNotFoundException {
+
+        Long userId = customUserDetails.getAccountDto().getUserId();
+
+        miniHomeService.setMiniHome(userId, miniHomeDto);
+        return new ResponseEntity<>("미니홈 설정 완료", HttpStatus.OK);
     }
 
 }
