@@ -13,4 +13,6 @@ public interface PlaylistService {
 
   void deleteMyPlaylist(Long playlistId, Long userId);
 
+  PlaylistDto getPlaylist(Long playlistId);
+
 }
