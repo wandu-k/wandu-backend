@@ -14,6 +14,7 @@ import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
+import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.repository.ShopInfo.PlaylistRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
@@ -96,6 +97,17 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         MiniHome miniHome = miniHomeRepository.findByUserDo_UserId(userId);
 
         miniHome.updatePlaylist(playlist);
+
+        miniHomeRepository.save(miniHome);
+
+    }
+
+    @Override
+    public void setMiniHome(Long userId, MiniHomeDto miniHomeDto) {
+
+        MiniHome miniHome = miniHomeRepository.findByUserDo_UserId(userId);
+
+        miniHome.updateMiniHome(miniHomeDto);
 
         miniHomeRepository.save(miniHome);
 

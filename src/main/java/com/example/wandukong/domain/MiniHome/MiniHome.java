@@ -98,4 +98,9 @@ public class MiniHome {
         this.playlist = playlist;
     }
 
+    public void updateMiniHome(MiniHomeDto miniHomeDto) {
+        this.introduction = miniHomeDto.getIntroduction();
+        this.statusM = miniHomeDto.getStatusM();
+    }
+
 }
