@@ -64,9 +64,10 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
         .map(tuple -> {
           Shop shopEntity = tuple.get(shop);
           BuyItem buyItemEntity = tuple.get(buyItem);
+          log.info(buyItemEntity.getHead().toString());
           int enable = 0;
-          if (buyItemEntity.getHead() != null || buyItemEntity.getEye() != null ||
-              buyItemEntity.getMouse() != null || buyItemEntity.getCloth() != null) {
+          if (!buyItemEntity.getHead().isEmpty() || !buyItemEntity.getEye().isEmpty() ||
+              !buyItemEntity.getMouse().isEmpty() || !buyItemEntity.getCloth().isEmpty()) {
             enable = 1;
           }
           return InventoryItemDto.builder()

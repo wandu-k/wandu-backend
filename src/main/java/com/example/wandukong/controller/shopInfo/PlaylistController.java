@@ -51,6 +51,7 @@ public class PlaylistController {
   @GetMapping("/my/playlist")
   public ResponseEntity<?> getplaylist(
       @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(required = false) Long itemId) {
+    System.out.println(itemId);
 
     // 미니홈을 접속했는지 안했는지의 여부는 프론트에서 확인합니다.
 

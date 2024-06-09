@@ -18,6 +18,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -89,15 +90,26 @@ public class PlaylistAllpageRepositoryImpl extends QuerydslRepositorySupport imp
 
     if (itemId != null) {
       include = new CaseBuilder()
-          .when(playlist.playlistId.eq(bgmList.bgmListId.playlist.playlistId)
-              .and(bgmList.bgmListId.buyItem.itemId.eq(itemId)))
+          .when(
+              JPAExpressions
+                  .selectOne()
+                  .from(bgmList)
+                  .where(
+                      bgmList.bgmListId.playlist.playlistId.eq(playlist.playlistId)
+                          .and(bgmList.bgmListId.buyItem.itemId.eq(itemId)))
+                  .exists())
           .then(1)
           .otherwise(0);
-      ; // Declare include outside the if block
     }
 
-    return jpaQueryFactory.select(Projections.constructor(PlaylistDto.class,
-        playlist.playlistId, playlist.plName, playlist.userDo.userId, playlist.plDate, include.intValue()))
+    return jpaQueryFactory.select(
+        Projections.constructor(
+            PlaylistDto.class,
+            playlist.playlistId,
+            playlist.plName,
+            playlist.userDo.userId,
+            playlist.plDate,
+            include.intValue()))
         .from(playlist)
         .where(playlist.userDo.userId.eq(userId))
         .fetch();
