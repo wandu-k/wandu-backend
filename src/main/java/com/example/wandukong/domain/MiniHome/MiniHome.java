@@ -78,20 +78,21 @@ public class MiniHome {
     }
 
     public MiniHomeDto toDto(int hpToday) {
-
-        MiniHomeDto miniHomeDto = MiniHomeDto.builder()
+        MiniHomeDto.MiniHomeDtoBuilder miniHomeDtoBuilder = MiniHomeDto.builder()
                 .hpId(hpId)
                 .statusM(statusM)
                 .introduction(introduction)
                 .hpToday(hpToday)
                 .allVisit(allVisit)
                 .hpOpen(hpOpen)
-                .hpToday(hpToday)
-                .playlistId(playlist.getPlaylistId())
-                .build();
+                .hpToday(hpToday);
 
+        if (playlist != null) {
+            miniHomeDtoBuilder.playlistId(playlist.getPlaylistId());
+        }
+
+        MiniHomeDto miniHomeDto = miniHomeDtoBuilder.build();
         return miniHomeDto;
-
     }
 
     public void updatePlaylist(Playlist playlist) {
