@@ -87,10 +87,15 @@ public class MiniHome {
                 .allVisit(allVisit)
                 .hpOpen(hpOpen)
                 .hpToday(hpToday)
+                .playlistId(playlist.getPlaylistId())
                 .build();
 
         return miniHomeDto;
 
+    }
+
+    public void updatePlaylist(Playlist playlist) {
+        this.playlist = playlist;
     }
 
 }

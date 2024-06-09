@@ -13,10 +13,11 @@ public class MiniHomeDto {
     private int hpToday;
     private int allVisit;
     private int hpOpen;
+    private Long playlistId;
 
     @Builder
     public MiniHomeDto(Long hpId, Long userId, String statusM, String introduction, int hpToday, int allVisit,
-            int hpOpen) {
+            int hpOpen, Long playlistId) {
         this.hpId = hpId;
         this.userId = userId;
         this.statusM = statusM;
@@ -24,6 +25,7 @@ public class MiniHomeDto {
         this.hpToday = hpToday;
         this.allVisit = allVisit;
         this.hpOpen = hpOpen;
+        this.playlistId = playlistId;
     }
 
 }

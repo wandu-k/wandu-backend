@@ -1,4 +1,4 @@
-package com.example.wandukong.service;
+package com.example.wandukong.service.trash;
 
 import java.util.Optional;
 

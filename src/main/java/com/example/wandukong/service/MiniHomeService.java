@@ -12,4 +12,6 @@ public interface MiniHomeService {
 
     List<MiniHomeBoardDto> getBoardList();
 
+    void setMiniHomePlaylist(Long userId, Long playlistId);
+
 }

@@ -11,9 +11,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
+import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
+import com.example.wandukong.repository.ShopInfo.PlaylistRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeBoardRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
 import com.example.wandukong.util.GetIpUtil;
@@ -29,6 +31,9 @@ public class MiniHomeServiceImpl implements MiniHomeService {
 
     @Autowired
     MiniHomeBoardRepository miniHomeBoardRepository;
+
+    @Autowired
+    PlaylistRepository playlistRepository;
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
@@ -81,6 +86,19 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         }
 
         return boardList;
+    }
+
+    @Override
+    public void setMiniHomePlaylist(Long userId, Long playlistId) {
+
+        Playlist playlist = playlistRepository.getReferenceById(playlistId);
+
+        MiniHome miniHome = miniHomeRepository.findByUserDo_UserId(userId);
+
+        miniHome.updatePlaylist(playlist);
+
+        miniHomeRepository.save(miniHome);
+
     }
 
 }

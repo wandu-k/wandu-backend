@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.model.ApiResponseDto;
-import com.example.wandukong.service.MiniHomeBoardService;
+import com.example.wandukong.service.trash.MiniHomeBoardService;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
