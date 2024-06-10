@@ -85,7 +85,7 @@ public class ShopServiceImpl implements ShopService {
       s3Util.itemfileDelete(shop.getItemFile().getFileName());
 
       // 오프벡트 키 생성
-      String objectKey = filePathGenerate(shop);
+      String objectKey = filePathGenerate(itemfile, shop);
 
       // 파일 업로드
       s3Util.itemfileUpload(itemfile, objectKey);
@@ -108,7 +108,7 @@ public class ShopServiceImpl implements ShopService {
 
     shopInfoRepository.save(shop);
 
-    String objectKey = filePathGenerate(shop);
+    String objectKey = filePathGenerate(itemfile, shop);
 
     s3Util.itemfileUpload(itemfile, objectKey);
     // ItemFile 엔티티 생성 및 저장
@@ -127,10 +127,12 @@ public class ShopServiceImpl implements ShopService {
     return apiResponseDto;
   }
 
-  private String filePathGenerate(Shop shop) {
+  private String filePathGenerate(MultipartFile itemfile, Shop shop) {
+
+    String ext = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf("."));
     // 파일 경로 지정()
     String filepath = "shop/" + shop.getShopSubcategory().getSubcategoryId() + "/"
-        + shop.getUserDo().getUserId() + "/";
+        + shop.getUserDo().getUserId() + "/" + ext;
 
     // uuid설정
     String uuid = UUID.randomUUID().toString();
