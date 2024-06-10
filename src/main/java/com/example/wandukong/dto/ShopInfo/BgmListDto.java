@@ -10,14 +10,16 @@ public class BgmListDto {
   private String album;
   private String artist;
   private String title;
+  private String url;
 
   @Builder
-  public BgmListDto(Long playlistId, Long itemId, String album, String artist, String title) {
+  public BgmListDto(Long playlistId, Long itemId, String album, String artist, String title, String url) {
     this.playlistId = playlistId;
     this.itemId = itemId;
     this.album = album;
     this.artist = artist;
     this.title = title;
+    this.url = url;
   }
 
   /* 브금목록 */

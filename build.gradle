@@ -58,6 +58,7 @@ implementation 'commons-io:commons-io:2.5'
 		"com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	)
 	implementation 'com.mpatric:mp3agic:0.9.1'
+
 }
 
 tasks.named('test') {
