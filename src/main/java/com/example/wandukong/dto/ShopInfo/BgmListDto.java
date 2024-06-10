@@ -5,17 +5,19 @@ import lombok.Getter;
 
 @Getter
 public class BgmListDto {
-  private Long bgmListId;
   private Long playlistId;
   private Long itemId;
-  private Long userId;
+  private String album;
+  private String artist;
+  private String title;
 
   @Builder
-  public BgmListDto(Long itemId, Long playlistId, Long bgmListId, Long userId) {
-    this.bgmListId = bgmListId;
+  public BgmListDto(Long playlistId, Long itemId, String album, String artist, String title) {
     this.playlistId = playlistId;
     this.itemId = itemId;
-    this.userId = userId;
+    this.album = album;
+    this.artist = artist;
+    this.title = title;
   }
 
   /* 브금목록 */

@@ -1,5 +1,6 @@
 package com.example.wandukong.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,14 @@ import com.example.wandukong.domain.ShopInfo.BgmList;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
 import com.example.wandukong.dto.ShopInfo.BgmListDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.repository.ShopInfo.BgmListRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.repository.ShopInfo.PlaylistRepository;
+import com.example.wandukong.util.S3Util;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,7 @@ public class BgmServiceImpl implements BgmService {
     private final BuyItemRepository buyItemRepository;
     private final PlaylistRepository playlistRepository;
     private final BgmListRepository bgmListRepository;
+    private final S3Util s3Util;
 
     @Override
     public void addBgm(Long playlistId, Long itemId) {
@@ -58,8 +64,25 @@ public class BgmServiceImpl implements BgmService {
 
         for (BgmList bgmList : list) {
 
-            BgmListDto bgmListDto = new BgmListDto();
+            String url = s3Util.getUrl(bgmList.getBgmListId().getBuyItem().getShop().getItemFile().getFileName());
 
+            BgmListDto.BgmListDtoBuilder bgmListDtoBuilder = BgmListDto.builder()
+                    .itemId(bgmList.getBgmListId().getBuyItem().getItemId())
+                    .playlistId(bgmList.getBgmListId().getPlaylist().getPlaylistId());
+
+            try {
+                Mp3File mp3file = new Mp3File(url);
+                ID3v1 id3v1Tag = mp3file.getId3v1Tag();
+                bgmListDtoBuilder
+                        .album(id3v1Tag.getAlbum())
+                        .artist(id3v1Tag.getArtist())
+                        .title(id3v1Tag.getTitle());
+
+            } catch (UnsupportedTagException | InvalidDataException | IOException e) {
+                e.printStackTrace();
+            }
+
+            BgmListDto bgmListDto = bgmListDtoBuilder.build();
             listDto.add(bgmListDto);
         }
 
