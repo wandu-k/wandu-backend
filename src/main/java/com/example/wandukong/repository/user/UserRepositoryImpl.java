@@ -30,8 +30,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 Tuple result = jpaQueryFactory
                                 .select(userDo1, friend.count().as("followCount"), friend.count().as("followerCount"))
                                 .from(userDo1)
-                                .leftJoin(friend).on(friend.userDo.userId.eq(userId))
-                                .leftJoin(friend).on(friend.friendDo.userId.eq(userId))
+                                .leftJoin(friend).on(friend.friendId.userDo.userId.eq(userId))
+                                .leftJoin(friend).on(friend.friendId.friendDo.userId.eq(userId))
                                 .where(userDo1.userId.eq(userId))
                                 .fetchOne();
 
