@@ -8,7 +8,6 @@ import com.example.wandukong.domain.BgmListPK;
 import com.example.wandukong.domain.ShopInfo.BgmList;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
-import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.repository.ShopInfo.BgmListRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
@@ -27,13 +26,13 @@ public class BgmServiceImpl implements BgmService {
     private final BgmListRepository bgmListRepository;
 
     @Override
-    public void addBgm(BgmListDto bgmListDto) {
+    public void addBgm(Long playlistId, Long itemId) {
 
-        BuyItem buyItem = buyItemRepository.getReferenceById(bgmListDto.getItemId());
+        BuyItem buyItem = buyItemRepository.getReferenceById(itemId);
 
         log.info("구매한 아이템 참조");
 
-        Playlist playlist = playlistRepository.getReferenceById(bgmListDto.getPlaylistId());
+        Playlist playlist = playlistRepository.getReferenceById(playlistId);
 
         log.info("플레이리스트 참조");
 
@@ -54,6 +53,19 @@ public class BgmServiceImpl implements BgmService {
         List<ShopInfoDto> shopInfoDto = bgmListRepository.findAllByPlaylistId(playlistId);
 
         return shopInfoDto;
+    }
+
+    @Override
+    public void deleteBgm(Long playerlistId, Long itemId) {
+
+        BuyItem buyItem = buyItemRepository.getReferenceById(itemId);
+        Playlist playlist = playlistRepository.getReferenceById(playerlistId);
+
+        BgmListPK bgmListPK = new BgmListPK(buyItem, playlist);
+
+        BgmList bgmList = new BgmList(bgmListPK);
+
+        bgmListRepository.delete(bgmList);
     }
 
 }
