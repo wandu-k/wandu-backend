@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
@@ -50,8 +51,8 @@ public class PlaylistController {
   @GetMapping("/playlist/{playlistId}/bgm")
   public ResponseEntity<?> getBgmList(@PathVariable Long playlistId) {
 
-    List<ShopInfoDto> shopInfoDto = bgmService.getBgmList(playlistId);
-    return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
+    List<BgmListDto> bgmListDtos = bgmService.getBgmList(playlistId);
+    return new ResponseEntity<>(bgmListDtos, HttpStatus.OK);
   }
 
   @Operation(summary = "특정 플레이리스트의 노래 삭제")

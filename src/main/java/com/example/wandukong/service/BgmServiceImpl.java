@@ -1,5 +1,6 @@
 package com.example.wandukong.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import com.example.wandukong.domain.BgmListPK;
 import com.example.wandukong.domain.ShopInfo.BgmList;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
 import com.example.wandukong.domain.ShopInfo.Playlist;
+import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.repository.ShopInfo.BgmListRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
@@ -48,11 +50,20 @@ public class BgmServiceImpl implements BgmService {
     }
 
     @Override
-    public List<ShopInfoDto> getBgmList(Long playlistId) {
+    public List<BgmListDto> getBgmList(Long playlistId) {
 
-        List<ShopInfoDto> shopInfoDto = bgmListRepository.findAllByPlaylistId(playlistId);
+        List<BgmList> list = bgmListRepository.findAllByBgmListId_Playlist_PlaylistId(playlistId);
 
-        return shopInfoDto;
+        List<BgmListDto> listDto = new ArrayList<>();
+
+        for (BgmList bgmList : list) {
+
+            BgmListDto bgmListDto = new BgmListDto();
+
+            listDto.add(bgmListDto);
+        }
+
+        return listDto;
     }
 
     @Override
