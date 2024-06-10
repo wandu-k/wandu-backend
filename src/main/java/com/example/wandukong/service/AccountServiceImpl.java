@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     MiniHomeRepository miniHpRepository;
@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
         String encodedPw = passwordEncoder.encode(accountDto.getPassword());
 
         // Check for duplicate username before saving
-        if (accountRepository.findByEmail(accountDto.getUsername()) == null) {
+        if (userRepository.findByEmail(accountDto.getUsername()) == null) {
 
             UserDo userDo = UserDo.builder()
                     .email(accountDto.getUsername())
@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
                     .nickname(accountDto.getNickname())
                     .build();
 
-            userDo = accountRepository.save(userDo);
+            userDo = userRepository.save(userDo);
 
             if (profileImage != null) {
                 String profileImagePath = profileUpload(profileImage, userDo.getUserId());
@@ -91,7 +91,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteAccount(Long userId) {
-        accountRepository.deleteById(userId);
+        userRepository.deleteById(userId);
         amazonS3.deleteObject(bucketName, "users/" + userId + "/");
 
     }
@@ -102,7 +102,7 @@ public class AccountServiceImpl implements AccountService {
     public void updateProfile(Long userId, MultipartFile profileImage, UserDto userDto)
             throws IOException, UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userId)
+        UserDo userDo = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
 
         if (profileImage != null) {
@@ -137,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto getUserInfo(Long userId) throws UserNotFoundException {
 
-        UserDo userDo = accountRepository.findById(userId)
+        UserDo userDo = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException());
         AccountDto accountDto = userDo.toDto();
 
@@ -148,7 +148,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updatePassword(Long userId, String currentPassword, String newPassword)
             throws UserNotFoundException, IncorrectPasswordException {
-        UserDo userDo = accountRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+        UserDo userDo = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
         if (!passwordEncoder.matches(currentPassword, userDo.getPassword())) {
             throw new IncorrectPasswordException();
@@ -160,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public MyStatisticsDto getMyStatistics(Long userId) {
 
-        MyStatisticsDto myStatisticsDto = accountRepository.getMyStatistics(userId);
+        MyStatisticsDto myStatisticsDto = userRepository.getMyStatistics(userId);
 
         return myStatisticsDto;
     }
