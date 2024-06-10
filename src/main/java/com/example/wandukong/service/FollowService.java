@@ -8,10 +8,10 @@ public interface FollowService {
 
     List<FriendDto> getFollowingList(Long userId);
 
-    void following(FriendDto friendDto);
-
-    void unFollowing(FriendDto friendDto);
-
     List<FriendDto> getFollowerList(Long userId);
+
+    void following(Long accountId, Long userId);
+
+    void unFollowing(Long accountId, Long userId);
 
 }

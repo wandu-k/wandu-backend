@@ -2,9 +2,7 @@ package com.example.wandukong.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.FriendDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.service.FollowService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,15 +14,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "팔로우", description = "팔로우 API")
+@Tag(name = "팔로우", description = "팔로우 기능API")
 @RestController
 @RequestMapping("/api/user/follow")
 public class FollowController {
@@ -49,37 +43,6 @@ public class FollowController {
         List<FriendDto> friends = followService.getFollowerList(userId);
 
         return new ResponseEntity<>(friends, HttpStatus.OK);
-    }
-
-    @Operation(summary = "팔로잉", description = "팔로잉")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping
-    public ResponseEntity<?> following(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody FriendDto friendDto) throws BadRequestException {
-
-        if (customUserDetails.getAccountDto().getUserId() != friendDto.getUserId()) {
-            throw new BadRequestException();
-        }
-
-        followService.following(friendDto);
-
-        return new ResponseEntity<>("팔로우 성공", HttpStatus.OK);
-    }
-
-    @Operation(summary = "팔로잉 취소", description = "팔로잉 취소")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping
-    public ResponseEntity<?> unFollowing(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody FriendDto friendDto) throws BadRequestException {
-
-        if (customUserDetails.getAccountDto().getUserId() != friendDto.getUserId()) {
-            throw new BadRequestException();
-        }
-
-        followService.unFollowing(friendDto);
-
-        return new ResponseEntity<>("팔로우 취소 성공", HttpStatus.OK);
-
     }
 
 }
