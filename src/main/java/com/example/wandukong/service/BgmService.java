@@ -2,7 +2,6 @@ package com.example.wandukong.service;
 
 import java.util.List;
 
-import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 
 public interface BgmService {
@@ -11,6 +10,6 @@ public interface BgmService {
 
     List<ShopInfoDto> getBgmList(Long playlistId);
 
-    void deleteBgm(Long playerlistId, Long itemId);
+    void deleteBgm(Long playlistId, Long itemId);
 
 }

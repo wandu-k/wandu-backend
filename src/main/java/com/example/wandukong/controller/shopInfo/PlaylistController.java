@@ -57,8 +57,8 @@ public class PlaylistController {
   @Operation(summary = "특정 플레이리스트의 노래 삭제")
   @SecurityRequirement(name = "Baerer Authentication")
   @DeleteMapping("/playlist/{playlistId}/bgm/{itemId}")
-  public ResponseEntity<?> deleteBgm(@PathVariable Long playerlistId, @PathVariable Long itemId) {
-    bgmService.deleteBgm(playerlistId, itemId);
+  public ResponseEntity<?> deleteBgm(@PathVariable Long playlistId, @PathVariable Long itemId) {
+    bgmService.deleteBgm(playlistId, itemId);
 
     return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
   }
@@ -66,9 +66,9 @@ public class PlaylistController {
   @Operation(summary = "특정 플레이리스트의 특정 노래 추가")
   @SecurityRequirement(name = "Baerer Authentication")
   @PostMapping("/playlist/{playlistId}/bgm/{itemId}")
-  public ResponseEntity<?> postBgmAdd(@PathVariable Long playlistId, @PathVariable Long ItemId) {
+  public ResponseEntity<?> postBgmAdd(@PathVariable Long playlistId, @PathVariable Long itemId) {
 
-    bgmService.addBgm(playlistId, ItemId);
+    bgmService.addBgm(playlistId, itemId);
 
     return new ResponseEntity<>("추가 완료", HttpStatus.OK);
   }

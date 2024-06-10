@@ -56,10 +56,10 @@ public class BgmServiceImpl implements BgmService {
     }
 
     @Override
-    public void deleteBgm(Long playerlistId, Long itemId) {
+    public void deleteBgm(Long playlistId, Long itemId) {
 
         BuyItem buyItem = buyItemRepository.getReferenceById(itemId);
-        Playlist playlist = playlistRepository.getReferenceById(playerlistId);
+        Playlist playlist = playlistRepository.getReferenceById(playlistId);
 
         BgmListPK bgmListPK = new BgmListPK(buyItem, playlist);
 
