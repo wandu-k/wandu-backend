@@ -75,6 +75,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .nickname(userDo.getNickname())
                                 .birthday(userDo.getBirthday())
                                 .signupDay(userDo.getSignupDay())
+                                .intro(userDo.getIntro())
                                 .role(userDo.getRole())
                                 .followCount(followCountValue)
                                 .followerCount(followerCountValue)
