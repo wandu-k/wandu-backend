@@ -18,7 +18,7 @@ import com.example.wandukong.domain.ShopInfo.Playlist;
 public class BgmListPK implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "itemId", referencedColumnName = "itemId")
+    @JoinColumn(name = "buyItemId", referencedColumnName = "buyItemId")
     private BuyItem buyItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
