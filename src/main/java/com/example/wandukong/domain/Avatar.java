@@ -1,9 +1,6 @@
 package com.example.wandukong.domain;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.example.wandukong.domain.ShopInfo.BuyItem;
-import com.example.wandukong.util.S3Util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +11,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

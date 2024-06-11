@@ -1,9 +1,12 @@
 package com.example.wandukong.dto.ShopInfo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class ShopInfoDto {
   /* 상점 판매정보 */
 
@@ -19,27 +22,5 @@ public class ShopInfoDto {
   private int purchaseStatus;
   private int purchase;
   private Long categoryId;
-
-  @Builder
-  public ShopInfoDto(Long userId, Long itemId, String nickname, String itemName, String categoryName,
-      String subcategoryName, int price, Long subcategoryId,
-      String file, int purchaseStatus, int purchase, Long categoryId) {
-    this.userId = userId;
-    this.itemId = itemId;
-    this.nickname = nickname;
-    this.itemName = itemName;
-    this.categoryName = categoryName;
-    this.subcategoryName = subcategoryName;
-    this.price = price;
-    this.subcategoryId = subcategoryId;
-    this.file = file;
-    this.purchaseStatus = purchaseStatus;
-    this.purchase = purchase;
-    this.categoryId = categoryId;
-  }
-
-  public void setFile(String file) {
-    this.file = file;
-  }
-
+  private String thumbnail;
 }

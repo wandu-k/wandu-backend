@@ -71,6 +71,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .file(s3Util.getUrl(s.getItemFile().getFileName()))
             .subcategoryName(s.getShopSubcategory().getSubcategoryName())
             .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
+            .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
             .build())
         .collect(Collectors.toList());
 
@@ -83,7 +84,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
   }
 
   @Override
-  public ShopInfoDto findByIdWithDto(Long itemId, Long userId) {
+  public ShopInfoDto findByIdWithDto(Long itemId) {
     QShop shop = QShop.shop;
     QBuyItem buyItem = QBuyItem.buyItem;
 
@@ -101,31 +102,24 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
     // private int price;
     // private String file;
 
-    ShopInfoDto shopInfoDto = jpaQueryFactory
-        .select(Projections.constructor(ShopInfoDto.class,
-            shop.userDo.userId,
-            shop.itemId,
-            shop.userDo.nickname,
-            shop.itemName,
-            shop.shopSubcategory.category.categoryName,
-            shop.shopSubcategory.subcategoryName,
-            shop.price,
-            shop.shopSubcategory.subcategoryId,
-            shop.itemFile.fileName,
-            purchaseStatus,
-            purchaseCount.intValue(),
-            shop.shopSubcategory.category.categoryId))
-        .from(shop)
+    Shop s = jpaQueryFactory
+        .selectFrom(shop)
         .leftJoin(buyItem)
-        .on(buyItem.shop.itemId.eq(shop.itemId).and(buyItem.userDo.userId.eq(userId)))
+        .on(buyItem.shop.itemId
+            .eq(shop.itemId))
         .where(shop.itemId.eq(itemId)) // Add condition to filter by itemId
-        .fetchOne(); // Fetch a single result
+        .fetchOne();
 
-    if (shopInfoDto != null) {
-      String fileName = shopInfoDto.getFile(); // Assuming getFile() returns the file name
-      String fileUrl = s3Util.getUrl(fileName);
-      shopInfoDto.setFile(fileUrl); // Assuming setFile() sets the URL
-    }
+    ShopInfoDto shopInfoDto = ShopInfoDto.builder()
+        .userId(s.getUserDo().getUserId())
+        .itemId(s.getItemId())
+        .nickname(s.getUserDo().getNickname())
+        .itemName(s.getItemName())
+        .file(s3Util.getUrl(s.getItemFile().getFileName()))
+        .subcategoryName(s.getShopSubcategory().getSubcategoryName())
+        .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
+        .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
+        .build();
 
     return shopInfoDto;
   }

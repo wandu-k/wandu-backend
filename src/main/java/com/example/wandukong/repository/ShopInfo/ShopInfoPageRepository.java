@@ -9,5 +9,5 @@ public interface ShopInfoPageRepository {
 
   Page<ShopInfoDto> SearchAndfindAll(SearchItemDto searchDiaryDto);
 
-  ShopInfoDto findByIdWithDto(Long itemId, Long userId);
+  ShopInfoDto findByIdWithDto(Long itemId);
 }

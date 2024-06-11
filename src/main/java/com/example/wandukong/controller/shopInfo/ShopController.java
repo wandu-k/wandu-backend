@@ -2,15 +2,13 @@ package com.example.wandukong.controller.shopInfo;
 
 import java.io.IOException;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageResponseDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
-import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.ShopInfo.ShopService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +29,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @RestController
@@ -44,21 +41,19 @@ public class ShopController {
   ShopService shopService;
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @GetMapping
+  @GetMapping("/{itemId}")
   public ResponseEntity<?> getItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @RequestParam Long itemId) {
+      @PathVariable Long itemId) {
 
-    Long userId = customUserDetails.getAccountDto().getUserId();
-
-    ShopInfoDto shopInfoDto = shopService.getItem(itemId, userId);
+    ShopInfoDto shopInfoDto = shopService.getItem(itemId);
     return new ResponseEntity<>(shopInfoDto, HttpStatus.OK);
   }
 
   @Operation(summary = "아이템 리스트")
-  @PostMapping
+  @GetMapping
   @SecurityRequirement(name = "Bearer Authentication")
   public ResponseEntity<?> getShopItemList(
-      @RequestBody SearchItemDto searchItemDto) {
+      @ParameterObject SearchItemDto searchItemDto) {
 
     log.info(searchItemDto.toString());
 
@@ -76,19 +71,15 @@ public class ShopController {
       @ApiResponse(responseCode = "200", description = "아이템 수정이 완료되었습니다."),
   })
   @SecurityRequirement(name = "Bearer Authentication")
-  @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<?> putItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<?> addItem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
       @RequestPart(required = true, value = "itemfile") MultipartFile itemfile,
       @RequestPart(value = "shopDto") @Parameter(schema = @Schema(type = "string", format = "binary")) ShopDto shopDto)
-      throws IOException, BadRequestException {
+      throws IOException {
 
-    // 프론트에서 보낸 유저번호와 로그인된 유저번호가 일치하는지 확인
-    if (customUserDetails.getAccountDto().getUserId() != shopDto.getUserId()) {
-      throw new BadRequestException();
-    }
-    ApiResponseDto apiResponse = shopService.putItem(itemfile, shopDto);
+    shopService.addItem(itemfile, shopDto);
 
-    return new ResponseEntity<>(apiResponse.getMessage(), apiResponse.getStatus());
+    return new ResponseEntity<>("아이템 업로드 완료", HttpStatus.OK);
 
   }
 }

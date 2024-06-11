@@ -1,30 +1,39 @@
 package com.example.wandukong.service.ShopInfo;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.wandukong.domain.ShopInfo.ItemFile;
 import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.dto.ShopInfo.ShopDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
-import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.ShopInfo.CategoryRepository;
 import com.example.wandukong.repository.ShopInfo.ItemFileRepository;
 import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
 import com.example.wandukong.repository.user.UserRepository;
 import com.example.wandukong.util.S3Util;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +55,12 @@ public class ShopServiceImpl implements ShopService {
   @Autowired
   UserRepository accountRepository;
 
-  private final S3Util s3Util;
+  private final AmazonS3 amazonS3;
 
   @Value(value = "${cloud.aws.s3.bucket}")
   private String bucketName;
+
+  private final S3Util s3Util;
 
   @Override
   public PageResponseDto<ShopInfoDto> getShopItemList(SearchItemDto searchItemDto) {
@@ -65,79 +76,17 @@ public class ShopServiceImpl implements ShopService {
         .build();
   }
 
-  @Transactional
-  @Override
-  public ApiResponseDto putItem(MultipartFile itemfile, ShopDto shopDto) throws IOException, BadRequestException {
-
-    if (itemfile == null) {
-      throw new BadRequestException();
-    }
-
-    // Dto 아이템 번호 존재 여부 확인
-    if (shopDto.getItemId() != null) {
-
-      // 만약 존재한다면 해당 번호의 아이템 조회
-      Shop shop = shopInfoRepository.findById(shopDto.getItemId()).orElse(null);
-
-      ItemFile itemFile = itemFileRepository.findById(shop.getItemId()).orElse(null);
-
-      // 기존 아이템 이미지 삭제
-      s3Util.itemfileDelete(shop.getItemFile().getFileName());
-
-      // 오프벡트 키 생성
-      String objectKey = filePathGenerate(itemfile, shop);
-
-      // 파일 업로드
-      s3Util.itemfileUpload(itemfile, objectKey);
-
-      // 상점 아이템 및 파일 정보 수정
-      shop.updateItem(shopDto.getItemName(), shopDto.getPrice());
-      itemFile.changeFileName(objectKey);
-
-      ApiResponseDto apiResponseDto = ApiResponseDto.builder()
-          .message("수정 완료")
-          .status(HttpStatus.OK)
-          .build();
-
-      return apiResponseDto;
-
-    }
-
-    // 등록할 아이템 정보 설정
-    Shop shop = shopDto.toEntity();
-
-    shopInfoRepository.save(shop);
-
-    String objectKey = filePathGenerate(itemfile, shop);
-
-    s3Util.itemfileUpload(itemfile, objectKey);
-    // ItemFile 엔티티 생성 및 저장
-    ItemFile itemFile = ItemFile.builder()
-        .itemId(shop.getItemId())
-        .fileName(objectKey)
-        .build();
-
-    itemFileRepository.save(itemFile);
-    log.info("각 아이템 정보들" + shop);
-
-    ApiResponseDto apiResponseDto = ApiResponseDto.builder()
-        .message("추가 완료")
-        .status(HttpStatus.CREATED)
-        .build();
-    return apiResponseDto;
-  }
-
   private String filePathGenerate(MultipartFile itemfile, Shop shop) {
 
     String ext = itemfile.getOriginalFilename().substring(itemfile.getOriginalFilename().lastIndexOf("."));
     // 파일 경로 지정()
     String filepath = "shop/" + shop.getShopSubcategory().getSubcategoryId() + "/"
-        + shop.getUserDo().getUserId() + "/" + ext;
+        + shop.getUserDo().getUserId() + "/";
 
     // uuid설정
     String uuid = UUID.randomUUID().toString();
 
-    String filename = uuid + "-" + shop.getItemName();
+    String filename = uuid + "-" + shop.getItemName() + ext;
 
     String objectKey = filepath + filename;
 
@@ -145,9 +94,97 @@ public class ShopServiceImpl implements ShopService {
   }
 
   @Override
-  public ShopInfoDto getItem(Long itemId, Long userId) {
-    ShopInfoDto shopInfoDto = shopInfoRepository.findByIdWithDto(itemId, userId);
+  public ShopInfoDto getItem(Long itemId) {
+    ShopInfoDto shopInfoDto = shopInfoRepository.findByIdWithDto(itemId);
     return shopInfoDto;
   }
 
+  @Transactional
+  @Override
+  public void addItem(MultipartFile itemfile, ShopDto shopDto) throws IOException {
+
+    // 등록할 아이템 정보 설정
+    Shop shop = shopDto.toEntity();
+
+    shop = shopInfoRepository.save(shop);
+
+    log.info("아이템 저장 완료");
+
+    String objectKey = filePathGenerate(itemfile, shop);
+
+    log.info("아이템 업로드 성공");
+
+    ItemFile.ItemFileBuilder itemFileBuilder = ItemFile.builder()
+        .itemId(shop.getItemId())
+        .fileName(objectKey);
+
+    File tempFile = File.createTempFile("upload", itemfile.getOriginalFilename());
+    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+      fos.write(itemfile.getBytes());
+    }
+    Path filePath = tempFile.toPath();
+
+    String mimeType = Files.probeContentType(filePath);
+
+    // 오디오 파일 MIME 타입 체크
+    // 오디오 파일 MIME 타입 체크
+    if (mimeType.startsWith("audio/")) {
+      log.info("오디오 파일");
+      Mp3File mp3File;
+      try {
+        mp3File = new Mp3File(filePath.toFile());
+        if (mp3File.hasId3v2Tag()) {
+          ID3v2 id3v2Tag = mp3File.getId3v2Tag();
+          String title = id3v2Tag.getTitle();
+          String artist = id3v2Tag.getArtist();
+          String album = id3v2Tag.getAlbum();
+          byte[] albumImage = id3v2Tag.getAlbumImage();
+
+          // 메타데이터 출력 및 DTO 설정
+          System.out.println("Title: " + title);
+          System.out.println("Artist: " + artist);
+          System.out.println("Album: " + album);
+
+          // 앨범 아트가 존재하는 경우
+          if (albumImage != null) {
+            String uuid = UUID.randomUUID().toString();
+            String thumbnail = "thumbnail/" + uuid + ".jpeg";
+
+            // 바이트 배열을 ByteArrayInputStream으로 변환
+            ByteArrayInputStream albumImageInputStream = new ByteArrayInputStream(albumImage);
+
+            // ObjectMetadata 설정
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType("image/jpeg");
+            objectMetadata.setContentLength(albumImage.length);
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, thumbnail,
+                albumImageInputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+            itemFileBuilder.thumbnail(thumbnail);
+
+            // 임시 파일 삭제
+            tempFile.delete();
+
+          } else {
+            System.out.println("No album art found");
+          }
+
+        } else {
+          System.out.println("No ID3v2 tag found");
+        }
+
+      } catch (UnsupportedTagException | InvalidDataException | IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    ItemFile itemFile = itemFileBuilder.build();
+
+    s3Util.itemfileUpload(itemfile, objectKey);
+
+    itemFileRepository.save(itemFile);
+
+  }
 }

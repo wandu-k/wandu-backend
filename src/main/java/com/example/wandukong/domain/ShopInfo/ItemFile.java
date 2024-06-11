@@ -31,10 +31,15 @@ public class ItemFile {
     @Column(name = "fileName")
     private String fileName;
 
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
     @Builder
-    public ItemFile(String fileName, Long itemId) {
+    public ItemFile(Long itemId, Shop shop, String fileName, String thumbnail) {
         this.itemId = itemId;
+        this.shop = shop;
         this.fileName = fileName;
+        this.thumbnail = thumbnail;
     }
 
     public void changeFileName(String fileName) {
