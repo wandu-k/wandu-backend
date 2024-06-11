@@ -11,7 +11,8 @@ import com.example.wandukong.domain.ShopInfo.QShop;
 import com.example.wandukong.dto.MyStatisticsDto;
 import com.example.wandukong.dto.UserDto;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -22,22 +23,52 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         private JPAQueryFactory jpaQueryFactory;
 
         @Override
-        public UserDto getUserInfo(Long userId) {
+        public UserDto getUserInfo(Long userId, Long followCheckUserId) {
 
                 QUserDo userDo1 = QUserDo.userDo;
                 QFriend friend = QFriend.friend;
 
+                // followCheck 초기화
+                NumberExpression<Integer> followCheck = new CaseBuilder()
+                                .when(JPAExpressions
+                                                .selectOne()
+                                                .from(friend)
+                                                .where(friend.friendId.userDo.userId.eq(followCheckUserId)
+                                                                .and(friend.friendId.friendDo.userId
+                                                                                .eq(userId)))
+                                                .exists())
+                                .then(1)
+                                .otherwise(0);
+
+                // Query 수정
+                // followCount와 followerCount 조건 정의
+                NumberExpression<Long> followCount = new CaseBuilder()
+                                .when(friend.friendId.userDo.userId.eq(userId))
+                                .then(1L)
+                                .otherwise(0L);
+
+                NumberExpression<Long> followerCount = new CaseBuilder()
+                                .when(friend.friendId.friendDo.userId.eq(userId))
+                                .then(1L)
+                                .otherwise(0L);
+
+                // Query 수정
                 Tuple result = jpaQueryFactory
-                                .select(userDo1, friend.count().as("followCount"), friend.count().as("followerCount"))
+                                .select(userDo1,
+                                                followCount.sum().as("followCount"),
+                                                followerCount.sum().as("followerCount"),
+                                                followCheck.as("followCheck"))
                                 .from(userDo1)
-                                .leftJoin(friend).on(friend.friendId.userDo.userId.eq(userId))
-                                .leftJoin(friend).on(friend.friendId.friendDo.userId.eq(userId))
+                                .leftJoin(friend)
+                                .on(friend.friendId.userDo.userId.eq(userId)
+                                                .or(friend.friendId.friendDo.userId.eq(userId)))
                                 .where(userDo1.userId.eq(userId))
                                 .fetchOne();
 
                 UserDo userDo = result.get(userDo1);
-                Long followCount = result.get(1, Long.class);
-                Long followerCount = result.get(2, Long.class);
+                Long followCountValue = result.get(1, Long.class);
+                Long followerCountValue = result.get(2, Long.class);
+                Integer followCheckValue = result.get(followCheck.as("followCheck"));
 
                 UserDto userDto = UserDto.builder()
                                 .userId(userDo.getUserId())
@@ -45,8 +76,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .birthday(userDo.getBirthday())
                                 .signupDay(userDo.getSignupDay())
                                 .role(userDo.getRole())
-                                .followCount(followCount)
-                                .followerCount(followerCount)
+                                .followCount(followCountValue)
+                                .followerCount(followerCountValue)
+                                .followCheck(followCheckValue)
                                 .build();
 
                 return userDto;

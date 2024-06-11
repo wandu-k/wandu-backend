@@ -35,10 +35,11 @@ public class PublicUserController {
             @ApiResponse(responseCode = "422", description = "존재하지 않는 회원입니다."),
     })
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long userId) throws UserNotFoundException {
+    public ResponseEntity<?> getUserInfo(@PathVariable Long userId,
+            @RequestParam(required = false) Long followCheckUserId) throws UserNotFoundException {
 
         log.info("유저 정보 조회 컨트롤러");
-        UserDto userDto = userService.getUserInfo(userId);
+        UserDto userDto = userService.getUserInfo(userId, followCheckUserId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 

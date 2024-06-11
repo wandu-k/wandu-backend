@@ -14,8 +14,8 @@ public class UserServiceimpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto getUserInfo(Long userId) {
-        return userRepository.getUserInfo(userId);
+    public UserDto getUserInfo(Long userId, Long followCheckUserId) {
+        return userRepository.getUserInfo(userId, followCheckUserId);
     }
 
 }

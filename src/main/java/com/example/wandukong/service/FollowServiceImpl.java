@@ -12,8 +12,11 @@ import com.example.wandukong.dto.FriendDto;
 import com.example.wandukong.repository.FriendRepository;
 import com.example.wandukong.repository.user.UserRepository;
 
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
@@ -50,8 +53,10 @@ public class FollowServiceImpl implements FollowService {
         UserDo userDo = userRepository.getReferenceById(accountId);
         UserDo friendDo = userRepository.getReferenceById(userId);
         FriendPK friendPK = new FriendPK(userDo, friendDo);
-        Friend friend = friendRepository.getReferenceById(friendPK);
-        friendRepository.save(friend);
+        if (!friendRepository.existsById(friendPK)) {
+            Friend friend = new Friend(friendPK);
+            friendRepository.save(friend);
+        }
     }
 
     @Override

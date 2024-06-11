@@ -5,7 +5,7 @@ import com.example.wandukong.dto.UserDto;
 
 public interface UserRepositoryCustom {
 
-    UserDto getUserInfo(Long userId);
+    UserDto getUserInfo(Long userId, Long followCheckUserId);
 
     MyStatisticsDto getMyStatistics(Long userId);
 
