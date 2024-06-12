@@ -35,7 +35,7 @@ public class PlaylistController {
   @Operation(summary = "특정 플레이리스트 조회")
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping("/playlist/{playlistId}")
-  public ResponseEntity<?> getPlaylist(@PathVariable Long playlistId)
+  public ResponseEntity<?> getPlaylist(@PathVariable("playlistId") Long playlistId)
       throws HomeNotFoundException {
 
     PlaylistDto playlistDto = playlistService.getPlaylist(playlistId);
@@ -45,7 +45,7 @@ public class PlaylistController {
   @Operation(summary = "특정 플레이리스트의 노래 리스트")
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping("/playlist/{playlistId}/bgm")
-  public ResponseEntity<?> getBgmList(@PathVariable Long playlistId) {
+  public ResponseEntity<?> getBgmList(@PathVariable("playlistId") Long playlistId) {
 
     List<BgmListDto> bgmListDtos = bgmService.getBgmList(playlistId);
     return new ResponseEntity<>(bgmListDtos, HttpStatus.OK);

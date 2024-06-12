@@ -67,3 +67,7 @@ tasks.named('test') {
 
 // gradle에서 compile.java를 실행할 때 다 지우고 새로 만드는 부분
 compileJava.dependsOn('clean')
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
+}

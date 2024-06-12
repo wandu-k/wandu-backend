@@ -42,7 +42,7 @@ public class MyPlaylistController {
     @SecurityRequirement(name = "Baerer Authentication")
     @GetMapping
     public ResponseEntity<?> getplaylist(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(required = false) Long itemId) {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam(required = false, value = "itemId") Long itemId) {
         System.out.println(itemId);
 
         // 미니홈을 접속했는지 안했는지의 여부는 프론트에서 확인합니다.
@@ -76,7 +76,7 @@ public class MyPlaylistController {
     @SecurityRequirement(name = "Baerer Authentication")
     @PutMapping(value = "/{playlistId}")
     public ResponseEntity<?> putMyPlaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long playlistId,
+            @PathVariable("playlistId") Long playlistId,
             @RequestBody PlaylistDto playlistDto)
             throws BadRequestException {
 
@@ -92,7 +92,7 @@ public class MyPlaylistController {
     @SecurityRequirement(name = "Baerer Authentication")
     @DeleteMapping(value = "/{playlistId}")
     public ResponseEntity<?> deleteMyPlaylist(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long playlistId) {
+            @PathVariable("playlistId") Long playlistId) {
 
         Long userId = customUserDetails.getAccountDto().getUserId();
 
@@ -105,7 +105,7 @@ public class MyPlaylistController {
     @Operation(summary = "특정 플레이리스트의 노래 삭제")
     @SecurityRequirement(name = "Baerer Authentication")
     @DeleteMapping("/{playlistId}/bgm/{buyItemId}")
-    public ResponseEntity<?> deleteBgm(@PathVariable Long playlistId, @PathVariable Long buyItemId) {
+    public ResponseEntity<?> deleteBgm(@PathVariable("playlistId") Long playlistId, @PathVariable("buyItemId") Long buyItemId) {
         bgmService.deleteBgm(playlistId, buyItemId);
 
         return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
@@ -114,7 +114,7 @@ public class MyPlaylistController {
     @Operation(summary = "특정 플레이리스트의 특정 노래 추가")
     @SecurityRequirement(name = "Baerer Authentication")
     @PostMapping("/{playlistId}/bgm/{buyItemId}")
-    public ResponseEntity<?> postBgmAdd(@PathVariable Long playlistId, @PathVariable Long buyItemId) {
+    public ResponseEntity<?> postBgmAdd(@PathVariable("playlistId") Long playlistId, @PathVariable("buyItemId") Long buyItemId) {
 
         bgmService.addBgm(playlistId, buyItemId);
 

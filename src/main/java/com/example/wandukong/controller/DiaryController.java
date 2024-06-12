@@ -38,7 +38,7 @@ public class DiaryController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{userId}/diary/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable Long userId, @PathVariable Long postId) {
+    public ResponseEntity<?> getPost(@PathVariable("userId") Long userId, @PathVariable("postId") Long postId) {
 
         log.info("다이어리 get 단건 조회 컨트롤러 진입");
 
@@ -52,8 +52,8 @@ public class DiaryController {
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/diary/list")
     public ResponseEntity<?> getList(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) LocalDate date) {
+            @RequestParam(required = false, value = "userId") Long userId,
+            @RequestParam(required = false, value = "date") LocalDate date) {
 
         SearchDiaryDto searchDiaryDto = new SearchDiaryDto(date, null, userId);
 
@@ -79,7 +79,7 @@ public class DiaryController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping("/diary/{postId}")
     public ResponseEntity<?> putPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long postId, @RequestBody DiaryDto diaryDto)
+            @PathVariable("postId") Long postId, @RequestBody DiaryDto diaryDto)
             throws BadRequestException, PostNotFoundException {
 
         log.info("다이어리 Put 진입");
@@ -94,7 +94,7 @@ public class DiaryController {
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/diary/{postId}")
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long postId)
+            @PathVariable("postId") Long postId)
             throws BadRequestException, PostNotFoundException {
 
         log.info("다이어리 Put 진입");

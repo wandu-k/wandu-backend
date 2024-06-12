@@ -7,9 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.AlbumDto;
 import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
-import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
-import com.example.wandukong.exception.CustomException.BadRequestException;
-import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.service.AlbumService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,13 +18,10 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -39,7 +33,7 @@ public class AlbumController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{userId}/album/{albumId}")
-    public ResponseEntity<?> getAlbum(@RequestParam Long albumId) {
+    public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId) {
 
         AlbumDto pictureDto = albumService.getAlbum(albumId);
         return new ResponseEntity<>(pictureDto, HttpStatus.OK);
@@ -47,7 +41,7 @@ public class AlbumController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{userId}/album/list")
-    public ResponseEntity<?> getAlbumList(@PathVariable Long userId,
+    public ResponseEntity<?> getAlbumList(@PathVariable("userId") Long userId,
             @RequestBody(required = false) SliceRequestDto sliceRequestDto) {
         List<AlbumDto> albumDtos = albumService.getAlbumList(userId);
         return new ResponseEntity<>(albumDtos, HttpStatus.OK);
@@ -56,8 +50,8 @@ public class AlbumController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/album")
     public ResponseEntity<?> addAlbum(
-            @RequestPart MultipartFile multipartFile,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart AlbumDto albumDto)
+        @RequestPart("multipartFile")  MultipartFile multipartFile,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart("albumDto") AlbumDto albumDto)
             throws IOException {
 
         Long userId = customUserDetails.getAccountDto().getUserId();

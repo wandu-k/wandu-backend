@@ -28,7 +28,7 @@ public class MyAvatarController {
     @PutMapping("/{buyItemId}")
     public ResponseEntity<?> putAvatar(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long buyItemId,
+            @PathVariable("buyItemId") Long buyItemId,
             @RequestBody RequestAvatarDto requestAvatarDto) throws BadRequestException {
 
         Long userId = customUserDetails.getAccountDto().getUserId();

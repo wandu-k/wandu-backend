@@ -29,23 +29,11 @@ public class MiniHomeController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{userId}/minihome")
-    public ResponseEntity<?> getMiniHome(@PathVariable Long userId) throws HomeNotFoundException {
+    public ResponseEntity<?> getMiniHome(@PathVariable("userId") Long userId) throws HomeNotFoundException {
 
         MiniHomeDto miniHomeDto = miniHomeService.getMiniHome(userId);
         return new ResponseEntity<>(miniHomeDto, HttpStatus.OK);
     }
-
-    // @SecurityRequirement(name = "Bearer Authentication")
-    // @GetMapping("/board")
-    // public ResponseEntity<?> getBoardList() {
-    // List<MiniHomeBoardDto> boardList = new ArrayList<MiniHomeBoardDto>();
-    // boardList = miniHomeService.getBoardList();
-
-    // if (boardList.isEmpty()) {
-    // return new ResponseEntity<>("현재 등록된 게시판이 없습니다", HttpStatus.OK);
-    // }
-    // return new ResponseEntity<>(boardList, HttpStatus.OK);
-    // }
 
     @Operation(summary = "미니홈 플레이리스트 설정")
     @PatchMapping("/minihome/playlist")

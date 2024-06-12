@@ -30,7 +30,7 @@ public class MyFollowController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{userId}")
     public ResponseEntity<?> following(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long userId) throws BadRequestException {
+            @PathVariable("userId") Long userId) throws BadRequestException {
 
         Long accountId = customUserDetails.getAccountDto().getUserId();
 
@@ -43,7 +43,7 @@ public class MyFollowController {
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> unFollowing(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long userId) throws BadRequestException {
+            @PathVariable("userId") Long userId) throws BadRequestException {
 
         Long accountId = customUserDetails.getAccountDto().getUserId();
 
