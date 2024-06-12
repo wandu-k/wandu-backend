@@ -17,4 +17,9 @@ public class DailyDto {
         this.date = date;
     }
 
+    public DailyDto() {
+    }
+
+    
+
 }

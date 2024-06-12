@@ -89,35 +89,36 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
     QShop shop = QShop.shop;
     QBuyItem buyItem = QBuyItem.buyItem;
 
-    // Count the number of purchases for the item
     NumberExpression<Long> purchaseCount = buyItem.shop.itemId.count();
 
-    // Consider revising this expression based on your actual requirement
-    // Currently, it checks if the itemId is not null, which might not be what you
-    // need
     NumberExpression<Integer> purchaseStatus = new CaseBuilder()
         .when(buyItem.shop.itemId.eq(itemId)).then(1)
         .otherwise(0);
 
-    long purchaseCountValue = jpaQueryFactory
+    Long purchaseCountValue = jpaQueryFactory
         .select(purchaseCount)
         .from(buyItem)
-        .fetchOne();
+        .where(buyItem.shop.itemId.eq(itemId))
+        .fetchFirst();
 
     Integer purchaseStatusValue = jpaQueryFactory
         .select(purchaseStatus)
         .from(buyItem)
-        .fetchOne();
+        .where(buyItem.shop.itemId.eq(itemId))
+        .fetchFirst();
 
     int statusValue = (purchaseStatusValue != null) ? purchaseStatusValue.intValue() : 0;
 
     Shop s = jpaQueryFactory
         .selectFrom(shop)
         .leftJoin(buyItem)
-        .on(buyItem.shop.itemId
-            .eq(shop.itemId))
-        .where(shop.itemId.eq(itemId)) // Add condition to filter by itemId
+        .on(buyItem.shop.itemId.eq(shop.itemId))
+        .where(shop.itemId.eq(itemId))
         .fetchOne();
+
+    if (s == null) {
+      return null;
+    }
 
     ShopInfoDto shopInfoDto = ShopInfoDto.builder()
         .userId(s.getUserDo().getUserId())
@@ -128,7 +129,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
         .price(s.getPrice())
         .subcategoryName(s.getShopSubcategory().getSubcategoryName())
         .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
-        .purchase((int) purchaseCountValue)
+        .purchase((int) (purchaseCountValue != null ? purchaseCountValue : 0))
         .purchaseStatus(statusValue)
         .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
         .build();

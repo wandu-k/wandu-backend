@@ -33,7 +33,7 @@ public class ItemInventoryController {
   @PostMapping("/{userId}/inventory/list")
   public ResponseEntity<?> inventory(
       @AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @PathVariable Long userId,
+      @PathVariable("userId") Long userId,
       @RequestBody SearchItemDto searchItemDto) throws BadRequestException {
 
     if (!customUserDetails.getAccountDto().getUserId().equals(userId)) {

@@ -25,6 +25,13 @@ public class ShopDto {
         this.price = price;
     }
 
+    
+
+    public ShopDto() {
+    }
+
+
+
     /* 상점 */
     public Shop toEntity() {
         return Shop.builder()

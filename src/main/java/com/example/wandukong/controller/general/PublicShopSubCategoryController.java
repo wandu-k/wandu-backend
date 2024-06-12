@@ -22,7 +22,7 @@ public class PublicShopSubCategoryController {
     private final ShopSubCategoryService shopSubCategoryService;
 
     @GetMapping
-    public ResponseEntity<?> getListSubCategory(@RequestParam(required = false) Long categoryId) {
+    public ResponseEntity<?> getListSubCategory(@RequestParam(required = false, value = "categoryId") Long categoryId) {
         List<ShopSubCategoryDto> ShopSubCategoryDto = shopSubCategoryService.getListSubCategory(categoryId);
         return new ResponseEntity<>(ShopSubCategoryDto, HttpStatus.OK);
     }

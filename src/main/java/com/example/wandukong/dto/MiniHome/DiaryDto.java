@@ -2,14 +2,15 @@ package com.example.wandukong.dto.MiniHome;
 
 import java.time.LocalDate;
 
-import com.example.wandukong.domain.Friend;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.diary.Diary;
-import com.example.wandukong.dto.FriendDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+@AllArgsConstructor
+@Builder
 @Getter
 public class DiaryDto {
 
@@ -18,16 +19,6 @@ public class DiaryDto {
     private String title;
     private String content;
     private LocalDate writeDay;
-
-    @Builder
-    public DiaryDto(Long postId, Long userId, String title, String content,
-            LocalDate writeDay) {
-        this.postId = postId;
-        this.userId = userId;
-        this.title = title;
-        this.content = content;
-        this.writeDay = writeDay;
-    }
 
     public Diary toEntity() {
 
@@ -38,4 +29,9 @@ public class DiaryDto {
                 .build();
         return diary;
     }
+
+    public DiaryDto() {
+    }
+
+    
 }

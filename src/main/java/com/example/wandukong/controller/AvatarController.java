@@ -23,7 +23,7 @@ public class AvatarController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{userId}/avatar")
-    public ResponseEntity<?> getAvatar(@PathVariable Long userId) {
+    public ResponseEntity<?> getAvatar(@PathVariable("userId") Long userId) {
 
         ResponseAvatarDto avatarDto = avatarService.getAvatar(userId);
         return new ResponseEntity<>(avatarDto, HttpStatus.OK);

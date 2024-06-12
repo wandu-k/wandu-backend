@@ -77,7 +77,7 @@ public class AccountController {
     public ResponseEntity<?> updateProfile(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart(required = false, value = "profileImage") MultipartFile profileImage,
-            @RequestPart UserDto userDto)
+            @RequestPart("userDto") UserDto userDto)
             throws IOException, UserNotFoundException {
 
         Long userId = customUserDetails.getAccountDto().getUserId();

@@ -25,24 +25,28 @@ public class AvatarServiceImpl implements AvatarService {
 
         Avatar avatar = avatarRepository.findById(userId).orElse(null);
 
-        ResponseAvatarDto responseAvatarDto = ResponseAvatarDto.builder()
-                .userId(userId)
-                .head(avatar.getHead() != null
-                        ? s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName())
-                        : null)
-                .eye(avatar.getEye() != null
-                        ? s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName())
-                        : null)
-                .mouse(avatar.getMouse() != null
-                        ? s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName())
-                        : null)
-                .cloth(avatar.getCloth() != null
-                        ? s3Util.getUrl(avatar.getCloth().getShop().getItemFile().getFileName())
-                        : null)
-                .build();
+        ResponseAvatarDto.ResponseAvatarDtoBuilder responseAvatarDtoBuilder = ResponseAvatarDto
+                .builder()
+                .userId(userId);
+
+        if (avatar != null) {
+            responseAvatarDtoBuilder.head(avatar.getHead() != null
+                    ? s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName())
+                    : null)
+                    .eye(avatar.getEye() != null
+                            ? s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName())
+                            : null)
+                    .mouse(avatar.getMouse() != null
+                            ? s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName())
+                            : null)
+                    .cloth(avatar.getCloth() != null
+                            ? s3Util.getUrl(avatar.getCloth().getShop().getItemFile().getFileName())
+                            : null);
+        }
+
+        ResponseAvatarDto responseAvatarDto = responseAvatarDtoBuilder.build();
 
         return responseAvatarDto;
-
     }
 
     @Override
