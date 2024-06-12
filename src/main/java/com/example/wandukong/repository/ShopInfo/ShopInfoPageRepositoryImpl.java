@@ -69,6 +69,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
             .nickname(s.getUserDo().getNickname())
             .itemName(s.getItemName())
             .file(s3Util.getUrl(s.getItemFile().getFileName()))
+            .price(s.getPrice())
             .subcategoryName(s.getShopSubcategory().getSubcategoryName())
             .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
             .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
@@ -103,10 +104,12 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
         .from(buyItem)
         .fetchOne();
 
-    int purchaseStatusValue = jpaQueryFactory
+    Integer purchaseStatusValue = jpaQueryFactory
         .select(purchaseStatus)
         .from(buyItem)
         .fetchOne();
+
+    int statusValue = (purchaseStatusValue != null) ? purchaseStatusValue.intValue() : 0;
 
     Shop s = jpaQueryFactory
         .selectFrom(shop)
@@ -122,10 +125,11 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
         .nickname(s.getUserDo().getNickname())
         .itemName(s.getItemName())
         .file(s3Util.getUrl(s.getItemFile().getFileName()))
+        .price(s.getPrice())
         .subcategoryName(s.getShopSubcategory().getSubcategoryName())
         .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
         .purchase((int) purchaseCountValue)
-        .purchaseStatus(purchaseStatusValue)
+        .purchaseStatus(statusValue)
         .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
         .build();
 

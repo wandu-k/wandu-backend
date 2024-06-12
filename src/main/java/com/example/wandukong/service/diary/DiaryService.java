@@ -12,8 +12,10 @@ public interface DiaryService {
 
     List<DiaryDto> getList(SearchDiaryDto searchDiaryDto);
 
-    DiaryDto getPost(Long postId);
+    DiaryDto getPost(Long userId, Long postId);
 
     void addPost(DiaryDto diaryDto);
+
+    void deletePost(Long postId);
 
 }

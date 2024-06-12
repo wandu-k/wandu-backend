@@ -12,7 +12,9 @@ import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.repository.diary.DiaryRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -34,18 +36,20 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public DiaryDto getPost(Long postId) {
-        Diary diary = diaryRepository.findById(postId).orElse(null);
+    public DiaryDto getPost(Long userId, Long postId) {
 
-        DiaryDto diarydto = DiaryDto.builder()
+        log.info(postId.toString());
+        log.info(userId.toString());
+
+        Diary diary = diaryRepository.findByUserDo_UserIdAndPostId(userId, postId).orElse(null);
+
+        return DiaryDto.builder()
                 .postId(diary.getPostId())
                 .userId(diary.getUserDo().getUserId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
                 .writeDay(diary.getWriteDay())
                 .build();
-
-        return diarydto;
     }
 
     @Override
@@ -54,6 +58,11 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryDto.toEntity();
 
         diaryRepository.save(diary);
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        diaryRepository.deleteById(postId);
     }
 
 }

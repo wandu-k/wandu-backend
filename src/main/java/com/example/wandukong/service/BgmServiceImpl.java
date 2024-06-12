@@ -73,7 +73,7 @@ public class BgmServiceImpl implements BgmService {
                     .playlistId(bgmList.getPlaylist().getPlaylistId())
                     .url(fileUrl)
                     .title(bgmList.getBuyItem().getShop().getItemName())
-                    .album(bgmList.getBuyItem().getShop().getItemFile().getThumbnail())
+                    .album(s3Util.getUrl(bgmList.getBuyItem().getShop().getItemFile().getThumbnail()))
                     .artist(bgmList.getBuyItem().getShop().getUserDo().getNickname())
                     .build();
             listDto.add(bgmListDto);
