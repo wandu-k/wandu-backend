@@ -1,6 +1,5 @@
 package com.example.wandukong.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,7 +7,6 @@ import com.example.wandukong.domain.Album;
 import com.example.wandukong.domain.AlbumFile;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.dto.AlbumDto;
-import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.AlbumFileRepository;
 import com.example.wandukong.repository.AlbumRepository;

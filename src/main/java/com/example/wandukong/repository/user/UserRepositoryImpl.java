@@ -101,25 +101,41 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         }
 
         @Override
-        public MyStatisticsDto getMyStatistics(Long userId) {
+        public int getShopCount(Long userId) {
                 QShop shop = QShop.shop;
+
+                return jpaQueryFactory
+                                .select(shop.count())
+                                .from(shop)
+                                .where(shop.userDo.userId.eq(userId))
+                                .fetchOne()
+                                .intValue();
+        }
+
+        @Override
+        public int getSoldItemCount(Long userId) {
                 QBuyItem buyItem = QBuyItem.buyItem;
 
-                // 상점과 상품 구매 테이블을 조인하여 필요한 통계를 한 번에 계산
-                Tuple tuple = jpaQueryFactory
-                                .select(shop.count(), buyItem.count(), buyItem.countDistinct())
-                                .from(shop)
-                                .leftJoin(shop.buyItem, buyItem)
-                                .where(shop.userDo.userId.eq(userId))
-                                .fetchOne();
+                return jpaQueryFactory
+                                .select(buyItem.count())
+                                .from(buyItem)
+                                .leftJoin(buyItem.shop)
+                                .where(buyItem.shop.userDo.userId.eq(userId))
+                                .fetchOne()
+                                .intValue();
+        }
 
-                // 튜플에서 각 통계를 추출하여 MyStatisticsDto로 변환
-                Long shopCount = tuple.get(shop.count());
-                Long soldItemCount = tuple.get(buyItem.count());
-                Long distinctBoughtItemCount = tuple.get(buyItem.countDistinct());
+        @Override
+        public int getDistinctBoughtItemCount(Long userId) {
 
-                // MyStatisticsDto 객체 반환
-                return new MyStatisticsDto(shopCount.intValue(), soldItemCount.intValue(),
-                                distinctBoughtItemCount.intValue());
+                QBuyItem buyItem = QBuyItem.buyItem;
+
+                return jpaQueryFactory
+                                .select(buyItem.buyItemId.countDistinct())
+                                .from(buyItem)
+                                .leftJoin(buyItem.shop)
+                                .where(buyItem.userDo.userId.eq(userId))
+                                .fetchOne()
+                                .intValue();
         }
 }

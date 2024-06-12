@@ -159,7 +159,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public MyStatisticsDto getMyStatistics(Long userId) {
 
-        MyStatisticsDto myStatisticsDto = userRepository.getMyStatistics(userId);
+        int shopCount = userRepository.getShopCount(userId);
+        int soldItemCount = userRepository.getSoldItemCount(userId);
+        int distinctBoughtItemCount = userRepository.getDistinctBoughtItemCount(userId);
+
+        MyStatisticsDto myStatisticsDto = new MyStatisticsDto(shopCount, soldItemCount, distinctBoughtItemCount);
 
         return myStatisticsDto;
     }

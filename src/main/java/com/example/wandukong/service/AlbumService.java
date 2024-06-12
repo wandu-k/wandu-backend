@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wandukong.dto.AlbumDto;
-import com.example.wandukong.dto.ScrollDto.SliceResponseDto;
 import com.example.wandukong.model.ApiResponseDto;
 
 public interface AlbumService {
