@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.wandukong.dto.CustomUserDetails;
@@ -30,7 +31,7 @@ public class ItemInventoryController {
 
   // 구매한 아이템 내역
   @SecurityRequirement(name = "Bearer Authentication")
-  @GetMapping("/{userId}/inventory")
+  @PostMapping("/{userId}/inventory/list")
   public ResponseEntity<?> inventory(
       @AuthenticationPrincipal CustomUserDetails customUserDetails,
       @PathVariable Long userId,
