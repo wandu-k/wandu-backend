@@ -81,6 +81,7 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
               .enable(enable)
               .categoryId(shopEntity.getShopSubcategory().getCategory().getCategoryId())
               .buyItemId(buyItemEntity.getBuyItemId())
+              .thumbnail(s3Util.getUrl(shopEntity.getItemFile().getThumbnail()))
               .build();
         })
         .collect(Collectors.toList());

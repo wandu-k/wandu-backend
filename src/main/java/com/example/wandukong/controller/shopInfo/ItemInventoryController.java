@@ -1,13 +1,12 @@
 package com.example.wandukong.controller.shopInfo;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.wandukong.dto.CustomUserDetails;
@@ -35,7 +34,7 @@ public class ItemInventoryController {
   public ResponseEntity<?> inventory(
       @AuthenticationPrincipal CustomUserDetails customUserDetails,
       @PathVariable Long userId,
-      @ParameterObject SearchItemDto searchItemDto) throws BadRequestException {
+      @RequestBody SearchItemDto searchItemDto) throws BadRequestException {
 
     if (!customUserDetails.getAccountDto().getUserId().equals(userId)) {
       throw new BadRequestException();

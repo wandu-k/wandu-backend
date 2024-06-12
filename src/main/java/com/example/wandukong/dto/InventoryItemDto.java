@@ -20,5 +20,6 @@ public class InventoryItemDto {
     private int enable;
     private Long categoryId;
     private Long buyItemId;
+    private String thumbnail;
 
 }

@@ -88,19 +88,25 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
     QShop shop = QShop.shop;
     QBuyItem buyItem = QBuyItem.buyItem;
 
+    // Count the number of purchases for the item
     NumberExpression<Long> purchaseCount = buyItem.shop.itemId.count();
 
+    // Consider revising this expression based on your actual requirement
+    // Currently, it checks if the itemId is not null, which might not be what you
+    // need
     NumberExpression<Integer> purchaseStatus = new CaseBuilder()
-        .when(buyItem.shop.itemId.isNotNull()).then(1)
+        .when(buyItem.shop.itemId.eq(itemId)).then(1)
         .otherwise(0);
 
-    // private Long userId;
-    // private Long itemId;
-    // private String nickname;
-    // private String itemName;
-    // private String subcategoryName;
-    // private int price;
-    // private String file;
+    long purchaseCountValue = jpaQueryFactory
+        .select(purchaseCount)
+        .from(buyItem)
+        .fetchOne();
+
+    int purchaseStatusValue = jpaQueryFactory
+        .select(purchaseStatus)
+        .from(buyItem)
+        .fetchOne();
 
     Shop s = jpaQueryFactory
         .selectFrom(shop)
@@ -118,6 +124,8 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
         .file(s3Util.getUrl(s.getItemFile().getFileName()))
         .subcategoryName(s.getShopSubcategory().getSubcategoryName())
         .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
+        .purchase((int) purchaseCountValue)
+        .purchaseStatus(purchaseStatusValue)
         .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
         .build();
 
