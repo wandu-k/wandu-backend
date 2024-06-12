@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.wandukong.dto.CustomUserDetails;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
 import com.example.wandukong.exception.CustomException.BadRequestException;
+import com.example.wandukong.service.BgmService;
 import com.example.wandukong.service.ShopInfo.PlaylistService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class MyPlaylistController {
 
     private final PlaylistService playlistService;
+    private final BgmService bgmService;
 
     // 사용자들의 플레이리스트 출력
     @Operation(summary = "나의 플레이리스트 목록 조회")
@@ -98,6 +100,25 @@ public class MyPlaylistController {
 
         return new ResponseEntity<>("삭제완료", HttpStatus.OK);
 
+    }
+
+    @Operation(summary = "특정 플레이리스트의 노래 삭제")
+    @SecurityRequirement(name = "Baerer Authentication")
+    @DeleteMapping("/{playlistId}/bgm/{buyItemId}")
+    public ResponseEntity<?> deleteBgm(@PathVariable Long playlistId, @PathVariable Long buyItemId) {
+        bgmService.deleteBgm(playlistId, buyItemId);
+
+        return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+    }
+
+    @Operation(summary = "특정 플레이리스트의 특정 노래 추가")
+    @SecurityRequirement(name = "Baerer Authentication")
+    @PostMapping("/{playlistId}/bgm/{buyItemId}")
+    public ResponseEntity<?> postBgmAdd(@PathVariable Long playlistId, @PathVariable Long buyItemId) {
+
+        bgmService.addBgm(playlistId, buyItemId);
+
+        return new ResponseEntity<>("추가 완료", HttpStatus.OK);
     }
 
 }

@@ -40,6 +40,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .then(1)
                                 .otherwise(0);
 
+                // followCheck 초기화
+                NumberExpression<Integer> followerCheck = new CaseBuilder()
+                                .when(JPAExpressions
+                                                .selectOne()
+                                                .from(friend)
+                                                .where(friend.friendId.userDo.userId.eq(userId)
+                                                                .and(friend.friendId.friendDo.userId
+                                                                                .eq(followCheckUserId)))
+                                                .exists())
+                                .then(1)
+                                .otherwise(0);
+
                 // Query 수정
                 // followCount와 followerCount 조건 정의
                 NumberExpression<Long> followCount = new CaseBuilder()
@@ -57,7 +69,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .select(userDo1,
                                                 followCount.sum().as("followCount"),
                                                 followerCount.sum().as("followerCount"),
-                                                followCheck.as("followCheck"))
+                                                followCheck.as("followCheck"),
+                                                followerCheck.as("followerCheck"))
                                 .from(userDo1)
                                 .leftJoin(friend)
                                 .on(friend.friendId.userDo.userId.eq(userId)
@@ -69,6 +82,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 Long followCountValue = result.get(1, Long.class);
                 Long followerCountValue = result.get(2, Long.class);
                 Integer followCheckValue = result.get(followCheck.as("followCheck"));
+                Integer followerCheckValue = result.get(followerCheck.as("followerCheck"));
 
                 UserDto userDto = UserDto.builder()
                                 .userId(userDo.getUserId())
@@ -80,6 +94,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .followCount(followCountValue)
                                 .followerCount(followerCountValue)
                                 .followCheck(followCheckValue)
+                                .followerCheck(followerCheckValue)
                                 .build();
 
                 return userDto;

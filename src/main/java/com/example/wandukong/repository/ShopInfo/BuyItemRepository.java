@@ -11,6 +11,6 @@ import com.example.wandukong.domain.ShopInfo.BuyItem;
 public interface BuyItemRepository extends JpaRepository<BuyItem, Long> {
   List<BuyItem> findByUserDoUserId(Long userId);
 
-  BuyItem findByShop_ItemId(Long itemId);
+  BuyItem getReferenceByBuyItemIdAndUserDo_UserId(Long buyItemId, Long userId);
 
 }

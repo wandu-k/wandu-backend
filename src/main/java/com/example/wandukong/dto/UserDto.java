@@ -22,6 +22,7 @@ public class UserDto {
     private Long followCount;
     private Long followerCount;
     private Integer followCheck;
+    private Integer followerCheck;
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;

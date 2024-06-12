@@ -80,6 +80,7 @@ public class BuyItemPageImplRepository implements BuyItemPageRepository {
               .subcategoryId(shopEntity.getShopSubcategory().getSubcategoryId())
               .enable(enable)
               .categoryId(shopEntity.getShopSubcategory().getCategory().getCategoryId())
+              .buyItemId(buyItemEntity.getBuyItemId())
               .build();
         })
         .collect(Collectors.toList());

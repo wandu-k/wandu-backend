@@ -1,11 +1,12 @@
 package com.example.wandukong.service.ShopInfo;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
+import com.example.wandukong.domain.ShopInfo.Shop;
 import com.example.wandukong.dto.InventoryItemDto;
 import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.page.PageRequestDto;
@@ -14,15 +15,19 @@ import com.example.wandukong.dto.ShopInfo.BuyItemDto;
 import com.example.wandukong.exception.CustomException.EntityAlreadyExistsException;
 import com.example.wandukong.repository.ShopInfo.BuyItemPageRepository;
 import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
+import com.example.wandukong.repository.ShopInfo.ShopInfoRepository;
+import com.example.wandukong.repository.user.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class InventoryItemServiceimpl implements InventoryItemService {
 
-        @Autowired
-        private BuyItemRepository buyItemRepository;
-
-        @Autowired
-        private BuyItemPageRepository buyItemPageRepository;
+        private final BuyItemRepository buyItemRepository;
+        private final BuyItemPageRepository buyItemPageRepository;
+        private final ShopInfoRepository shopInfoRepository;
+        private final UserRepository userRepository;
 
         @Override
         public PageResponseDto<InventoryItemDto> getMybuylist(Long userId, SearchItemDto searchItemDto) {
@@ -47,13 +52,11 @@ public class InventoryItemServiceimpl implements InventoryItemService {
         @Override
         public void addItem(BuyItemDto buyItemDto) throws EntityAlreadyExistsException {
 
-                BuyItem buyItem = buyItemRepository.findByShop_ItemId(buyItemDto.getItemId());
+                Shop shop = shopInfoRepository.getReferenceById(buyItemDto.getItemId());
 
-                if (buyItem != null) {
-                        throw new EntityAlreadyExistsException();
-                }
+                UserDo userDo = userRepository.getReferenceById(buyItemDto.getUserId());
 
-                buyItem = buyItemDto.toEntity();
+                BuyItem buyItem = new BuyItem(null, null, shop, userDo);
 
                 buyItemRepository.save(buyItem);
         }

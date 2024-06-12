@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wandukong.dto.ShopInfo.BgmListDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.service.BgmService;
 import com.example.wandukong.service.ShopInfo.PlaylistService;
@@ -53,25 +52,6 @@ public class PlaylistController {
 
     List<BgmListDto> bgmListDtos = bgmService.getBgmList(playlistId);
     return new ResponseEntity<>(bgmListDtos, HttpStatus.OK);
-  }
-
-  @Operation(summary = "특정 플레이리스트의 노래 삭제")
-  @SecurityRequirement(name = "Baerer Authentication")
-  @DeleteMapping("/playlist/{playlistId}/bgm/{itemId}")
-  public ResponseEntity<?> deleteBgm(@PathVariable Long playlistId, @PathVariable Long itemId) {
-    bgmService.deleteBgm(playlistId, itemId);
-
-    return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
-  }
-
-  @Operation(summary = "특정 플레이리스트의 특정 노래 추가")
-  @SecurityRequirement(name = "Baerer Authentication")
-  @PostMapping("/playlist/{playlistId}/bgm/{itemId}")
-  public ResponseEntity<?> postBgmAdd(@PathVariable Long playlistId, @PathVariable Long itemId) {
-
-    bgmService.addBgm(playlistId, itemId);
-
-    return new ResponseEntity<>("추가 완료", HttpStatus.OK);
   }
 
 }

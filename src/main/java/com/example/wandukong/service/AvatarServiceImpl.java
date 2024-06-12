@@ -1,17 +1,13 @@
 package com.example.wandukong.service;
 
-import java.util.Optional;
-
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.example.wandukong.domain.Avatar;
-import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.ShopInfo.BuyItem;
-import com.example.wandukong.domain.ShopInfo.ShopSubCategory;
 import com.example.wandukong.dto.RequestAvatarDto;
 import com.example.wandukong.dto.ResponseAvatarDto;
 import com.example.wandukong.repository.AvatarRepository;
+import com.example.wandukong.repository.ShopInfo.BuyItemRepository;
 import com.example.wandukong.util.S3Util;
 
 import lombok.RequiredArgsConstructor;
@@ -21,9 +17,9 @@ import lombok.RequiredArgsConstructor;
 public class AvatarServiceImpl implements AvatarService {
 
     private final AvatarRepository avatarRepository;
+    private final BuyItemRepository buyItemRepository;
     private final S3Util s3Util;
 
-    // 추후 JQPL 이나 QueryDsl 로 개선 필요
     @Override
     public ResponseAvatarDto getAvatar(Long userId) {
 
@@ -31,9 +27,11 @@ public class AvatarServiceImpl implements AvatarService {
 
         ResponseAvatarDto responseAvatarDto = ResponseAvatarDto.builder()
                 .userId(userId)
-                .head(avatar.getHead() != null ? s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName())
+                .head(avatar.getHead() != null
+                        ? s3Util.getUrl(avatar.getHead().getShop().getItemFile().getFileName())
                         : null)
-                .eye(avatar.getEye() != null ? s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName())
+                .eye(avatar.getEye() != null
+                        ? s3Util.getUrl(avatar.getEye().getShop().getItemFile().getFileName())
                         : null)
                 .mouse(avatar.getMouse() != null
                         ? s3Util.getUrl(avatar.getMouse().getShop().getItemFile().getFileName())
@@ -48,7 +46,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public void putAvatar(Long userId, RequestAvatarDto requestAvatarDto) {
+    public void putAvatar(Long userId, Long itemId, RequestAvatarDto requestAvatarDto) {
 
         Avatar avatar = avatarRepository.findById(userId).orElseGet(() -> {
             Avatar newAvatar = Avatar.builder()
@@ -58,34 +56,26 @@ public class AvatarServiceImpl implements AvatarService {
         });
 
         Long subcategoryId = requestAvatarDto.getSubcategoryId();
-        Long itemId = requestAvatarDto.getItemId();
+        BuyItem buyItem = buyItemRepository.getReferenceByBuyItemIdAndUserDo_UserId(itemId, userId);
 
         if (subcategoryId == 1) {
-            if (itemId != null) {
-                avatar.setHead(BuyItem.builder().itemId(itemId).build());
-            } else {
-                avatar.setHead(null);
-            }
+
+            avatar.setHead(buyItem);
+
         } else if (subcategoryId == 2) {
-            if (itemId != null) {
-                avatar.setEye(BuyItem.builder().itemId(itemId).build());
-            } else {
-                avatar.setEye(null);
-            }
+
+            avatar.setEye(buyItem);
         } else if (subcategoryId == 3) {
-            if (itemId != null) {
-                avatar.setMouse(BuyItem.builder().itemId(itemId).build());
-            } else {
-                avatar.setMouse(null);
-            }
+
+            avatar.setMouse(buyItem);
+
         } else if (subcategoryId == 4) {
-            if (itemId != null) {
-                avatar.setCloth(BuyItem.builder().itemId(itemId).build());
-            } else {
-                avatar.setCloth(null);
-            }
+
+            avatar.setCloth(buyItem);
+
         } else {
-            throw new IllegalArgumentException("Invalid subcategory ID: " + subcategoryId);
+            throw new IllegalArgumentException("Invalid subcategory ID: " +
+                    subcategoryId);
         }
         avatarRepository.save(avatar);
     }

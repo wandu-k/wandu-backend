@@ -1,6 +1,7 @@
 package com.example.wandukong.domain.ShopInfo;
 
 import com.example.wandukong.domain.UserDo;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -45,8 +47,8 @@ public class Shop {
     @OneToOne(mappedBy = "shop", fetch = FetchType.LAZY)
     private ItemFile itemFile;
 
-    @OneToOne(mappedBy = "shop", fetch = FetchType.LAZY)
-    private BuyItem buyItem;
+    @OneToMany(mappedBy = "shop")
+    private List<BuyItem> buyItem;
 
     // 정보 수정
     public void updateItem(String itemName, int price) {

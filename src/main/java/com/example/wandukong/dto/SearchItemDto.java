@@ -3,16 +3,9 @@ package com.example.wandukong.dto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
-@Setter
-@ToString
 public class SearchItemDto {
 
     private Long userId;

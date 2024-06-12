@@ -6,10 +6,10 @@ import com.example.wandukong.dto.ShopInfo.BgmListDto;
 
 public interface BgmService {
 
-    void addBgm(Long playlistId, Long itemId);
+    void addBgm(Long playlistId, Long buyItemId);
 
     List<BgmListDto> getBgmList(Long playlistId);
 
-    void deleteBgm(Long playlistId, Long itemId);
+    void deleteBgm(Long playlistId, Long buyItemId);
 
 }

@@ -1,8 +1,7 @@
 package com.example.wandukong.dto.ShopInfo;
 
 import java.time.LocalDate;
-import com.example.wandukong.domain.UserDo;
-import com.example.wandukong.domain.ShopInfo.BuyItem;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -24,13 +23,5 @@ public class BuyItemDto {
 
   /* 내 아이템 인벤토리 */
   public BuyItemDto() {
-  }
-
-  public BuyItem toEntity() {
-    return BuyItem.builder()
-        .itemId(itemId)
-        .buyDate(buyDate)
-        .userDo(UserDo.builder().userId(userId).build())
-        .build();
   }
 }

@@ -11,6 +11,6 @@ import com.example.wandukong.domain.ShopInfo.BgmList;
 @Repository
 public interface BgmListRepository extends JpaRepository<BgmList, BgmListPK> {
 
-    List<BgmList> findAllByBgmListId_Playlist_PlaylistId(Long playlistId);
+    List<BgmList> findAllByPlaylist_PlaylistId(Long playlistId);
 
 }

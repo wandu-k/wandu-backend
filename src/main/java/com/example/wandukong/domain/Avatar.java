@@ -32,19 +32,19 @@ public class Avatar {
     private UserDo userDo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "headId")
+    @JoinColumn(name = "head")
     private BuyItem head;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "eyeId")
+    @JoinColumn(name = "eye")
     private BuyItem eye;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mouseId")
+    @JoinColumn(name = "mouse")
     private BuyItem mouse;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clothId")
+    @JoinColumn(name = "cloth")
     private BuyItem cloth;
 
     @Builder
@@ -65,8 +65,8 @@ public class Avatar {
         this.eye = eye;
     }
 
-    public void setMouse(BuyItem mouse) {
-        this.mouse = mouse;
+    public void setMouse(BuyItem buyItem) {
+        this.mouse = buyItem;
     }
 
     public void setCloth(BuyItem cloth) {

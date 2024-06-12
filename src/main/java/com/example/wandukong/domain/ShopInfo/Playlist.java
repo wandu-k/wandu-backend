@@ -43,7 +43,7 @@ public class Playlist {
     @Column(name = "plDate")
     private LocalDate plDate;
 
-    @OneToMany(mappedBy = "bgmListId.playlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BgmList> bgmList;
 
     @ManyToOne(fetch = FetchType.LAZY)

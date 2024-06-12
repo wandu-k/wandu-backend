@@ -3,23 +3,16 @@ package com.example.wandukong.repository.ShopInfo;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.stereotype.Repository;
-
 import com.example.wandukong.domain.ShopInfo.BgmList;
 import com.example.wandukong.domain.ShopInfo.QBgmList;
 import com.example.wandukong.domain.ShopInfo.QPlaylist;
-import com.example.wandukong.dto.ScrollDto.SliceRequestDto;
 import com.example.wandukong.dto.ShopInfo.PlaylistDto;
-import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -95,8 +88,8 @@ public class PlaylistAllpageRepositoryImpl extends QuerydslRepositorySupport imp
                   .selectOne()
                   .from(bgmList)
                   .where(
-                      bgmList.bgmListId.playlist.playlistId.eq(playlist.playlistId)
-                          .and(bgmList.bgmListId.buyItem.itemId.eq(itemId)))
+                      bgmList.playlist.playlistId.eq(playlist.playlistId)
+                          .and(bgmList.buyItem.shop.itemId.eq(itemId)))
                   .exists())
           .then(1)
           .otherwise(0);

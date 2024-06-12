@@ -12,7 +12,6 @@ import com.example.wandukong.dto.FriendDto;
 import com.example.wandukong.repository.FriendRepository;
 import com.example.wandukong.repository.user.UserRepository;
 
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +28,13 @@ public class FollowServiceImpl implements FollowService {
         List<Friend> friends = friendRepository.findAllByFriendId_UserDo_UserId(userId);
         List<FriendDto> friendList = new ArrayList<>();
         for (Friend friend : friends) {
-            FriendDto friendDto = new FriendDto(friend.getFriendId().getUserDo().getUserId(),
-                    friend.getFriendId().getFriendDo().getUserId());
+            FriendDto friendDto = FriendDto.builder()
+                    .userId(friend.getFriendId().getUserDo().getUserId())
+                    .friendId(friend.getFriendId().getFriendDo().getUserId())
+                    .nickname(friend.getFriendId().getFriendDo().getNickname())
+                    .intro(friend.getFriendId().getFriendDo().getIntro())
+                    .profileImage(friend.getFriendId().getFriendDo().getProfileImage())
+                    .build();
             friendList.add(friendDto);
         }
         return friendList;
@@ -41,8 +45,13 @@ public class FollowServiceImpl implements FollowService {
         List<Friend> friends = friendRepository.findAllByFriendId_FriendDo_UserId(userId);
         List<FriendDto> friendList = new ArrayList<>();
         for (Friend friend : friends) {
-            FriendDto friendDto = new FriendDto(friend.getFriendId().getUserDo().getUserId(),
-                    friend.getFriendId().getFriendDo().getUserId());
+            FriendDto friendDto = FriendDto.builder()
+                    .userId(friend.getFriendId().getFriendDo().getUserId())
+                    .friendId(friend.getFriendId().getUserDo().getUserId())
+                    .nickname(friend.getFriendId().getUserDo().getNickname())
+                    .intro(friend.getFriendId().getUserDo().getIntro())
+                    .profileImage(friend.getFriendId().getUserDo().getProfileImage())
+                    .build();
             friendList.add(friendDto);
         }
         return friendList;
