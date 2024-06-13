@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.my;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

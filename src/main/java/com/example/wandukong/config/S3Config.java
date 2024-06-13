@@ -1,4 +1,4 @@
-package com.example.wandukong.awstest;
+package com.example.wandukong.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

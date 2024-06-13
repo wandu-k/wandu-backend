@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.my;
 
 import java.util.List;
 

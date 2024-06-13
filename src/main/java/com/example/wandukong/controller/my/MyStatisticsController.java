@@ -1,4 +1,4 @@
-package com.example.wandukong.controller;
+package com.example.wandukong.controller.my;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
