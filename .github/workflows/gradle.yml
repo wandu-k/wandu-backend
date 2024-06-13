@@ -101,8 +101,8 @@ jobs:
       # 깃허브 Secret에 넣어둔 Region
         aws-region: ${{ secrets.AWS_REGION }}
 
-	#3
-	# 만들어 놓은 S3에 해당 zip 파일 저장
+    #3
+    # 만들어 놓은 S3에 해당 zip 파일 저장
     - name: Upload to S3
       run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./<자신이 만든 ZIP 파일 이름>.zip s3://<만들어 놓은 버킷 이름>/<자신이 만든 ZIP 파일 이름>.zip
     
