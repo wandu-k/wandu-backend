@@ -77,7 +77,7 @@ jobs:
     
     # gradlew에 권한 부여
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
     
     # gradlew 빌드
     - name: Build with Gradle
