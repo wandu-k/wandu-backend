@@ -1,4 +1,4 @@
-package com.example.wandukong.swagger;
+package com.example.wandukong.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;

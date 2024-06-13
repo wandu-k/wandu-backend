@@ -1,7 +1,8 @@
-package com.example.wandukong.security;
+package com.example.wandukong.config;
 
 import java.util.Collections;
 
+import com.example.wandukong.security.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
