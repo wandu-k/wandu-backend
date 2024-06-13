@@ -15,7 +15,6 @@ import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -85,7 +84,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
   }
 
   @Override
-  public ShopInfoDto findByIdWithDto(Long itemId) {
+  public ShopInfoDto findByIdWithDto(Long itemId, Long userId) {
     QShop shop = QShop.shop;
     QBuyItem buyItem = QBuyItem.buyItem;
 
@@ -104,7 +103,7 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
     Integer purchaseStatusValue = jpaQueryFactory
         .select(purchaseStatus)
         .from(buyItem)
-        .where(buyItem.shop.itemId.eq(itemId))
+        .where(buyItem.userDo.userId.eq(userId))
         .fetchFirst();
 
     int statusValue = (purchaseStatusValue != null) ? purchaseStatusValue.intValue() : 0;
