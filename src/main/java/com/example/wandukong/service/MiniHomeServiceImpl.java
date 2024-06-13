@@ -12,7 +12,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.MiniHome.MiniHomeBoard;
 import com.example.wandukong.domain.ShopInfo.Playlist;
-import com.example.wandukong.dto.MiniHome.MiniHomeBoardDto;
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 import com.example.wandukong.repository.ShopInfo.PlaylistRepository;
@@ -68,24 +67,6 @@ public class MiniHomeServiceImpl implements MiniHomeService {
         MiniHomeDto miniHomeDto = miniHome.toDto(Integer.parseInt(redisTemplate.opsForValue().get(viewKey)));
 
         return miniHomeDto;
-    }
-
-    @Override
-    public List<MiniHomeBoardDto> getBoardList() {
-
-        List<MiniHomeBoard> miniHomeBoards = miniHomeBoardRepository.findAll();
-
-        List<MiniHomeBoardDto> boardList = new ArrayList<>();
-
-        for (MiniHomeBoard miniHomeBoard : miniHomeBoards) {
-            MiniHomeBoardDto miniHomeBoardDto = new MiniHomeBoardDto();
-            miniHomeBoardDto.setBoardId(miniHomeBoard.getBoardId());
-            miniHomeBoardDto.setBoardId(miniHomeBoard.getBoardId());
-            miniHomeBoardDto.setBoardName(miniHomeBoard.getBoardName());
-            boardList.add(miniHomeBoardDto);
-        }
-
-        return boardList;
     }
 
     @Override
