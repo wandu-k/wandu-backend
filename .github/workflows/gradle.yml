@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew build
 
       - name: Make zip file
-        run: zip -r ./<자신이 만들 ZIP 파일 이름>.zip .
+        run: zip -r ./wandu.zip .
         shell: bash
 
       - name: Configure AWS credentials
@@ -61,19 +61,19 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload to S3
-        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./<자신이 만든 ZIP 파일 이름>.zip s3://<만들어 놓은 버킷 이름>/<자신이 만든 ZIP 파일 이름>.zip
+        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./wandu.zip s3://wandukong/wandu.zip
 
-      - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws deploy create-deployment \
-          --application-name <AWS codeDeploy 애플리케이션 이름> \
-          --deployment-group-name <codeDeploy group 이름> \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=<만들어 놓은 버킷 이름>,bundleType=zip,key=<자신이 만든 ZIP 파일 이름>.zip \
-          --region ${{ secrets.AWS_REGION }}
+#      - name: Deploy
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        run: |
+#          aws deploy create-deployment \
+#          --application-name <AWS codeDeploy 애플리케이션 이름> \
+#          --deployment-group-name <codeDeploy group 이름> \
+#          --file-exists-behavior OVERWRITE \
+#          --s3-location bucket=wandukong,bundleType=zip,key=wandu.zip \
+#          --region ${{ secrets.AWS_REGION }}
 
   dependency-submission:
     runs-on: ubuntu-latest
