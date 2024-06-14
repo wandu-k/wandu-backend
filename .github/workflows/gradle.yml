@@ -34,9 +34,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
-
       - name: Create application.properties
         run: |
           touch ./src/main/resources/application.properties
@@ -49,38 +46,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Make zip file
-        run: zip -r ./wandu.zip .
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Upload to S3
-        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./wandu.zip s3://wandukong/wandu.zip
-
-      #      - name: Deploy
-      #        env:
-      #          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #        run: |
-      #          aws deploy create-deployment \
-      #          --application-name <AWS codeDeploy 애플리케이션 이름> \
-      #          --deployment-group-name <codeDeploy group 이름> \
-      #          --file-exists-behavior OVERWRITE \
-      #          --s3-location bucket=wandukong,bundleType=zip,key=wandu.zip \
-      #          --region ${{ secrets.AWS_REGION }}
-
       # docker build & push to production
       - name: Docker build & push to prod
         if: contains(github.ref, 'main')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/wandukong .
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/wandukong .
           docker push ${{ secrets.DOCKER_USERNAME }}/wandukong
 
       ## deploy to production
