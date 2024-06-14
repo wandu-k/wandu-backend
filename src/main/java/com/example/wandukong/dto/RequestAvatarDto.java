@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class RequestAvatarDto {
+    private int enable;
     private Long subcategoryId;
 }
