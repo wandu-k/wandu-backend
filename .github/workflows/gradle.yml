@@ -80,8 +80,8 @@ jobs:
         if: contains(github.ref, 'main')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/docker-test-prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/wandukong .
+          docker push ${{ secrets.DOCKER_USERNAME }}/wandukong
 
       ## deploy to production
       - name: Deploy to prod
@@ -95,8 +95,10 @@ jobs:
           envs: GITHUB_SHA
           script: |
             sudo docker ps
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
-            sudo docker run -d -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wandukong
+            sudo docker stop wandukong
+            sudo docker rm wandukong
+            sudo docker run -d -p --name wandukong 8080:7090 ${{ secrets.DOCKER_USERNAME }}/wandukong
             sudo docker image prune -f
 
   dependency-submission:
