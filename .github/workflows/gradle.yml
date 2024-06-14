@@ -69,7 +69,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wandukong
             sudo docker stop wandukong
             sudo docker rm wandukong
-            sudo docker run -d -p --name wandukong 8080:7090 ${{ secrets.DOCKER_USERNAME }}/wandukong
+            sudo docker run -d --name wandukong -p 8080:7090 ${{ secrets.DOCKER_USERNAME }}/wandukong
             sudo docker image prune -f
 
   dependency-submission:
