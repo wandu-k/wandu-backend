@@ -36,5 +36,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/wandu-backend
-            docker-compose up -d
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wandu-backend
+            sudo docker-compose up -d
