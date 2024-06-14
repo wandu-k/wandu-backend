@@ -1,120 +1,40 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: 배포
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
+  deploy:
+    runs-on: ubuntu-latest # 작업이 실행될 환경
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Change gradlew permissions
-        run: chmod +x gradlew
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: 체크아웃
+        uses: actions/checkout@v3
+      - name: JDK 17 사용
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-      - name: Build with Gradle Wrapper
+      - name: Gradle Wrapper 실행 권한 추가
+        run: chmod +x gradlew
+      - name: Gradle로 빌드(CI)
         run: ./gradlew build
-
-      - name: Create application.properties
-        run: |
-          touch ./src/main/resources/application.properties
-          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
-          cat ./src/main/resources/application.properties
-
-      - name: Change gradlew permissions again
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Make zip file
-        run: zip -r ./wandu.zip .
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: 도커허브에 로그인
+        uses: docker/login-action@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Upload to S3
-        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./wandu.zip s3://wandukong/wandu.zip
-
-      #      - name: Deploy
-      #        env:
-      #          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #        run: |
-      #          aws deploy create-deployment \
-      #          --application-name <AWS codeDeploy 애플리케이션 이름> \
-      #          --deployment-group-name <codeDeploy group 이름> \
-      #          --file-exists-behavior OVERWRITE \
-      #          --s3-location bucket=wandukong,bundleType=zip,key=wandu.zip \
-      #          --region ${{ secrets.AWS_REGION }}
-
-      # docker build & push to production
-      - name: Docker build & push to prod
-        if: contains(github.ref, 'main')
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/docker-test-prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
-
-      ## deploy to production
-      - name: Deploy to prod
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/wandu-backend .
+      - name: 도커허브에 이미지 푸시
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/wandu-backend
+      - name: AWS EC2에 ssh 접속 후 배포
         uses: appleboy/ssh-action@master
-        id: deploy-prod
-        if: contains(github.ref, 'main')
         with:
-          host: ${{ secrets.HOST_PROD }} # EC2 퍼블릭 IPv4 DNS
+          host: ${{ secrets.HOST_PROD }}
+          port: 22
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
-          envs: GITHUB_SHA
           script: |
-            sudo docker ps
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
-            sudo docker run -d -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/docker-test-prod
-            sudo docker image prune -f
-
-  dependency-submission:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Change gradlew permissions
-        run: chmod +x gradlew
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+            docker pull ${{ secrets.DOCKER_USERNAME }}/wandu-backend
+            docker-compose up -d
