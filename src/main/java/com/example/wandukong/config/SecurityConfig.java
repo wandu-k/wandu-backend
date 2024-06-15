@@ -53,27 +53,13 @@ public class SecurityConfig implements WebMvcConfigurer {
         return httpSecurity
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("*"));
-                        config.setAllowedMethods(Collections.singletonList("*"));
-                        config.setAllowCredentials(false);
-                        config.setAllowedHeaders(Collections.singletonList("*"));
-                        config.addExposedHeader(JwtConstants.TOKEN_HEADER);
-                        config.setMaxAge(3600L); // 1시간
-                        return config;
-                    }
-                }))
-
                 .addFilterAfter(new JwtAuthenticationFilter(configuration.getAuthenticationManager(), jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
 
                     requests.requestMatchers("/v3/**", "/swagger-ui/**", "/error").permitAll();
-                    requests.requestMatchers("/api/public/**").permitAll();
+                    requests.requestMatchers("/api/public/**","/ws-stomp/**").permitAll();
                     requests.requestMatchers("/api/user/**", "/api/my/**").hasAnyRole("USER", "ADMIN");
                     requests.requestMatchers("/api/admin/**").hasRole("ADMIN");
 
