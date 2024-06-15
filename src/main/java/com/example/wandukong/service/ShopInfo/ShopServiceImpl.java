@@ -95,7 +95,9 @@ public class ShopServiceImpl implements ShopService {
 
   @Override
   public ShopInfoDto getItem(Long itemId, Long userId) {
+    log.info("아이템 단건 조회");
     ShopInfoDto shopInfoDto = shopInfoRepository.findByIdWithDto(itemId, userId);
+    log.info("아이템 조회 완료 : " + shopInfoDto);
     return shopInfoDto;
   }
 

@@ -3,6 +3,8 @@ package com.example.wandukong.repository.ShopInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.querydsl.core.types.dsl.*;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +17,6 @@ import com.example.wandukong.dto.SearchItemDto;
 import com.example.wandukong.dto.ShopInfo.ShopInfoDto;
 import com.example.wandukong.util.S3Util;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -88,25 +88,30 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
     QShop shop = QShop.shop;
     QBuyItem buyItem = QBuyItem.buyItem;
 
-    NumberExpression<Long> purchaseCount = buyItem.shop.itemId.count();
+    //itemId 의 아이템이 총 몇번 팔렸는지 계산
+    NumberPath<Long> purchaseCount = Expressions.numberPath(Long.class, "purchaseCount");
 
-    NumberExpression<Integer> purchaseStatus = new CaseBuilder()
-        .when(buyItem.shop.itemId.eq(itemId)).then(1)
-        .otherwise(0);
+    JPAQuery<Long> purchaseQuery = jpaQueryFactory
+            .select(buyItem.count())
+            .from(buyItem)
+            .where(buyItem.shop.itemId.eq(itemId));
 
-    Long purchaseCountValue = jpaQueryFactory
-        .select(purchaseCount)
-        .from(buyItem)
-        .where(buyItem.shop.itemId.eq(itemId))
-        .fetchFirst();
+    long totalPurchases = purchaseQuery.fetchOne();
 
-    Integer purchaseStatusValue = jpaQueryFactory
-        .select(purchaseStatus)
-        .from(buyItem)
-        .where(buyItem.userDo.userId.eq(userId))
-        .fetchFirst();
+    log.info(purchaseCount.toString());
 
-    int statusValue = (purchaseStatusValue != null) ? purchaseStatusValue.intValue() : 0;
+    //userId의 아이템 구매여부
+    BooleanExpression userPurchaseCondition = userId != null ? buyItem.userDo.userId.eq(userId) : null;
+    boolean hasPurchased = userId != null && jpaQueryFactory
+            .select(buyItem.count())
+            .from(buyItem)
+            .where(buyItem.shop.itemId.eq(itemId).and(userPurchaseCondition))
+            .fetchOne() > 0;
+
+    Integer purchaseStatus = null;
+    if (userId != null) {
+      purchaseStatus = hasPurchased ? 1 : 0;
+    }
 
     Shop s = jpaQueryFactory
         .selectFrom(shop)
@@ -128,8 +133,8 @@ public class ShopInfoPageRepositoryImpl implements ShopInfoPageRepository {
         .price(s.getPrice())
         .subcategoryName(s.getShopSubcategory().getSubcategoryName())
         .categoryId(s.getShopSubcategory().getCategory().getCategoryId())
-        .purchase((int) (purchaseCountValue != null ? purchaseCountValue : 0))
-        .purchaseStatus(statusValue)
+        .purchase ((int)totalPurchases)
+        .purchaseStatus(purchaseStatus)
         .thumbnail(s3Util.getUrl(s.getItemFile().getThumbnail()))
         .build();
 
