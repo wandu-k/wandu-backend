@@ -41,6 +41,7 @@ public class ShopController {
   @Autowired
   ShopService shopService;
 
+  @Operation(summary = "아이템 단건 조회")
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping("/{itemId}")
   public ResponseEntity<?> getItem(@RequestParam(value = "userId", required = false) Long userId,
