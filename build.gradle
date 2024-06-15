@@ -42,6 +42,10 @@ implementation group: 'org.springframework.boot', name: 'spring-boot-starter-dat
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '3.3.0'
+
+
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 // https://mvnrepository.com/artifact/commons-io/commons-io
 implementation 'commons-io:commons-io:2.5'
