@@ -6,10 +6,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-
 
 
 @Getter
@@ -34,14 +34,14 @@ public class Chat {
     @Column(columnDefinition = "TEXT")
     private String message;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public Chat(MiniHome miniHome,UserDo userDo, String message) {
+    public Chat(MiniHome miniHome, UserDo userDo, String message) {
         this.miniHome = miniHome;
-        this.userDo=userDo;
+        this.userDo = userDo;
         this.message = message;
     }
 }

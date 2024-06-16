@@ -9,11 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api/user/minihome")
 public class ChatController {
 
     private final ChatService chatService;
@@ -27,4 +33,12 @@ public class ChatController {
         ChatMessageDto dto = chatService.createChat(hpId, chatMessageDto);
         return dto;
     }
+
+    @GetMapping
+    @RequestMapping("/{hpId}/chat")
+    public ResponseEntity<?> chatList(@PathVariable Long hpId) {
+        List<ChatMessageDto> chatList = chatService.chatList(hpId);
+        return new ResponseEntity<>(chatList, HttpStatus.OK);
+    }
+
 }
