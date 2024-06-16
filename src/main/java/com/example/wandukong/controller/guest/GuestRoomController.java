@@ -1,10 +1,9 @@
 package com.example.wandukong.controller.guest;
 
 import com.example.wandukong.dto.CustomUserDetails;
-import com.example.wandukong.dto.guest.GuestRoomDto;
+import com.example.wandukong.dto.guest.GuestCommentDto;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.example.wandukong.dto.page.PageResponseDto;
-import com.example.wandukong.exception.CustomException;
 import com.example.wandukong.exception.CustomException.BadRequestException;
 import com.example.wandukong.exception.CustomException.PermissionDeniedException;
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
@@ -24,37 +23,37 @@ import java.util.Objects;
 @Tag(name = "방명록", description = "방명록 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/guest")
+@RequestMapping("/api/user")
 public class GuestRoomController {
 
     private final GuestRoomService guestRoomService;
 
     @Operation(summary = "방명록 조회")
-    @PostMapping
-    public ResponseEntity<?> list(@RequestBody PageRequestDto pageRequestDto) {
+    @PostMapping("/minihome/{hpId}/guest")
+    public ResponseEntity<?> list(@PathVariable("hpId") Long hpId, @RequestBody PageRequestDto pageRequestDto) {
 
-        PageResponseDto<GuestRoomDto> guestDto = guestRoomService.getList(pageRequestDto);
+        PageResponseDto<GuestCommentDto> guestDto = guestRoomService.getList(hpId, pageRequestDto);
 
         return new ResponseEntity<>(guestDto, HttpStatus.OK);
     }
 
     @Operation(summary = "방명록 등록 및 수정")
     @SecurityRequirement(name = "Bearer Authentication")
-    @PutMapping
+    @PutMapping("/{userId}/guest")
     public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                    @RequestBody GuestRoomDto guestRoomDto) throws PostNotFoundException, BadRequestException {
+                                    @RequestBody GuestCommentDto guestCommentDto) throws PostNotFoundException, BadRequestException {
 
-        if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), guestRoomDto.getUserId())) {
+        if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), guestCommentDto.getUserId())) {
             throw new BadRequestException();
         }
 
-        ApiResponseDto apiResponseDto = guestRoomService.modify(guestRoomDto);
+        ApiResponseDto apiResponseDto = guestRoomService.modify(guestCommentDto);
 
         return new ResponseEntity<>(apiResponseDto.getMessage(), apiResponseDto.getStatus());
     }
 
     @Operation(summary = "방명록 삭제")
-    @DeleteMapping
+    @DeleteMapping("/{userId}/guest")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long roomId) throws PostNotFoundException, PermissionDeniedException {
 

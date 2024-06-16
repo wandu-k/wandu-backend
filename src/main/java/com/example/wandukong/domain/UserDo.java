@@ -7,7 +7,7 @@ import com.example.wandukong.domain.ask.AdminComment;
 import com.example.wandukong.domain.ask.Ask;
 import com.example.wandukong.domain.forum.ForumPost;
 import com.example.wandukong.domain.forum.ForumPostReview;
-import com.example.wandukong.domain.guest.GuestRoom;
+import com.example.wandukong.domain.guest.GuestComment;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.wandukong.domain.MiniHome.MiniHomePost;
@@ -96,11 +96,11 @@ public class UserDo {
     private List<AdminComment> adminComments;
 
     @OneToMany(mappedBy = "userDo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GuestRoom> guestRooms;
+    private List<GuestComment> guestReplies;
 
     @Builder
     public UserDo(Long userId, String email, String password, String nickname, String profileImage, Date birthday,
-            String intro, String phone, int point, Date signupDay, String role) {
+                  String intro, String phone, int point, Date signupDay, String role) {
         this.userId = userId;
         this.email = email;
         this.password = password;
