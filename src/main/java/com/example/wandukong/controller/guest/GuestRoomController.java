@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,12 +30,27 @@ public class GuestRoomController {
     private final GuestRoomService guestRoomService;
 
     @Operation(summary = "방명록 조회")
-    @PostMapping("/minihome/{hpId}/guest")
+    @PostMapping("/minihome/{hpId}/guest/list")
     public ResponseEntity<?> list(@PathVariable("hpId") Long hpId, @RequestBody PageRequestDto pageRequestDto) {
 
         PageResponseDto<GuestCommentDto> guestDto = guestRoomService.getList(hpId, pageRequestDto);
 
         return new ResponseEntity<>(guestDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "방명록 등록")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping("/minihome/{hpId}/guest")
+    public ResponseEntity<?> addComment(@PathVariable("hpId") Long hpId, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                        @RequestBody GuestCommentDto guestCommentDto) throws PostNotFoundException, BadRequestException {
+
+        if (!Objects.equals(customUserDetails.getAccountDto().getUserId(), guestCommentDto.getUserId())) {
+            throw new BadRequestException();
+        }
+
+        guestRoomService.addComment(hpId, guestCommentDto);
+
+        return new ResponseEntity<>("등록 완료 되었습니다.", HttpStatus.OK);
     }
 
     @Operation(summary = "방명록 등록 및 수정")
@@ -51,6 +67,7 @@ public class GuestRoomController {
 
         return new ResponseEntity<>(apiResponseDto.getMessage(), apiResponseDto.getStatus());
     }
+
 
     @Operation(summary = "방명록 삭제")
     @DeleteMapping("/{userId}/guest")

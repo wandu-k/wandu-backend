@@ -1,5 +1,6 @@
 package com.example.wandukong.service.guest;
 
+import com.example.wandukong.domain.MiniHome.MiniHome;
 import com.example.wandukong.domain.UserDo;
 import com.example.wandukong.domain.guest.GuestComment;
 import com.example.wandukong.dto.guest.GuestCommentDto;
@@ -9,6 +10,8 @@ import com.example.wandukong.exception.CustomException.PermissionDeniedException
 import com.example.wandukong.exception.CustomException.PostNotFoundException;
 import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.guest.GuestRoomRepository;
+import com.example.wandukong.repository.miniHome.MiniHomeRepository;
+import com.example.wandukong.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,8 @@ import java.util.Optional;
 public class GuestRoomServiceImpl implements GuestRoomService {
 
     private final GuestRoomRepository guestRoomRepository;
+    private final UserRepository userRepository;
+    private final MiniHomeRepository miniHomeRepository;
 
     @Transactional
     @Override
@@ -86,5 +91,20 @@ public class GuestRoomServiceImpl implements GuestRoomService {
         }
 
         guestRoomRepository.deleteById(roomId);
+    }
+
+    @Override
+    public void addComment(Long hpId, GuestCommentDto guestCommentDto) {
+
+        UserDo userDo = userRepository.getReferenceById(guestCommentDto.getUserId());
+        MiniHome miniHome = miniHomeRepository.getReferenceById(hpId);
+
+        GuestComment guestComment = GuestComment.builder()
+                .userDo(userDo)
+                .miniHome(miniHome)
+                .mainContent(guestCommentDto.getMainContent())
+                .build();
+
+        guestRoomRepository.save(guestComment);
     }
 }

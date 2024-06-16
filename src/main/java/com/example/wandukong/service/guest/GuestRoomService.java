@@ -14,4 +14,6 @@ public interface GuestRoomService {
     PageResponseDto<GuestCommentDto> getList(Long hpId, PageRequestDto pageRequestDto);
 
     void remove(Long userId, Long commentId) throws PostNotFoundException, PermissionDeniedException;
+
+    void addComment(Long hpId, GuestCommentDto guestCommentDto);
 }
