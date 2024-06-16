@@ -3,6 +3,7 @@ package com.example.wandukong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,21 +12,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class WandukongApplication {
 
-	@Autowired
-	RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
 
-	static {
-		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
-	}
+    static {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+    }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(WandukongApplication.class, args);
-	}
+        SpringApplication.run(WandukongApplication.class, args);
+    }
 
-	@Scheduled(cron = "0 0 0 * * *")
-	public void resetTodayVisit() {
-		redisTemplate.delete("viewKey");
-	}
+    @Scheduled(cron = "0 0 0 * * *")
+    public void resetTodayVisit() {
+        redisTemplate.delete("viewKey");
+    }
 
 }
