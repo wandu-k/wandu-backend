@@ -68,6 +68,7 @@ public class MiniHomeRepositoryCustomImpl implements MiniHomeRepositoryCustom {
                 .where(miniHomeLike.miniHome.eq(miniHome1))
                 .fetchOne();
 
+        Long playlistId = miniHome1.getPlaylist() != null ? miniHome1.getPlaylist().getPlaylistId() : null;
 
         // Build and return the MiniHomeDto
         MiniHomeDto miniHomeDto = MiniHomeDto.builder()
@@ -75,7 +76,7 @@ public class MiniHomeRepositoryCustomImpl implements MiniHomeRepositoryCustom {
                 .hpId(miniHome1.getHpId())
                 .statusM(miniHome1.getStatusM())
                 .introduction(miniHome1.getIntroduction())
-                .playlistId(miniHome1.getPlaylist().getPlaylistId())
+                .playlistId(playlistId)
                 .hpOpen(miniHome1.getHpOpen())
                 .allVisit(miniHome1.getAllVisit())
                 .hpToday(Integer.parseInt(redisTemplate.opsForValue().get(viewKey)))
