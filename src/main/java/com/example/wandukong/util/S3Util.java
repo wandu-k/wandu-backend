@@ -41,6 +41,11 @@ public class S3Util {
     }
 
     public String getUrl(String objectKey) {
+
+        if (objectKey == null) {
+            return null;
+        }
+
         return amazonS3.getUrl(bucketName, objectKey).toString();
     }
 

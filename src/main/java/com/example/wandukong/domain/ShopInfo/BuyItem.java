@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @NoArgsConstructor
 @Getter
@@ -33,6 +34,7 @@ public class BuyItem {
     @Column(name = "buyItemId")
     private Long buyItemId;
 
+    @CreationTimestamp
     @Column(name = "buyDate")
     private LocalDate buyDate;
 

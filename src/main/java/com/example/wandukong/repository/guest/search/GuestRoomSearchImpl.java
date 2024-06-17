@@ -1,7 +1,7 @@
 package com.example.wandukong.repository.guest.search;
 
-import com.example.wandukong.domain.guest.GuestRoom;
-import com.example.wandukong.domain.guest.QGuestRoom;
+import com.example.wandukong.domain.guest.GuestComment;
+import com.example.wandukong.domain.guest.QGuestComment;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.*;
@@ -12,21 +12,21 @@ import java.util.List;
 public class GuestRoomSearchImpl extends QuerydslRepositorySupport implements GuestRoomSearch {
 
     public GuestRoomSearchImpl() {
-        super(GuestRoom.class);
+        super(GuestComment.class);
     }
 
     @Override
-    public Page<GuestRoom> search(PageRequestDto pageRequestDto) {
-        QGuestRoom guestRoom = QGuestRoom.guestRoom;
+    public Page<GuestComment> search(Long hpId, PageRequestDto pageRequestDto) {
+        QGuestComment guestComment = QGuestComment.guestComment;
 
-        JPQLQuery<GuestRoom> query = from(guestRoom);
+        JPQLQuery<GuestComment> query = from(guestComment).where(guestComment.miniHome.hpId.eq(hpId));
 
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(),
                 Sort.by("commentId").descending());
 
         this.getQuerydsl().applyPagination(pageable, query);
 
-        List<GuestRoom> list = query.fetch();
+        List<GuestComment> list = query.fetch();
 
         long total = query.fetchCount();
 

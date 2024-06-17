@@ -11,11 +11,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GuestRoomDto {
+public class GuestCommentDto {
 
-    private Long roomId;
+    private Long commentId;
+
+    private Long hpId;
 
     private Long userId;
+
+    private String profileImage;
+    
+    private String nickname;
 
     private String mainContent;
 

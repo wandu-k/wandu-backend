@@ -1,15 +1,13 @@
 package com.example.wandukong.service;
 
-import java.util.List;
-
 import com.example.wandukong.dto.MiniHome.MiniHomeDto;
 import com.example.wandukong.exception.CustomException.HomeNotFoundException;
 
 public interface MiniHomeService {
 
-    MiniHomeDto getMiniHome(Long userId) throws HomeNotFoundException;
+    MiniHomeDto getMiniHome(Long userId, Long likeUserId) throws HomeNotFoundException;
 
-    void setMiniHomePlaylist(Long userId, Long playlistId);
+    void setMiniHomePlaylist(Long hpId, Long playlistId);
 
     void setMiniHome(Long userId, MiniHomeDto miniHomeDto);
 
