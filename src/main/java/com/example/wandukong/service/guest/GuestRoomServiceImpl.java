@@ -12,6 +12,7 @@ import com.example.wandukong.model.ApiResponseDto;
 import com.example.wandukong.repository.guest.GuestRoomRepository;
 import com.example.wandukong.repository.miniHome.MiniHomeRepository;
 import com.example.wandukong.repository.user.UserRepository;
+import com.example.wandukong.util.S3Util;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ public class GuestRoomServiceImpl implements GuestRoomService {
     private final GuestRoomRepository guestRoomRepository;
     private final UserRepository userRepository;
     private final MiniHomeRepository miniHomeRepository;
+    private final S3Util s3Util;
 
     @Transactional
     @Override
@@ -69,6 +71,8 @@ public class GuestRoomServiceImpl implements GuestRoomService {
                     .commentId(guest.getCommentId())
                     .hpId(guest.getMiniHome().getHpId())
                     .userId(guest.getUserDo().getUserId())
+                    .nickname(guest.getUserDo().getNickname())
+                    .profileImage(s3Util.getUrl(guest.getUserDo().getProfileImage()))
                     .mainContent(guest.getMainContent())
                     .writeDate(guest.getWriteDate())
                     .build();
@@ -83,14 +87,14 @@ public class GuestRoomServiceImpl implements GuestRoomService {
     }
 
     @Override
-    public void remove(Long userId, Long roomId) throws PostNotFoundException, PermissionDeniedException {
-        GuestComment guestComment = guestRoomRepository.findById(roomId).orElseThrow(PostNotFoundException::new);
+    public void remove(Long userId, Long hpId, Long commentId) throws PostNotFoundException, PermissionDeniedException {
+        GuestComment guestComment = guestRoomRepository.findById(commentId).orElseThrow(PostNotFoundException::new);
 
         if (!Objects.equals(guestComment.getUserDo().getUserId(), userId)) {
             throw new PermissionDeniedException();
         }
 
-        guestRoomRepository.deleteById(roomId);
+        guestRoomRepository.deleteById(commentId);
     }
 
     @Override

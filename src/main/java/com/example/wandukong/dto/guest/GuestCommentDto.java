@@ -19,6 +19,10 @@ public class GuestCommentDto {
 
     private Long userId;
 
+    private String profileImage;
+    
+    private String nickname;
+
     private String mainContent;
 
     private LocalDate writeDate;

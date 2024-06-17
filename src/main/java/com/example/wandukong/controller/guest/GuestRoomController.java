@@ -70,13 +70,13 @@ public class GuestRoomController {
 
 
     @Operation(summary = "방명록 삭제")
-    @DeleteMapping("/{userId}/guest")
+    @DeleteMapping("/minihome/{hpId}/guest/{commentId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, Long roomId) throws PostNotFoundException, PermissionDeniedException {
+    public ResponseEntity<?> remove(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable("hpId") Long hpId, @PathVariable("commentId") Long commentId) throws PostNotFoundException, PermissionDeniedException {
 
         if (customUserDetails != null) {
             Long userId = customUserDetails.getAccountDto().getUserId();
-            guestRoomService.remove(userId, roomId);
+            guestRoomService.remove(userId, hpId, commentId);
             return new ResponseEntity<>("방명록 삭제가 완료되었습니다.", HttpStatus.OK);
         }
 
