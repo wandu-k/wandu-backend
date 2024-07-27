@@ -9,10 +9,12 @@ import lombok.ToString;
 @ToString
 public class DailyDto {
 
+    private Long id;
     private Long userId;
     private LocalDate date;
 
-    public DailyDto(Long userId, LocalDate date) {
+    public DailyDto(Long id, Long userId, LocalDate date) {
+        this.id = id;
         this.userId = userId;
         this.date = date;
     }
@@ -20,6 +22,5 @@ public class DailyDto {
     public DailyDto() {
     }
 
-    
 
 }

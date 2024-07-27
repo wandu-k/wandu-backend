@@ -33,7 +33,7 @@ public class DailyCheckServiceImpl implements DailyCheckService {
         List<DailyDto> dailyDtos = new ArrayList<>();
 
         for (Daily daily : dailes) {
-            DailyDto dailyDto = new DailyDto(daily.getUserId(), daily.getDate());
+            DailyDto dailyDto = new DailyDto(daily.getId(), daily.getUserDo().getUserId(), daily.getDate());
             dailyDtos.add(dailyDto);
         }
         return dailyDtos;

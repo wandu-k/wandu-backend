@@ -2,13 +2,7 @@ package com.example.wandukong.domain;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
@@ -20,19 +14,18 @@ import lombok.AccessLevel;
 public class Daily {
 
     @Id
-    @Column(name = "userId", unique = true)
-    private Long userId;
+    @Column(name = "id", unique = true)
+    private Long id;
 
-    @MapsId(value = "userId")
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userId")
     private UserDo userDo;
 
     @Column(name = "date")
     private LocalDate date;
 
-    public Daily(Long userId, UserDo userDo, LocalDate date) {
-        this.userId = userId;
+    public Daily(Long id, UserDo userDo, LocalDate date) {
+        this.id = id;
         this.userDo = userDo;
         this.date = date;
     }
