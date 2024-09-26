@@ -15,3 +15,5 @@ public class RedisConfig {
         return template;
     }
 }
+
+//메모리 기반의 데이터 저장소, nosql, 빠른 처리 속도 
