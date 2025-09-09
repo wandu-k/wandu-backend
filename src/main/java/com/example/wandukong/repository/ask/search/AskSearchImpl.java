@@ -1,14 +1,18 @@
 package com.example.wandukong.repository.ask.search;
 
-import com.example.wandukong.domain.ask.Ask;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+
+import com.example.wandukong.domain.ask.Ask;
 import com.example.wandukong.domain.ask.QAsk;
 import com.example.wandukong.dto.page.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-
-import java.util.List;
 
 public class AskSearchImpl extends QuerydslRepositorySupport implements AskSearch {
     public AskSearchImpl() {
