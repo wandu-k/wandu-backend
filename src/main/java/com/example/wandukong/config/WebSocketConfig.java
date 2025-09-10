@@ -19,8 +19,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry config) {
         config.addEndpoint("/ws-stomp")
-                .setAllowedOriginPatterns("http://localhost:3000","http://mgsip.xyz:3000")
-                .withSockJS(); //버전 낮은 브라우저에서도 적용 가능
+                .setAllowedOriginPatterns("http://localhost:3000", "http://wookportfolio.duckdns.org:81")
+                .withSockJS(); // 버전 낮은 브라우저에서도 적용 가능
         // 주소 : ws://localhost:8080/ws-stomp
     }
 }
