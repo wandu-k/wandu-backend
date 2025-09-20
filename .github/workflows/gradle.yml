@@ -65,7 +65,7 @@ jobs:
             if [ ! -d "$APP_DIR/.git" ]; then
               # 기존 소스 초기화
               sudo rm -rf $APP_DIR
-              mkdir -p $APP_DIR
+              sudo mkdir -p $APP_DIR
 
               echo "Git 저장소 없음 → 클론 실행"
               sudo git clone https://github.com/wandu-k/wandu-backend.git .
@@ -78,9 +78,10 @@ jobs:
             fi
           
             # 기존 컨테이너 중지 및 삭제
-            if [ $(sudo docker ps -q -f name=wandu-backend) ]; then
-              sudo docker stop wandu-backend
-              sudo docker rm wandu-backend
+            CONTAINER_ID=$(sudo docker ps -aq -f name=wandu-backend)
+            if [ -n "$CONTAINER_ID" ]; then
+              sudo docker stop $CONTAINER_ID
+              sudo docker rm $CONTAINER_ID
             fi
 
             # 최신 이미지 가져오기
