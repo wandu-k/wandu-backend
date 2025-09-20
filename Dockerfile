@@ -6,4 +6,4 @@ WORKDIR /wandu-backend
 COPY app.jar .
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "/app.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "/wandu-backend/app.jar", "--spring.profiles.active=prod"]
