@@ -43,7 +43,9 @@ jobs:
 
       # 7. 이미지 빌드
       - name: 이미지 빌드
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/wandu-backend .
+        run: |
+          cp ./build/libs/wandu-backend-0.0.1-SNAPSHOT.jar ./app.jar
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/wandu-backend .
 
       # 8. DockerHub에 푸시
       - name: 도커허브에 이미지 푸시
@@ -77,12 +79,8 @@ jobs:
               sudo git pull origin main
             fi
           
-            # 기존 컨테이너 중지 및 삭제
-            CONTAINER_ID=$(sudo docker ps -aq -f name=wandu-backend)
-            if [ -n "$CONTAINER_ID" ]; then
-              sudo docker stop $CONTAINER_ID
-              sudo docker rm $CONTAINER_ID
-            fi
+            sudo docker stop wandu-backend || true
+            sudo docker rm wandu-backend || true
 
             # 최신 이미지 가져오기
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/wandu-backend
