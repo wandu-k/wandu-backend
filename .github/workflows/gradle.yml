@@ -41,10 +41,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # 빌드 산출물 확인
+      - name: 빌드 산출물 확인
+        run: ls -lh ./build/libs
+
       # 7. 이미지 빌드
       - name: 이미지 빌드
         run: |
-          cp ./build/libs/wandu-backend-0.0.1-SNAPSHOT.jar ./app.jar
+          cp ./wand-backend/build/libs/wandu-backend-0.0.1-SNAPSHOT.jar ./app.jar
           docker build -t ${{ secrets.DOCKER_USERNAME }}/wandu-backend .
 
       # 8. DockerHub에 푸시
