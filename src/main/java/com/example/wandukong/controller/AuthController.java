@@ -23,8 +23,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Slf4j
 @Tag(name = "인증", description = "인증 API")
 @RestController
 @RequestMapping("/api/public")
@@ -44,12 +47,12 @@ public class AuthController {
             @RequestPart(value = "accountDto") @Parameter(schema = @Schema(type = "string", format = "binary")) AccountDto accountDto)
             throws UserNotFoundException, UserAlreadyExistsException, java.io.IOException {
         accountService.register(profileImage, accountDto);
+        log.info("회원가입 컨트롤러 진입");
         return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
-
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
     }
 
