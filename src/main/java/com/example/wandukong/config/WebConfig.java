@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins("https://localhost:3000", "https://wookportfolio.duckdns.org:81")
+                .allowedOrigins("http://localhost:3000", "https://wookportfolio.duckdns.org:81")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("Authorization", "Content-Type", "X-Requested-With")
                 .exposedHeaders("Authorization"); // ★ 프론트에서 읽을 수 있도록 노출
